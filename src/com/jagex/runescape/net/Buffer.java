@@ -297,12 +297,12 @@ public class Buffer extends CacheableNode {
 		buffer[currentPosition++] = (byte) (value >> 8);
 	}
 
-	public int method549() {
+	public int getLEShort() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 	}
 
-	public int method550() {
+	public int getShortA() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] - 128 & 0xff);
 	}
