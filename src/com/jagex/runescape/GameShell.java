@@ -11,15 +11,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
 @SuppressWarnings("serial")
 public class GameShell extends Applet implements Runnable, MouseListener, MouseMotionListener, KeyListener,
@@ -78,12 +70,22 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
 	}
 
 	public void run() {
-		getParentComponent().addMouseListener(this);
-		getParentComponent().addMouseMotionListener(this);
-		getParentComponent().addKeyListener(this);
-		getParentComponent().addFocusListener(this);
-		if (gameFrame != null)
-			gameFrame.addWindowListener(this);
+		final Component parentComponent = getParentComponent();
+		parentComponent.addMouseListener(this);
+		parentComponent.addMouseMotionListener(this);
+		parentComponent.addKeyListener(this);
+		parentComponent.addFocusListener(this);
+		if (gameFrame != null) {
+			// Handle SIGTERM and exit
+			gameFrame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent event) {
+					System.out.println("Closing Client...");
+					System.exit(0);
+				}
+			});
+		}
+
 		drawLoadingText(0, "Loading...");
 		startup();
 		int opos = 0;
@@ -394,10 +396,6 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
 	}
 
 	public void windowClosed(WindowEvent windowevent) {
-	}
-
-	public void windowClosing(WindowEvent windowevent) {
-		destroy();
 	}
 
 	public void windowDeactivated(WindowEvent windowevent) {
