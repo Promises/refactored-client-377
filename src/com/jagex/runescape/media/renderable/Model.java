@@ -1,6 +1,4 @@
-package com.jagex.runescape.media.renderable;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) 
+package com.jagex.runescape.media.renderable;
 
 import com.jagex.runescape.net.Buffer;
 import com.jagex.runescape.net.requester.Requester;
