@@ -29,10 +29,10 @@ public class Widget {
 	public int unknownOne;
 	public int enabledHoveredColor;
 	public int anInt227;
-	public int anInt228;
+	public int xOffset;
 	public boolean isInventory;
 	public String disabledText;
-	public int anInt231;
+	public int scrollPosition;
 	public int childrenX[];
 	public boolean unknownTwo;
 	public int opcodes[][];
@@ -59,7 +59,7 @@ public class Widget {
 	public static int anInt255 = -1;
 	public int conditionValues[];
 	public int children[];
-	public int anInt259;
+	public int yOffset;
 	public int enabledColor;
 	public int disabledHoveredColor;
 	public String options[];

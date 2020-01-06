@@ -230,13 +230,14 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
 		eventClickX = mouseX;
 		eventClickY = mouseY;
 		lastClick = System.currentTimeMillis();
-		if (mouseevent.getButton() == 2) {
+		System.out.println(mouseevent.getButton());
+		if (mouseevent.getButton() == MouseEvent.BUTTON2) {
 			mouseWheelDown = true;
 			mouseWheelX = mouseX;
 			mouseWheelY = mouseY;
 			return;
 		}
-		if (mouseevent.isMetaDown()) {
+		if (mouseevent.isMetaDown() || mouseevent.getButton() == MouseEvent.BUTTON3) {
 			eventMouseButtonPressed = 2;
 			mouseButtonPressed = 2;
 		} else {
