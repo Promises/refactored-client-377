@@ -231,29 +231,29 @@ public class GameObjectDefinition {
             needsTranslation = true;
         else
             needsTranslation = false;
-        Model animtedModel = new Model(modifiedModelColors == null, subModel, Animation.exists(animationId));
+        Model animatedModel = new Model(modifiedModelColors == null, subModel, Animation.exists(animationId));
         if (animationId != -1) {
-            animtedModel.createBones();
-            animtedModel.applyTransform(animationId);
-            animtedModel.triangleSkin = null;
-            animtedModel.vectorSkin = null;
+            animatedModel.createBones();
+            animatedModel.applyTransform(animationId);
+            animatedModel.triangleSkin = null;
+            animatedModel.vectorSkin = null;
         }
         while (face-- > 0)
-            animtedModel.rotate90Degrees();
+            animatedModel.rotate90Degrees();
         if (modifiedModelColors != null) {
             for (int k2 = 0; k2 < modifiedModelColors.length; k2++)
-                animtedModel.replaceColor(modifiedModelColors[k2], anIntArray792[k2]);
+                animatedModel.replaceColor(modifiedModelColors[k2], anIntArray792[k2]);
 
         }
         if (scale)
-            animtedModel.scaleT(modelSizeY, modelSizeZ, 9, modelSizeX);
+            animatedModel.scaleT(modelSizeY, modelSizeZ, 9, modelSizeX);
         if (needsTranslation)
-            animtedModel.translate(translateX, translateZ, translateY);
-        animtedModel.applyLighting(64 + modelLightFalloff, 768 + modelLightAmbient * 5, -50, -10, -50, !nonFlatShading);
+            animatedModel.translate(translateX, translateZ, translateY);
+        animatedModel.applyLighting(64 + modelLightFalloff, 768 + modelLightAmbient * 5, -50, -10, -50, !nonFlatShading);
         if (anInt794 == 1)
-            animtedModel.anInt1675 = animtedModel.modelHeight;
-        animatedModelCache.put(animtedModel, hash);
-        return animtedModel;
+            animatedModel.anInt1675 = animatedModel.modelHeight;
+        animatedModelCache.put(animatedModel, hash);
+        return animatedModel;
     }
 
     public boolean isModelCached() {
@@ -454,7 +454,7 @@ public class GameObjectDefinition {
         if (model == null)
             return null;
         if (adjustToTerrain || nonFlatShading)
-            model = new Model(adjustToTerrain, nonFlatShading, 0, model);
+            model = new Model(adjustToTerrain, nonFlatShading, model);
         if (adjustToTerrain) {
             int l1 = (vertexHeight + vertexHeightRight + vertexHeightTopRight + vertexHeightTop) / 4;
             for (int i2 = 0; i2 < model.vertexCount; i2++) {

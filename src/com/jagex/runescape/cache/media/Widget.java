@@ -28,7 +28,7 @@ public class Widget {
 	public int itemAmounts[];
 	public int unknownOne;
 	public int enabledHoveredColor;
-	public int anInt227;
+	public int animationDuration;
 	public int xOffset;
 	public boolean isInventory;
 	public String disabledText;
@@ -36,7 +36,7 @@ public class Widget {
 	public int childrenX[];
 	public boolean unknownTwo;
 	public int opcodes[][];
-	public int anInt235;
+	public int animationFrame;
 	public int type;
 	public TypeFace typeFaces;
 	public int height;

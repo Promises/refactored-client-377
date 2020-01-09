@@ -9,10 +9,10 @@ public class Rasterizer3D extends Rasterizer {
 	public static int anInt1525;
 	public static boolean aBoolean1526;
 	public static boolean lowMemory = true;
-	public static boolean aBoolean1528;
+	public static boolean restrictEdges;
 	public static boolean aBoolean1529;
 	public static boolean approximateAlphaBlending = true;
-	public static int anInt1531;
+	public static int alpha;
 	public static int centerX;
 	public static int centerY;
 	public static int[] anIntArray1534 = new int[512];
@@ -28,7 +28,7 @@ public class Rasterizer3D extends Rasterizer {
 	public static int anIntArrayArray1544[][];
 	public static int anIntArrayArray1545[][] = new int[50][];
 	public static int anIntArray1546[] = new int[50];
-	public static int anInt1547;
+	public static int textureGetCount;
 	public static int getRgbLookupTableId[] = new int[0x10000];
 	public static int anIntArrayArray1549[][] = new int[50][];
 
@@ -140,7 +140,7 @@ public class Rasterizer3D extends Rasterizer {
 	}
 
 	public static int[] method500(int i) {
-		anIntArray1546[i] = anInt1547++;
+		anIntArray1546[i] = textureGetCount++;
 		if (anIntArrayArray1545[i] != null)
 			return anIntArrayArray1545[i];
 		int ai[];
@@ -293,7 +293,7 @@ public class Rasterizer3D extends Rasterizer {
 		return (j << 16) + (k << 8) + l;
 	}
 
-	public static void method503(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2) {
+	public static void drawShadedTriangle(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2) {
 		int j2 = 0;
 		int k2 = 0;
 		if (j != i) {
@@ -680,7 +680,7 @@ public class Rasterizer3D extends Rasterizer {
 	public static void method504(int ai[], int i, int j, int k, int l, int i1, int j1, int k1) {
 		if (approximateAlphaBlending) {
 			int l1;
-			if (aBoolean1528) {
+			if (restrictEdges) {
 				if (i1 - l > 3)
 					l1 = (k1 - j1) / (i1 - l);
 				else
@@ -706,7 +706,7 @@ public class Rasterizer3D extends Rasterizer {
 				else
 					l1 = 0;
 			}
-			if (anInt1531 == 0) {
+			if (alpha == 0) {
 				while (--k >= 0) {
 					j = getRgbLookupTableId[j1 >> 8];
 					j1 += l1;
@@ -724,8 +724,8 @@ public class Rasterizer3D extends Rasterizer {
 					return;
 				}
 			} else {
-				int j2 = anInt1531;
-				int l2 = 256 - anInt1531;
+				int j2 = alpha;
+				int l2 = 256 - alpha;
 				while (--k >= 0) {
 					j = getRgbLookupTableId[j1 >> 8];
 					j1 += l1;
@@ -749,7 +749,7 @@ public class Rasterizer3D extends Rasterizer {
 		if (l >= i1)
 			return;
 		int i2 = (k1 - j1) / (i1 - l);
-		if (aBoolean1528) {
+		if (restrictEdges) {
 			if (i1 > Rasterizer.virtualBottomX)
 				i1 = Rasterizer.virtualBottomX;
 			if (l < 0) {
@@ -761,15 +761,15 @@ public class Rasterizer3D extends Rasterizer {
 		}
 		i += l;
 		k = i1 - l;
-		if (anInt1531 == 0) {
+		if (alpha == 0) {
 			do {
 				ai[i++] = getRgbLookupTableId[j1 >> 8];
 				j1 += i2;
 			} while (--k > 0);
 			return;
 		}
-		int k2 = anInt1531;
-		int i3 = 256 - anInt1531;
+		int k2 = alpha;
+		int i3 = 256 - alpha;
 		do {
 			j = getRgbLookupTableId[j1 >> 8];
 			j1 += i2;
@@ -1076,7 +1076,7 @@ public class Rasterizer3D extends Rasterizer {
 	}
 
 	public static void method506(int ai[], int i, int j, int k, int l, int i1) {
-		if (aBoolean1528) {
+		if (restrictEdges) {
 			if (i1 > Rasterizer.virtualBottomX)
 				i1 = Rasterizer.virtualBottomX;
 			if (l < 0)
@@ -1086,7 +1086,7 @@ public class Rasterizer3D extends Rasterizer {
 			return;
 		i += l;
 		k = i1 - l >> 2;
-		if (anInt1531 == 0) {
+		if (alpha == 0) {
 			while (--k >= 0) {
 				ai[i++] = j;
 				ai[i++] = j;
@@ -1098,8 +1098,8 @@ public class Rasterizer3D extends Rasterizer {
 
 			return;
 		}
-		int j1 = anInt1531;
-		int k1 = 256 - anInt1531;
+		int j1 = alpha;
+		int k1 = 256 - alpha;
 		j = ((j & 0xff00ff) * k1 >> 8 & 0xff00ff) + ((j & 0xff00) * k1 >> 8 & 0xff00);
 		while (--k >= 0) {
 			ai[i++] = j + ((ai[i] & 0xff00ff) * j1 >> 8 & 0xff00ff) + ((ai[i] & 0xff00) * j1 >> 8 & 0xff00);
@@ -1112,8 +1112,8 @@ public class Rasterizer3D extends Rasterizer {
 
 	}
 
-	public static void method507(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int j2, int k2,
-			int l2, int i3, int j3, int k3, int l3, int i4, int j4, int k4) {
+	public static void drawTexturedTriangle(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int j2, int k2,
+											int l2, int i3, int j3, int k3, int l3, int i4, int j4, int k4) {
 		int ai[] = method500(k4);
 		aBoolean1529 = !aBooleanArray1541[k4];
 		k2 = j2 - k2;
@@ -1652,7 +1652,7 @@ public class Rasterizer3D extends Rasterizer {
 			return;
 		int j3;
 		int k3;
-		if (aBoolean1528) {
+		if (restrictEdges) {
 			j3 = (k1 - j1) / (i1 - l);
 			if (i1 > Rasterizer.virtualBottomX)
 				i1 = Rasterizer.virtualBottomX;

@@ -2,20 +2,20 @@ package com.jagex.runescape.scene.tile;
 
 public class GenericTile {
 
-	public GenericTile(int i, int j, int k, int l, int texture, int rgbColor, boolean flat) {
-		anInt95 = i;
-		anInt96 = j;
-		anInt97 = k;
-		anInt98 = l;
+	public GenericTile(int colourA, int colourB, int colourC, int colourD, int texture, int rgbColor, boolean flat) {
+		this.colourA = colourA;
+		this.colourB = colourB;
+		this.colourC = colourC;
+		this.colourD = colourD;
 		this.texture = texture;
 		this.rgbColor = rgbColor;
 		this.flat = flat;
 	}
 
-	public int anInt95;
-	public int anInt96;
-	public int anInt97;
-	public int anInt98;
+	public int colourA;
+	public int colourB;
+	public int colourD;
+	public int colourC;
 	public int texture;
 	public boolean flat;
 	public int rgbColor;

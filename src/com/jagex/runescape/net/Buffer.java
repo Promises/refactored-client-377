@@ -29,13 +29,13 @@ public class Buffer extends CacheableNode {
 			Buffer buffer = null;
 			if (sizeMode == 0 && smallBufferCount > 0) {
 				smallBufferCount--;
-				buffer = (Buffer) smallBuffers.removeFirst();
+				buffer = (Buffer) smallBuffers.pop();
 			} else if (sizeMode == 1 && mediumBufferCount > 0) {
 				mediumBufferCount--;
-				buffer = (Buffer) mediumBuffers.removeFirst();
+				buffer = (Buffer) mediumBuffers.pop();
 			} else if (sizeMode == 2 && largeBufferCount > 0) {
 				largeBufferCount--;
-				buffer = (Buffer) largeBuffers.removeFirst();
+				buffer = (Buffer) largeBuffers.pop();
 			}
 			if (buffer != null) {
 				buffer.currentPosition = 0;

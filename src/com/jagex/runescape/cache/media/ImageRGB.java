@@ -199,7 +199,7 @@ public class ImageRGB extends Rasterizer {
 
 	}
 
-	public void drawImage(int y, int x) {
+	public void drawImage(int x, int y) {
 		x += offsetX;
 		y += offsetY;
 		int rasterizerOffset = x + y * Rasterizer.width;

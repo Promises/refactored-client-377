@@ -15,24 +15,24 @@ import com.jagex.runescape.util.TextUtils;
 public class Player extends Actor {
 
 	public int anInt1743;
-	public int anInt1744;
+	public int drawHeight;
 	public int anInt1745;
 	public Model playerModel;
-	public int anInt1748 = -1;
-	public long cachedModel = -1L;
-	public int anInt1750;
+	public int headIcon = -1;
+	private long cachedModel = -1L;
+	public int drawHeight2;
 	public String playerName;
-	public int appearance[] = new int[12];
+	public int[] appearance = new int[12];
 	public int combatLevel;
-	public long appearanceHash;
-	public int gender;
-	public int anInt1756 = -1;
+	private long appearanceHash;
+	private int gender;
+	public int isSkulled = -1;
 	public ActorDefinition npcDefinition;
 	public boolean visible = false;
-	public int anInt1759;
-	public int appearanceColors[] = new int[5];
+	public int skillLevel;
+	public int[] appearanceColors = new int[5];
 	public static Cache modelCache = new Cache(260);
-	public boolean aBoolean1763 = false;
+	public boolean preventRotation = false;
 	public int objectAppearanceStartTick;
 	public int objectAppearanceEndTick;
 	public int teamId;
@@ -175,7 +175,7 @@ public class Player extends Actor {
 			modelCache.put(model, hash);
 			cachedModel = hash;
 		}
-		if (aBoolean1763)
+		if (preventRotation)
 			return model;
 		Model empty = Model.EMPTY_MODEL;
 		empty.replaceWithModel(model, Animation.exists(primaryFrame) & Animation.exists(secondaryFrame)
@@ -204,7 +204,7 @@ public class Player extends Actor {
 			return null;
 		modelHeight = appearanceModel.modelHeight;
 		appearanceModel.oneSquareModel = true;
-		if (aBoolean1763)
+		if (preventRotation)
 			return appearanceModel;
 		if (super.graphic != -1 && super.currentAnimation != -1) {
 			SpotAnimation spotAnimation = SpotAnimation.cache[super.graphic];
@@ -221,7 +221,7 @@ public class Player extends Actor {
 					spotAnimationModel2.scaleT(spotAnimation.resizeZ, spotAnimation.resizeXY, 9, spotAnimation.resizeXY);
 				spotAnimationModel2.applyLighting(64 + spotAnimation.modelLightFalloff, 850 + spotAnimation.modelLightAmbient, -30, -50, -30, true);
 				Model[] models = { appearanceModel, spotAnimationModel2 };
-				appearanceModel = new Model(2, 0, models);
+				appearanceModel = new Model(models);
 			}
 		}
 		if (playerModel != null) {
@@ -230,7 +230,7 @@ public class Player extends Actor {
 			if (Game.pulseCycle >= objectAppearanceStartTick && Game.pulseCycle < objectAppearanceEndTick) {
 				Model model = playerModel;
 				model.translate(anInt1743 - super.worldX, anInt1745 - super.worldY,
-						anInt1744 - anInt1750);
+						drawHeight - drawHeight2);
 				if (super.nextStepOrientation == 512) {
 					model.rotate90Degrees();
 					model.rotate90Degrees();
@@ -241,7 +241,7 @@ public class Player extends Actor {
 				} else if (super.nextStepOrientation == 1536)
 					model.rotate90Degrees();
 				Model[] models = { appearanceModel, model };
-				appearanceModel = new Model(2, 0, models);
+				appearanceModel = new Model(models);
 				if (super.nextStepOrientation == 512)
 					model.rotate90Degrees();
 				else if (super.nextStepOrientation == 1024) {
@@ -253,7 +253,7 @@ public class Player extends Actor {
 					model.rotate90Degrees();
 				}
 				model.translate(super.worldX - anInt1743, super.worldY - anInt1745,
-						anInt1750 - anInt1744);
+						drawHeight2 - drawHeight);
 			}
 		}
 		appearanceModel.oneSquareModel = true;
@@ -263,8 +263,8 @@ public class Player extends Actor {
 	public void updateAppearance(Buffer buffer) {
 		buffer.currentPosition = 0;
 		gender = buffer.getUnsignedByte();
-		anInt1756 = buffer.getSignedByte();
-		anInt1748 = buffer.getSignedByte();
+		isSkulled = buffer.getSignedByte();
+		headIcon = buffer.getSignedByte();
 		npcDefinition = null;
 		teamId = 0;
 		for (int index = 0; index < 12; index++) {
@@ -316,7 +316,7 @@ public class Player extends Actor {
 			super.runAnimationId = -1;
 		playerName = TextUtils.formatName(TextUtils.longToName(buffer.getLong()));
 		combatLevel = buffer.getUnsignedByte();
-		anInt1759 = buffer.getUnsignedLEShort();
+		skillLevel = buffer.getUnsignedLEShort();
 		visible = true;
 		appearanceHash = 0L;
 		int k1 = appearance[5];
