@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class TypeFace extends Rasterizer {
 
-
+    // Todo: Clean up duplicate legacy methods, by checking if images are not loaded when they are needed instead
     public byte[][] characterPixels = new byte[256][];
     public int[] characterWidths = new int[256];
     public int[] characterHeights = new int[256];
