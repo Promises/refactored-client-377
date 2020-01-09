@@ -343,7 +343,7 @@ public class Game extends GameShell {
     private static int anInt1139;
     private int anInt1140 = -110;
     private long aLong1141;
-    private IndexedImage moderatorIcon[] = new IndexedImage[2];
+    private ImageRGB moderatorIcon[] = new ImageRGB[2];
     private byte aByte1143 = -80;
     private boolean characterEditChangeGenger = true;
     private int quakeTimes[] = new int[5];
@@ -5176,7 +5176,7 @@ public class Game extends GameShell {
             aClass50_Sub1_Sub1_Sub3_987.flipVertical();
 
             for (int i = 0; i < 2; i++)
-                moderatorIcon[i] = new IndexedImage(archiveMedia, "mod_icons", i);
+                moderatorIcon[i] = new ImageRGB(archiveMedia, "mod_icons", i);
 
             ImageRGB image = new ImageRGB(archiveMedia, "backleft1", 0);
             aClass18_906 = new ProducingGraphicsBuffer(image.width, image.height, getParentComponent());
@@ -5256,6 +5256,10 @@ public class Game extends GameShell {
             drawLoadingText(95, "Unpacking interfaces");
 
             TypeFace[] typefaces = {fontSmall, fontNormal, fontBold, fontFancy};
+
+            for(TypeFace typeFace: typefaces){
+                typeFace.setNameIcons(moderatorIcon, (int[])null);
+            }
 
             Widget.load(archiveInterface, typefaces, archiveMedia);
             drawLoadingText(100, "Preparing game engine");
@@ -9829,7 +9833,7 @@ public class Game extends GameShell {
                     && method148(13292, ((Player) obj).playerName))) {
                 method136(((Actor) (obj)), false, ((Actor) (obj)).modelHeight);
                 if (anInt932 > -1 && anInt939 < anInt940) {
-                    anIntArray944[anInt939] = fontBold.getStringWidth(((Actor) (obj)).forcedChat
+                    anIntArray944[anInt939] = fontBold.getDisplayedWidth(((Actor) (obj)).forcedChat
                     ) / 2;
                     anIntArray943[anInt939] = fontBold.characterDefaultHeight;
                     anIntArray941[anInt939] = anInt932;
@@ -9960,7 +9964,7 @@ public class Game extends GameShell {
                     );
                 }
                 if (anIntArray946[j] == 4) {
-                    int k3 = fontBold.getStringWidth(s);
+                    int k3 = fontBold.getDisplayedWidth(s);
                     int i4 = ((150 - anIntArray947[j]) * (k3 + 100)) / 150;
                     Rasterizer.setCoordinates(0, anInt932 - 50, 334, anInt932 + 50);
                     fontBold.drawString(s, (anInt932 + 50) - i4, anInt933 + 1, 0);
