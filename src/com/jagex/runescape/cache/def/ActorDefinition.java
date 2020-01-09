@@ -276,7 +276,7 @@ public class ActorDefinition {
         childModel.triangleSkin = null;
         childModel.vectorSkin = null;
         if (boundaryDimension == 1)
-            childModel.oneSquareModel = true;
+            childModel.singleTile = true;
         return childModel;
     }
 

@@ -70,7 +70,8 @@ public class Game extends GameShell {
     private int anInt848;
     private String friendUsernames[] = new String[200];
     private int anInt850;
-    private int anInt851;
+    public int chatboxScroll;
+    public static int cameraZoom = 1200;
     private int cameraAmplitude[] = new int[5];
     private int anInt853;
     private int anInt854 = 2;
@@ -158,7 +159,7 @@ public class Game extends GameShell {
     private int anIntArray947[] = new int[anInt940];
     private String aStringArray948[] = new String[anInt940];
     private String inputInputMessage = "";
-    private boolean aBoolean950 = false;
+    private boolean drawTabIcons = false;
     private int tickDelta;
     private static int SKILL_EXPERIENCE[];
     private boolean aBoolean953 = false;
@@ -195,7 +196,7 @@ public class Game extends GameShell {
     private IndexedImage aClass50_Sub1_Sub1_Sub3_985;
     private IndexedImage aClass50_Sub1_Sub1_Sub3_986;
     private IndexedImage aClass50_Sub1_Sub1_Sub3_987;
-    private int backDialogueId = -1;
+    public int backDialogueId = -1;
     private int placementX;
     private int placementY;
     private int cameraFrequency[] = new int[5];
@@ -283,7 +284,7 @@ public class Game extends GameShell {
     private int minimapHintY[] = new int[1000];
     private ImageRGB aClass50_Sub1_Sub1_Sub1Array1079[] = new ImageRGB[32];
     private int anInt1080 = 0x4d4233;
-    private int tabInterfaceIDs[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+    public int tabInterfaceIDs[] = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
     private static int anInt1082;
     private int anInt1083;
     private int anIntArray1084[];
@@ -308,7 +309,7 @@ public class Game extends GameShell {
     private String chatboxInput = "";
     private int cameraJitter[] = new int[5];
     private int anInt1106;
-    private int anInt1107 = 78;
+    private int chatboxScrollMax = 78;
     private ProducingGraphicsBuffer aClass18_1108;
     private ProducingGraphicsBuffer aClass18_1109;
     private ProducingGraphicsBuffer aClass18_1110;
@@ -367,7 +368,7 @@ public class Game extends GameShell {
     private int anIntArray1166[] = new int[256];
     public static Player localPlayer;
     private static int anInt1168;
-    private int openInterfaceId = -1;
+    public int openInterfaceId = -1;
     private int anInt1170;
     private int widgetSelected;
     private int anInt1172;
@@ -379,7 +380,7 @@ public class Game extends GameShell {
     private int anInt1178 = 300;
     private int anInt1257;
     private int anIntArray1180[] = new int[33];
-    private boolean redrawTabArea = false;
+    public boolean redrawTabArea = false;
     private ImageRGB aClass50_Sub1_Sub1_Sub1Array1182[] = new ImageRGB[20];
     private int menuActionRow;
     private String menuActionTexts[] = new String[500];
@@ -436,7 +437,7 @@ public class Game extends GameShell {
     private static int anInt1237;
     private int anInt1238;
     private boolean aBoolean1239 = false;
-    private boolean redrawChatbox = false;
+    public boolean redrawChatbox = false;
     private int lastAddress;
     private static boolean aBoolean1242 = true;
     private volatile boolean aBoolean1243 = false;
@@ -445,7 +446,7 @@ public class Game extends GameShell {
     private boolean inTutorialIsland;
     private ImageRGB minimapEdge;
     private MouseCapturer mouseCapturer;
-    private Widget aClass13_1249 = new Widget();
+    public Widget chatboxInterface = new Widget();
     private long aLong1172;
     private int cameraVertical = 128;
     private int cameraHorizontal;
@@ -479,7 +480,7 @@ public class Game extends GameShell {
     private LinkedList aClass6_1282 = new LinkedList();
     private boolean aBoolean1283 = false;
     private int anInt1284;
-    private int currentTabId = 3;
+    public int currentTabId = 3;
     private int anIntArray1286[] = new int[33];
     private int anInt1287 = 0x332d25;
     private ImageRGB aClass50_Sub1_Sub1_Sub1Array1288[] = new ImageRGB[32];
@@ -764,7 +765,7 @@ public class Game extends GameShell {
             openInvOverLayId = -1;
             redrawTabArea = true;
             aBoolean1239 = false;
-            aBoolean950 = true;
+            drawTabIcons = true;
         }
         if (backDialogueId != -1) {
             method44(backDialogueId);
@@ -1033,85 +1034,85 @@ public class Game extends GameShell {
                     && tabInterfaceIDs[0] != -1) {
                 redrawTabArea = true;
                 currentTabId = 0;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 569 && super.clickX <= 599 && super.clickY >= 168 && super.clickY < 205
                     && tabInterfaceIDs[1] != -1) {
                 redrawTabArea = true;
                 currentTabId = 1;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 597 && super.clickX <= 627 && super.clickY >= 168 && super.clickY < 205
                     && tabInterfaceIDs[2] != -1) {
                 redrawTabArea = true;
                 currentTabId = 2;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 625 && super.clickX <= 669 && super.clickY >= 168 && super.clickY < 203
                     && tabInterfaceIDs[3] != -1) {
                 redrawTabArea = true;
                 currentTabId = 3;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 666 && super.clickX <= 696 && super.clickY >= 168 && super.clickY < 205
                     && tabInterfaceIDs[4] != -1) {
                 redrawTabArea = true;
                 currentTabId = 4;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 694 && super.clickX <= 724 && super.clickY >= 168 && super.clickY < 205
                     && tabInterfaceIDs[5] != -1) {
                 redrawTabArea = true;
                 currentTabId = 5;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 722 && super.clickX <= 756 && super.clickY >= 169 && super.clickY < 205
                     && tabInterfaceIDs[6] != -1) {
                 redrawTabArea = true;
                 currentTabId = 6;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 540 && super.clickX <= 574 && super.clickY >= 466 && super.clickY < 502
                     && tabInterfaceIDs[7] != -1) {
                 redrawTabArea = true;
                 currentTabId = 7;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 572 && super.clickX <= 602 && super.clickY >= 466 && super.clickY < 503
                     && tabInterfaceIDs[8] != -1) {
                 redrawTabArea = true;
                 currentTabId = 8;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 599 && super.clickX <= 629 && super.clickY >= 466 && super.clickY < 503
                     && tabInterfaceIDs[9] != -1) {
                 redrawTabArea = true;
                 currentTabId = 9;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 627 && super.clickX <= 671 && super.clickY >= 467 && super.clickY < 502
                     && tabInterfaceIDs[10] != -1) {
                 redrawTabArea = true;
                 currentTabId = 10;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 669 && super.clickX <= 699 && super.clickY >= 466 && super.clickY < 503
                     && tabInterfaceIDs[11] != -1) {
                 redrawTabArea = true;
                 currentTabId = 11;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 696 && super.clickX <= 726 && super.clickY >= 466 && super.clickY < 503
                     && tabInterfaceIDs[12] != -1) {
                 redrawTabArea = true;
                 currentTabId = 12;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             if (super.clickX >= 724 && super.clickX <= 758 && super.clickY >= 466 && super.clickY < 502
                     && tabInterfaceIDs[13] != -1) {
                 redrawTabArea = true;
                 currentTabId = 13;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
         }
     }
@@ -2090,7 +2091,7 @@ public class Game extends GameShell {
                     method44(openInvOverLayId);
                     openInvOverLayId = -1;
                     redrawTabArea = true;
-                    aBoolean950 = true;
+                    drawTabIcons = true;
                 }
                 if (anInt1053 != -1) {
                     method44(anInt1053);
@@ -2273,7 +2274,7 @@ public class Game extends GameShell {
                     method44(openInvOverLayId);
                     openInvOverLayId = -1;
                     redrawTabArea = true;
-                    aBoolean950 = true;
+                    drawTabIcons = true;
                 }
                 if (backDialogueId != -1) {
                     method44(backDialogueId);
@@ -2431,7 +2432,7 @@ public class Game extends GameShell {
                     redrawChatbox = true;
                 }
                 redrawTabArea = true;
-                aBoolean950 = true;
+                drawTabIcons = true;
                 aBoolean1239 = false;
                 opcode = -1;
                 return true;
@@ -2527,7 +2528,7 @@ public class Game extends GameShell {
             if (opcode == 252) {
                 currentTabId = buffer.getByteNegated();
                 redrawTabArea = true;
-                aBoolean950 = true;
+                drawTabIcons = true;
                 opcode = -1;
                 return true;
             }
@@ -2624,7 +2625,7 @@ public class Game extends GameShell {
                     method44(openInvOverLayId);
                     openInvOverLayId = -1;
                     redrawTabArea = true;
-                    aBoolean950 = true;
+                    drawTabIcons = true;
                 }
                 if (backDialogueId != -1) {
                     method44(backDialogueId);
@@ -2682,7 +2683,7 @@ public class Game extends GameShell {
                     redrawChatbox = true;
                 }
                 redrawTabArea = true;
-                aBoolean950 = true;
+                drawTabIcons = true;
                 aBoolean1239 = false;
                 opcode = -1;
                 return true;
@@ -3014,7 +3015,7 @@ public class Game extends GameShell {
                     tabInterfaceIDs[sidebarIcon] = interfaceId;
                 }
                 redrawTabArea = true;
-                aBoolean950 = true;
+                drawTabIcons = true;
                 opcode = -1;
                 return true;
             }
@@ -3628,7 +3629,7 @@ public class Game extends GameShell {
         }
     }
 
-    private void method42(int i, int j, Widget class13, byte byte0, int k, int l, int i1, int j1, int k1) {
+    private void scrollInterface(int i, int j, Widget class13, byte byte0, int k, int l, int i1, int j1, int k1) {
         if (aBoolean1127)
             anInt1303 = 32;
         else
@@ -5393,7 +5394,7 @@ public class Game extends GameShell {
             if (child.type == 0) {
                 method66(k2, child, j, child.scrollPosition, j2, i1, 23658, k1);
                 if (child.scrollLimit > child.height)
-                    method42(child.scrollLimit, k2, child, (byte) 102, k1, j, i1, child.height, j2
+                    scrollInterface(child.scrollLimit, k2, child, (byte) 102, k1, j, i1, child.height, j2
                             + child.width);
             } else {
                 if (child.actionType == 1 && i1 >= j2 && k1 >= k2 && i1 < j2 + child.width
@@ -5939,7 +5940,7 @@ public class Game extends GameShell {
             aClass18_914.drawGraphics(0, 338, super.gameGraphics);
             redrawTabArea = true;
             redrawChatbox = true;
-            aBoolean950 = true;
+            drawTabIcons = true;
             redrawChatMode = true;
             if (loadingStage != 2) {
                 gameScreenImageProducer.drawGraphics(4, 4, super.gameGraphics);
@@ -5969,25 +5970,25 @@ public class Game extends GameShell {
             redrawTabArea = false;
         }
         if (backDialogueId == -1 && inputType == 0) {
-            aClass13_1249.scrollPosition = anInt1107 - anInt851 - 77;
+            chatboxInterface.scrollPosition = chatboxScrollMax - chatboxScroll - 77;
             if (super.mouseX > 448 && super.mouseX < 560 && super.mouseY > 332)
-                method42(anInt1107, 0, aClass13_1249, (byte) 102, super.mouseY - 357, -1, super.mouseX - 17, 77, 463);
-            int j = anInt1107 - 77 - aClass13_1249.scrollPosition;
+                scrollInterface(chatboxScrollMax, 0, chatboxInterface, (byte) 102, super.mouseY - 357, -1, super.mouseX - 17, 77, 463);
+            int j = chatboxScrollMax - 77 - chatboxInterface.scrollPosition;
             if (j < 0)
                 j = 0;
-            if (j > anInt1107 - 77)
-                j = anInt1107 - 77;
-            if (anInt851 != j) {
-                anInt851 = j;
+            if (j > chatboxScrollMax - 77)
+                j = chatboxScrollMax - 77;
+            if (chatboxScroll != j) {
+                chatboxScroll = j;
                 redrawChatbox = true;
             }
         }
         if (backDialogueId == -1 && inputType == 3) {
             int k = anInt862 * 14 + 7;
-            aClass13_1249.scrollPosition = anInt865;
+            chatboxInterface.scrollPosition = anInt865;
             if (super.mouseX > 448 && super.mouseX < 560 && super.mouseY > 332)
-                method42(k, 0, aClass13_1249, (byte) 102, super.mouseY - 357, -1, super.mouseX - 17, 77, 463);
-            int i1 = aClass13_1249.scrollPosition;
+                scrollInterface(k, 0, chatboxInterface, (byte) 102, super.mouseY - 357, -1, super.mouseX - 17, 77, 463);
+            int i1 = chatboxInterface.scrollPosition;
             if (i1 < 0)
                 i1 = 0;
             if (i1 > k - 77)
@@ -6019,14 +6020,14 @@ public class Game extends GameShell {
             aClass18_1157.drawGraphics(550, 4, super.gameGraphics);
         }
         if (anInt1213 != -1)
-            aBoolean950 = true;
-        if (aBoolean950) {
+            drawTabIcons = true;
+        if (drawTabIcons) {
             if (anInt1213 != -1 && anInt1213 == currentTabId) {
                 anInt1213 = -1;
                 outBuffer.putOpcode(119);
                 outBuffer.putByte(currentTabId);
             }
-            aBoolean950 = false;
+            drawTabIcons = false;
             aClass18_1110.createRasterizer();
             anIndexedImage1054.drawImage(0, 0);
             if (openInvOverLayId == -1) {
@@ -6979,7 +6980,7 @@ public class Game extends GameShell {
                 if (chatMessages[i] != null) {
                     String name = chatPlayerNames[i];
                     int type = chatTypes[i];
-                    int y = (70 - line * 14) + anInt851;
+                    int y = (70 - line * 14) + chatboxScroll;
                     byte privilege = 0;
 
                     if (name != null && name.startsWith("@cr1@")) {
@@ -7086,12 +7087,12 @@ public class Game extends GameShell {
 
             Rasterizer.resetCoordinates();
 
-            anInt1107 = line * 14 + 7;
+            chatboxScrollMax = line * 14 + 7;
 
-            if (anInt1107 < 78)
-                anInt1107 = 78;
+            if (chatboxScrollMax < 78)
+                chatboxScrollMax = 78;
 
-            method56(true, anInt1107 - anInt851 - 77, 463, 77, anInt1107, 0);
+            method56(true, chatboxScrollMax - chatboxScroll - 77, 463, 77, chatboxScrollMax, 0);
 
             String name;
 
@@ -7715,7 +7716,7 @@ public class Game extends GameShell {
         int yawDifference = 2048 - yaw & 0x7ff;
         int xOffset = 0;
         int zOffset = 0;
-        int yOffset = 600 + pitch * 3;
+        int yOffset = cameraZoom + pitch * 3;
 
         if (pitchDifference != 0) {
             int sine = Model.SINE[pitchDifference];
@@ -8571,7 +8572,7 @@ public class Game extends GameShell {
             if (chatMessages[i1] == null)
                 continue;
             int j1 = chatTypes[i1];
-            int k1 = (70 - l * 14) + anInt851 + 4;
+            int k1 = (70 - l * 14) + chatboxScroll + 4;
             if (k1 < -20)
                 break;
             String s = chatPlayerNames[i1];
@@ -9408,7 +9409,7 @@ public class Game extends GameShell {
             if (anInt1173 == 16) {
                 redrawTabArea = true;
                 currentTabId = 3;
-                aBoolean950 = true;
+                drawTabIcons = true;
             }
             return;
         }

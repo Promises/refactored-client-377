@@ -51,7 +51,7 @@ public class Npc extends Actor {
 			}
 		}
 		if (npcDefinition.boundaryDimension == 1)
-			model.oneSquareModel = true;
+			model.singleTile = true;
 		return model;
 	}
 

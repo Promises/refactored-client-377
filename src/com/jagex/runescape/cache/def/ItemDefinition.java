@@ -418,7 +418,7 @@ public class ItemDefinition {
 
 		}
 		model.applyLighting(64 + ambience, 768 + diffusion, -50, -10, -50, true);
-		model.oneSquareModel = true;
+		model.singleTile = true;
 		modelCache.put(model, id);
 		return model;
 	}

@@ -203,7 +203,7 @@ public class Player extends Actor {
 		if (appearanceModel == null)
 			return null;
 		modelHeight = appearanceModel.modelHeight;
-		appearanceModel.oneSquareModel = true;
+		appearanceModel.singleTile = true;
 		if (preventRotation)
 			return appearanceModel;
 		if (super.graphic != -1 && super.currentAnimation != -1) {
@@ -256,7 +256,7 @@ public class Player extends Actor {
 						drawHeight2 - drawHeight);
 			}
 		}
-		appearanceModel.oneSquareModel = true;
+		appearanceModel.singleTile = true;
 		return appearanceModel;
 	}
 
