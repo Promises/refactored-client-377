@@ -61,4 +61,10 @@ public class Configuration {
 
     public static final String USERNAME = "Promises";
     public static final String PASSWORD = "Testing";
+
+    /**
+     * Do you want to render roofs
+     */
+    public static final boolean ROOFS_ENABLED = true;
+
 }

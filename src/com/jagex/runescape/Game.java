@@ -577,9 +577,7 @@ public class Game extends GameShell {
             SignLink.initialize(InetAddress.getLocalHost());
             Game cl = new Game();
             cl.initializeApplication(765, 503);
-            return;
         } catch (Exception exception) {
-            return;
         }
     }
 
@@ -1185,7 +1183,6 @@ public class Game extends GameShell {
             }
             if (i2 < secondaryCameraVertical) {
                 secondaryCameraVertical += (i2 - secondaryCameraVertical) / 80;
-                return;
             }
         } catch (Exception _ex) {
             SignLink.reportError("glfc_ex " + localPlayer.worldX + ","
@@ -1226,12 +1223,10 @@ public class Game extends GameShell {
 
     private void method24(boolean flag, byte abyte0[], int i) {
         if (!musicEnabled) {
-            return;
         } else {
             SignLink.fadeMidi = flag ? 1 : 0;
             SignLink.saveMidi(abyte0, abyte0.length);
             i = 71 / i;
-            return;
         }
     }
 
@@ -1593,11 +1588,9 @@ public class Game extends GameShell {
                 gameConnection.write(outBuffer.currentPosition, 0, outBuffer.buffer);
                 outBuffer.currentPosition = 0;
                 anInt872 = 0;
-                return;
             }
         } catch (IOException _ex) {
             dropClient();
-            return;
         } catch (Exception exception) {
             logout();
         }
@@ -4217,7 +4210,6 @@ public class Game extends GameShell {
                     redrawTabArea = true;
                 if (menuScreenArea == 2) {
                     redrawChatbox = true;
-                    return;
                 }
             }
         } else {
@@ -4268,10 +4260,8 @@ public class Game extends GameShell {
             int j2 = (int) (Math.sin(d) * 63D);
             int k2 = (int) (Math.cos(d) * 57D);
             minimapEdge.method466(256, 15, (94 + j2 + 4) - 10, 15, 20, anInt1119, 20, d, 83 - k2 - 20);
-            return;
         } else {
             drawOnMinimap(sprite, x, y);
-            return;
         }
     }
 
@@ -4347,9 +4337,7 @@ public class Game extends GameShell {
             logout();
         try {
             class17.close();
-            return;
         } catch (Exception _ex) {
-            return;
         }
     }
 
@@ -6832,7 +6820,6 @@ public class Game extends GameShell {
                 firstMenuOperand[menuActionRow] = j;
                 secondMenuOperand[menuActionRow] = i;
                 menuActionRow++;
-                return;
             }
         } else {
             if (actorDefinition.actions != null) {
@@ -8802,15 +8789,11 @@ public class Game extends GameShell {
             return SignLink.saveWave(abyte0, j);
     }
 
-    private int getWorldDrawPlane(byte byte0) {
-        int i = 3;
-        if (byte0 == aByte956) {
-            byte0 = 0;
-//            System.out.println("byte");
-        } else {
-            startup();
-//            System.out.println("startup");
+    private int getWorldDrawPlane() {
+        if (!ROOFS_ENABLED) {
+            return plane;
         }
+        int i = 3;
         if (cameraVerticalRotation < 310) {
             anInt978++;
             if (anInt978 > 1457) {
@@ -8896,10 +8879,11 @@ public class Game extends GameShell {
         return i;
     }
 
-    private int getCameraPlaneCutscene(int i) {
+    private int getCameraPlaneCutscene() {
+        if(!ROOFS_ENABLED){
+            return plane;
+        }
         int j = getFloorDrawHeight(plane, cameraX, cameraY);
-        while (i >= 0)
-            opcode = buffer.getUnsignedByte();
         if (j - cameraZ < 800 && (currentSceneTileFlags[plane][cameraX >> 7][cameraY >> 7] & 4) != 0)
             return plane;
         else
@@ -8911,10 +8895,8 @@ public class Game extends GameShell {
             i = 10;
         if (SignLink.applet != null) {
             SignLink.startThread(runnable, i);
-            return;
         } else {
             super.startRunnable(runnable, i);
-            return;
         }
     }
 
@@ -10011,7 +9993,6 @@ public class Game extends GameShell {
         while (i >= 0)
             aBoolean1242 = !aBoolean1242;
         if (chatboxProducingGraphicsBuffer != null) {
-            return;
         } else {
             method141();
             super.imageProducer = null;
@@ -10037,7 +10018,6 @@ public class Game extends GameShell {
             aBoolean1046 = true;
             gameScreenImageProducer.createRasterizer();
             Rasterizer3D.lineOffsets = viewportOffsets;
-            return;
         }
     }
 
@@ -10355,11 +10335,9 @@ public class Game extends GameShell {
         if (l > 2500) {
             sprite.method467(minimapBackgroundImage, 83 - l1 - sprite.maxHeight
                     / 2 - 4, -49993, ((94 + k1) - sprite.maxWidth / 2) + 4);
-            return;
         } else {
             sprite.drawImage(((94 + k1) - sprite.maxWidth / 2) + 4, 83 - l1 - sprite.maxHeight / 2 - 4
             );
-            return;
         }
     }
 
@@ -10836,11 +10814,9 @@ public class Game extends GameShell {
         if (k >= 50) {
             anInt932 = Rasterizer3D.centerX + (i << 9) / k;
             anInt933 = Rasterizer3D.centerY + (i1 << 9) / k;
-            return;
         } else {
             anInt932 = -1;
             anInt933 = -1;
-            return;
         }
     }
 
@@ -11536,7 +11512,6 @@ public class Game extends GameShell {
                 statusLineTwo = "Enter your username & password.";
                 loginScreenState = 2;
                 anInt977 = 0;
-                return;
             }
         } else {
             if (loginScreenState == 2) {
@@ -11763,9 +11738,9 @@ public class Game extends GameShell {
         }
         int cameraPlane;
         if (!cutsceneActive)
-            cameraPlane = getWorldDrawPlane((byte) 1);
+            cameraPlane = getWorldDrawPlane();
         else
-            cameraPlane = getCameraPlaneCutscene(-276);
+            cameraPlane = getCameraPlaneCutscene();
         int x = cameraX;
         int y = cameraY;
         int z = cameraZ;
