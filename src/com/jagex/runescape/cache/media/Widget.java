@@ -35,7 +35,7 @@ public class Widget {
 	public int scrollPosition;
 	public int childrenX[];
 	public boolean unknownTwo;
-	public int opcodes[][];
+	public int cs1opcodes[][]; // [idx][0] opcode [idx][1] configid
 	public int animationFrame;
 	public int type;
 	public TypeFace typeFaces;
@@ -176,14 +176,14 @@ public class Widget {
 			}
 
 		}
-		int opcodeCount = buffer.getUnsignedByte();
-		if (opcodeCount > 0) {
-			widget.opcodes = new int[opcodeCount][];
-			for (int opcode = 0; opcode < opcodeCount; opcode++) {
-				int subOpcodeCount = buffer.getUnsignedLEShort();
-				widget.opcodes[opcode] = new int[subOpcodeCount];
-				for (int subOpcode = 0; subOpcode < subOpcodeCount; subOpcode++)
-					widget.opcodes[opcode][subOpcode] = buffer.getUnsignedLEShort();
+		int cs1length = buffer.getUnsignedByte();
+		if (cs1length > 0) {
+			widget.cs1opcodes = new int[cs1length][];
+			for (int blockIdx = 0; blockIdx < cs1length; blockIdx++) {
+				int cs1blocklen = buffer.getUnsignedLEShort();
+				widget.cs1opcodes[blockIdx] = new int[cs1blocklen];
+				for (int cs1opcIdx = 0; cs1opcIdx < cs1blocklen; cs1opcIdx++)
+					widget.cs1opcodes[blockIdx][cs1opcIdx] = buffer.getUnsignedLEShort();
 
 			}
 

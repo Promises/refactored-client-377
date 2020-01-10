@@ -1,6 +1,5 @@
 package com.jagex.runescape;
 
-import java.applet.AppletContext;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -517,7 +516,7 @@ public class Game extends GameShell {
     private int soundType[] = new int[50];
     private int anInt1322;
     private LinkedList groundItems[][][] = new LinkedList[4][104][104];
-    private int anInt1324;
+    private int runEnergy;
     public static int pulseCycle;
     private int characterEditIdentityKits[] = new int[7];
     private int currentSong = -1;
@@ -2943,7 +2942,7 @@ public class Game extends GameShell {
             if (opcode == 125) {
                 if (currentTabId == 12)
                     redrawTabArea = true;
-                anInt1324 = buffer.getUnsignedByte();
+                runEnergy = buffer.getUnsignedByte();
                 opcode = -1;
                 return true;
             }
@@ -7382,7 +7381,7 @@ public class Game extends GameShell {
             if (widgetChild.type == 0)
                 flag |= method88(tickDelta, widgetChild.id);
             if (widgetChild.type == 6 && (widgetChild.disabledAnimation != -1 || widgetChild.enabledAnimation != -1)) {
-                boolean flag1 = method95(widgetChild);
+                boolean flag1 = componentEnabled(widgetChild);
                 int enabledState;
                 if (flag1)
                     enabledState = widgetChild.enabledAnimation;
@@ -7745,22 +7744,23 @@ public class Game extends GameShell {
         cameraHorizontalRotation = yaw;
     }
 
-    private boolean method95(Widget widget) {
-        if (widget.conditionTypes == null)
+    private boolean componentEnabled(Widget widget) {
+        if (widget.conditionTypes == null) {
             return false;
-        for (int j = 0; j < widget.conditionTypes.length; j++) {
-            int k = method129(3, j, widget);
-            int l = widget.conditionValues[j];
-            if (widget.conditionTypes[j] == 2) {
-                if (k >= l)
+        }
+        for (int id = 0; id < widget.conditionTypes.length; id++) {
+            int value = parseCS1(widget, id);
+            int requirement = widget.conditionValues[id];
+            if (widget.conditionTypes[id] == 2) {
+                if (value >= requirement)
                     return false;
-            } else if (widget.conditionTypes[j] == 3) {
-                if (k <= l)
+            } else if (widget.conditionTypes[id] == 3) {
+                if (value <= requirement)
                     return false;
-            } else if (widget.conditionTypes[j] == 4) {
-                if (k == l)
+            } else if (widget.conditionTypes[id] == 4) {
+                if (value == requirement)
                     return false;
-            } else if (k != l)
+            } else if (value != requirement)
                 return false;
         }
 
@@ -9177,8 +9177,8 @@ public class Game extends GameShell {
             outBuffer.putOpcode(79);
             outBuffer.putShort(second);
             Widget widget = Widget.forId(second);
-            if (widget.opcodes != null && widget.opcodes[0][0] == 5) {
-                int setting = widget.opcodes[0][1];
+            if (widget.cs1opcodes != null && widget.cs1opcodes[0][0] == 5) {
+                int setting = widget.cs1opcodes[0][1];
                 widgetSettings[setting] = 1 - widgetSettings[setting];
                 updateVarp(0, setting);
                 redrawTabArea = true;
@@ -9688,8 +9688,8 @@ public class Game extends GameShell {
             outBuffer.putOpcode(79);
             outBuffer.putShort(second);
             Widget widget = Widget.forId(second);
-            if (widget.opcodes != null && widget.opcodes[0][0] == 5) {
-                int operand = widget.opcodes[0][1];
+            if (widget.cs1opcodes != null && widget.cs1opcodes[0][0] == 5) {
+                int operand = widget.cs1opcodes[0][1];
                 if (widgetSettings[operand] != widget.conditionValues[0]) {
                     widgetSettings[operand] = widget.conditionValues[0];
                     updateVarp(0, operand);
@@ -10216,107 +10216,106 @@ public class Game extends GameShell {
 
     }
 
-    private int method129(int i, int j, Widget class13) {
-        if (i != 3)
-            return anInt1222;
-        if (class13.opcodes == null || j >= class13.opcodes.length)
+    private int parseCS1(Widget widget, int id) {
+        if (widget.cs1opcodes == null || id >= widget.cs1opcodes.length)
             return -2;
         try {
-            int ai[] = class13.opcodes[j];
-            int k = 0;
-            int l = 0;
-            int i1 = 0;
+            int opcodes[] = widget.cs1opcodes[id];
+            int result = 0;
+            int counter = 0;
+            int type = 0;
             do {
-                int j1 = ai[l++];
-                int k1 = 0;
-                byte byte0 = 0;
-                if (j1 == 0)
-                    return k;
-                if (j1 == 1)
-                    k1 = skillLevel[ai[l++]];
-                if (j1 == 2)
-                    k1 = skillMaxLevel[ai[l++]];
-                if (j1 == 3)
-                    k1 = skillExperience[ai[l++]];
-                if (j1 == 4) {
-                    Widget class13_1 = Widget.forId(ai[l++]);
-                    int k2 = ai[l++];
-                    if (k2 >= 0 && k2 < ItemDefinition.count && (!ItemDefinition.lookup(k2).members || memberServer)) {
-                        for (int j3 = 0; j3 < class13_1.items.length; j3++)
-                            if (class13_1.items[j3] == k2 + 1)
-                                k1 += class13_1.itemAmounts[j3];
+                int opcode = opcodes[counter++];
+                int value = 0;
+                byte tempType = 0;
+                if (opcode == 0)
+                    return result;
+                if (opcode == 1)
+                    value = skillLevel[opcodes[counter++]];
+                if (opcode == 2)
+                    value = skillMaxLevel[opcodes[counter++]];
+                if (opcode == 3)
+                    value = skillExperience[opcodes[counter++]];
+                if (opcode == 4) {
+                    Widget widget1 = Widget.forId(opcodes[counter++]);
+                    int itemId = opcodes[counter++];
+                    if (itemId >= 0 && itemId < ItemDefinition.count && (!ItemDefinition.lookup(itemId).members || memberServer)) {
+                        for (int item = 0; item < widget1.items.length; item++)
+                            if (widget1.items[item] == itemId + 1)
+                                value += widget1.itemAmounts[item];
 
                     }
                 }
-                if (j1 == 5)
-                    k1 = widgetSettings[ai[l++]];
-                if (j1 == 6)
-                    k1 = SKILL_EXPERIENCE[skillMaxLevel[ai[l++]] - 1];
-                if (j1 == 7)
-                    k1 = (widgetSettings[ai[l++]] * 100) / 46875;
-                if (j1 == 8)
-                    k1 = localPlayer.combatLevel;
-                if (j1 == 9) {
+                if (opcode == 5)
+                    value = widgetSettings[opcodes[counter++]];
+                if (opcode == 6)
+                    value = SKILL_EXPERIENCE[skillMaxLevel[opcodes[counter++]] - 1];
+                if (opcode == 7)
+                    value = (widgetSettings[opcodes[counter++]] * 100) / 46875;
+                if (opcode == 8)
+                    value = localPlayer.combatLevel;
+                if (opcode == 9) {
                     for (int l1 = 0; l1 < SkillConstants.SKILL_COUNT; l1++)
                         if (SkillConstants.SKILL_TOGGLES[l1])
-                            k1 += skillMaxLevel[l1];
+                            value += skillMaxLevel[l1];
 
                 }
-                if (j1 == 10) {
-                    Widget class13_2 = Widget.forId(ai[l++]);
-                    int l2 = ai[l++] + 1;
-                    if (l2 >= 0 && l2 < ItemDefinition.count && (!ItemDefinition.lookup(l2).members || memberServer)) {
-                        for (int k3 = 0; k3 < class13_2.items.length; k3++) {
-                            if (class13_2.items[k3] != l2)
+                if (opcode == 10) {
+                    Widget widget1 = Widget.forId(opcodes[counter++]);
+                    int itemId = opcodes[counter++] + 1;
+                    if (itemId >= 0 && itemId < ItemDefinition.count && (!ItemDefinition.lookup(itemId).members || memberServer)) {
+                        for (int item = 0; item < widget1.items.length; item++) {
+                            if (widget1.items[item] == itemId) {
                                 continue;
-                            k1 = 0x3b9ac9ff;
+                            }
+                            value = 999999999;
                             break;
                         }
 
                     }
                 }
-                if (j1 == 11)
-                    k1 = anInt1324;
-                if (j1 == 12)
-                    k1 = userWeight;
-                if (j1 == 13) {
-                    int i2 = widgetSettings[ai[l++]];
-                    int i3 = ai[l++];
-                    k1 = (i2 & 1 << i3) == 0 ? 0 : 1;
+                if (opcode == 11)
+                    value = runEnergy;
+                if (opcode == 12)
+                    value = userWeight;
+                if (opcode == 13) {
+                    int i2 = widgetSettings[opcodes[counter++]];
+                    int i3 = opcodes[counter++];
+                    value = (i2 & 1 << i3) == 0 ? 0 : 1;
                 }
-                if (j1 == 14) {
-                    int j2 = ai[l++];
-                    Varbit class49 = Varbit.cache[j2];
-                    int l3 = class49.configId;
-                    int i4 = class49.leastSignificantBit;
-                    int j4 = class49.mostSignificantBit;
+                if (opcode == 14) {
+                    int j2 = opcodes[counter++];
+                    Varbit varbit = Varbit.cache[j2];
+                    int l3 = varbit.configId;
+                    int i4 = varbit.leastSignificantBit;
+                    int j4 = varbit.mostSignificantBit;
                     int k4 = BITFIELD_MAX_VALUE[j4 - i4];
-                    k1 = widgetSettings[l3] >> i4 & k4;
+                    value = widgetSettings[l3] >> i4 & k4;
                 }
-                if (j1 == 15)
-                    byte0 = 1;
-                if (j1 == 16)
-                    byte0 = 2;
-                if (j1 == 17)
-                    byte0 = 3;
-                if (j1 == 18)
-                    k1 = (localPlayer.worldX >> 7) + nextTopLeftTileX;
-                if (j1 == 19)
-                    k1 = (localPlayer.worldY >> 7) + nextTopRightTileY;
-                if (j1 == 20)
-                    k1 = ai[l++];
-                if (byte0 == 0) {
-                    if (i1 == 0)
-                        k += k1;
-                    if (i1 == 1)
-                        k -= k1;
-                    if (i1 == 2 && k1 != 0)
-                        k /= k1;
-                    if (i1 == 3)
-                        k *= k1;
-                    i1 = 0;
+                if (opcode == 15)
+                    tempType = 1;
+                if (opcode == 16)
+                    tempType = 2;
+                if (opcode == 17)
+                    tempType = 3;
+                if (opcode == 18)
+                    value = (localPlayer.worldX >> 7) + nextTopLeftTileX;
+                if (opcode == 19)
+                    value = (localPlayer.worldY >> 7) + nextTopRightTileY;
+                if (opcode == 20)
+                    value = opcodes[counter++];
+                if (tempType == 0) {
+                    if (type == 0)
+                        result += value;
+                    if (type == 1)
+                        result -= value;
+                    if (type == 2 && value != 0)
+                        result /= value;
+                    if (type == 3)
+                        result *= value;
+                    type = 0;
                 } else {
-                    i1 = byte0;
+                    type = tempType;
                 }
             } while (true);
         } catch (Exception _ex) {
@@ -11109,7 +11108,7 @@ public class Game extends GameShell {
                             || anInt1302 == child.id)
                         flag = true;
                     int j3;
-                    if (method95(child)) {
+                    if (componentEnabled(child)) {
                         j3 = child.enabledColor;
                         if (flag && child.enabledHoveredColor != 0)
                             j3 = child.enabledHoveredColor;
@@ -11137,7 +11136,7 @@ public class Game extends GameShell {
                             || anInt1302 == child.id)
                         flag1 = true;
                     int j4;
-                    if (method95(child)) {
+                    if (componentEnabled(child)) {
                         j4 = child.enabledColor;
                         if (flag1 && child.enabledHoveredColor != 0)
                             j4 = child.enabledHoveredColor;
@@ -11164,31 +11163,31 @@ public class Game extends GameShell {
                                 int k8 = s.indexOf("%1");
                                 if (k8 == -1)
                                     break;
-                                s = s.substring(0, k8) + method89(method129(3, 0, child), 8) + s.substring(k8 + 2);
+                                s = s.substring(0, k8) + method89(parseCS1(child, 0), 8) + s.substring(k8 + 2);
                             } while (true);
                             do {
                                 int l8 = s.indexOf("%2");
                                 if (l8 == -1)
                                     break;
-                                s = s.substring(0, l8) + method89(method129(3, 1, child), 8) + s.substring(l8 + 2);
+                                s = s.substring(0, l8) + method89(parseCS1(child, 1), 8) + s.substring(l8 + 2);
                             } while (true);
                             do {
                                 int i9 = s.indexOf("%3");
                                 if (i9 == -1)
                                     break;
-                                s = s.substring(0, i9) + method89(method129(3, 2, child), 8) + s.substring(i9 + 2);
+                                s = s.substring(0, i9) + method89(parseCS1(child, 2), 8) + s.substring(i9 + 2);
                             } while (true);
                             do {
                                 int j9 = s.indexOf("%4");
                                 if (j9 == -1)
                                     break;
-                                s = s.substring(0, j9) + method89(method129(3, 3, child), 8) + s.substring(j9 + 2);
+                                s = s.substring(0, j9) + method89(parseCS1(child, 3), 8) + s.substring(j9 + 2);
                             } while (true);
                             do {
                                 int k9 = s.indexOf("%5");
                                 if (k9 == -1)
                                     break;
-                                s = s.substring(0, k9) + method89(method129(3, 4, child), 8) + s.substring(k9 + 2);
+                                s = s.substring(0, k9) + method89(parseCS1(child, 4), 8) + s.substring(k9 + 2);
                             } while (true);
                         }
                         int l9 = s.indexOf("\\n");
@@ -11209,7 +11208,7 @@ public class Game extends GameShell {
 
                 } else if (child.type == 5) {
                     ImageRGB class50_sub1_sub1_sub1;
-                    if (method95(child))
+                    if (componentEnabled(child))
                         class50_sub1_sub1_sub1 = child.enabledImage;
                     else
                         class50_sub1_sub1_sub1 = child.disabledImage;
@@ -11235,7 +11234,7 @@ public class Game extends GameShell {
                     Rasterizer3D.centerY = l2 + child.height / 2;
                     int k5 = Rasterizer3D.SINE[child.rotationX] * child.zoom >> 16;
                     int j6 = Rasterizer3D.COSINE[child.rotationX] * child.zoom >> 16;
-                    boolean flag2 = method95(child);
+                    boolean flag2 = componentEnabled(child);
                     int k7;
                     if (flag2)
                         k7 = child.enabledAnimation;
