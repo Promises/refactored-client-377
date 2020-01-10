@@ -4,16 +4,11 @@ import com.jagex.runescape.cache.media.ImageRGB;
 import com.jagex.runescape.cache.media.Widget;
 import com.jagex.runescape.media.ProducingGraphicsBuffer;
 
-import java.applet.Applet;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.*;
 
 @SuppressWarnings("serial")
-public class GameShell extends Applet implements Runnable, MouseListener, MouseMotionListener, KeyListener,
+public class GameShell extends Canvas implements Runnable, MouseListener, MouseMotionListener, KeyListener,
         MouseWheelListener, FocusListener, WindowListener {
 
     private int gameState;
@@ -49,7 +44,7 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
     public boolean mouseWheelDown;
     public int mouseWheelX;
     public int mouseWheelY;
-    private Game client;
+
 
 
     public final void initializeApplication(int _width, int _height) {
@@ -58,6 +53,12 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         gameFrame = new GameFrame(this, width, height);
         gameGraphics = getParentComponent().getGraphics();
         imageProducer = new ProducingGraphicsBuffer(width, height, getParentComponent());
+        this.setPreferredSize(new Dimension(width, height));
+        this.setMaximumSize(new Dimension(width, height));
+        this.setMinimumSize(new Dimension(width, height));
+        gameFrame.add(this);
+        gameFrame.pack();
+
         startRunnable(this, 1);
     }
 
@@ -70,12 +71,11 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
     }
 
     public void run() {
-        final Component parentComponent = getParentComponent();
-        parentComponent.addMouseListener(this);
-        parentComponent.addMouseMotionListener(this);
-        parentComponent.addMouseWheelListener(this);
-        parentComponent.addKeyListener(this);
-        parentComponent.addFocusListener(this);
+        this.addMouseListener(this);
+        this.addMouseMotionListener(this);
+        this.addMouseWheelListener(this);
+        this.addKeyListener(this);
+        this.addFocusListener(this);
         if (gameFrame != null) {
             // Handle SIGTERM and exit
             gameFrame.addWindowListener(new WindowAdapter() {
@@ -181,19 +181,16 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         deltime = 1000 / i;
     }
 
-    @Override
     public void start() {
         if (gameState >= 0)
             gameState = 0;
     }
 
-    @Override
     public void stop() {
         if (gameState >= 0)
             gameState = 4000 / deltime;
     }
 
-    @Override
     public void destroy() {
         gameState = -1;
         try {
@@ -204,7 +201,6 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
             exit();
     }
 
-    @Override
     public void update(Graphics graphics) {
         if (gameGraphics == null)
             gameGraphics = graphics;
@@ -212,7 +208,6 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         redraw();
     }
 
-    @Override
     public void paint(Graphics graphics) {
         if (gameGraphics == null)
             gameGraphics = graphics;
@@ -224,8 +219,8 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-            mouseX -= 4;
-            mouseY -= 22;
+//            mouseX -= 1;
+            mouseY -= 2;
         }
         idleTime = 0;
         eventClickX = mouseX;
@@ -253,9 +248,11 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
     }
 
     public void mouseClicked(MouseEvent mouseevent) {
+        System.out.println(mouseevent);
     }
 
     public void mouseEntered(MouseEvent mouseevent) {
+        System.out.println(mouseevent);
     }
 
     public void mouseExited(MouseEvent mouseevent) {
@@ -268,8 +265,8 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-            mouseX -= 4;
-            mouseY -= 22;
+//            mouseX -= 1;
+            mouseY -= 2;
         }
         if (mouseWheelDown) {
             mouseY = mouseWheelX - mouseevent.getX();
@@ -292,8 +289,8 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-            mouseX -= 4;
-            mouseY -= 22;
+//            mouseX -= 1;
+            mouseY -= 2;
         }
         idleTime = 0;
         this.mouseX = mouseX;
@@ -449,12 +446,12 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
         int rotation = event.getWheelRotation();
         if (this instanceof Game) {
             if(!handleInterfaceScrolling(event, (Game) this)) {
-                if ((client.cameraZoom <= 300 && rotation <= 0)
-                        || (client.cameraZoom >= 1200 && rotation >= 0)) {
+                if ((Game.cameraZoom <= 300 && rotation <= 0)
+                        || (Game.cameraZoom >= 1200 && rotation >= 0)) {
                     return;
                 }
                 int diff = rotation * 8;
-                client.cameraZoom = client.cameraZoom + diff;
+                Game.cameraZoom = Game.cameraZoom + diff;
             }
         }
     }
