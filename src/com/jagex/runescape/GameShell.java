@@ -248,11 +248,9 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     }
 
     public void mouseClicked(MouseEvent mouseevent) {
-        System.out.println(mouseevent);
     }
 
     public void mouseEntered(MouseEvent mouseevent) {
-        System.out.println(mouseevent);
     }
 
     public void mouseExited(MouseEvent mouseevent) {
