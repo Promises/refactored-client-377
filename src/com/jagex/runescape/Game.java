@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Calendar;
@@ -881,7 +882,7 @@ public class Game extends GameShell {
     private void method19(String s) {
         System.out.println(s);
         try {
-            getAppletContext().showDocument(new URL(getCodeBase(), "loaderror_" + s + ".html"));
+//            getAppletContext().showDocument(new URL(getCodeBase(), "loaderror_" + s + ".html"));
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -3436,10 +3437,9 @@ public class Game extends GameShell {
             opcode = buffer.getUnsignedByte();
         if (SignLink.applet != null)
             return SignLink.applet.getDocumentBase().getHost().toLowerCase();
-        if (super.gameFrame != null)
-            return "runescape.com";
         else
-            return super.getDocumentBase().getHost().toLowerCase();
+            return "runescape.com";
+
     }
 
     private void method38(int i, int j, int k, Player player) {
@@ -4945,10 +4945,10 @@ public class Game extends GameShell {
             if (!lowMemory) {
                 nextSong = 0;
 
-                try {
-                    nextSong = Integer.parseInt(getParameter("music"));
-                } catch (Exception ignored) {
-                }
+//                try {
+//                    nextSong = Integer.parseInt(getParameter("music"));
+//                } catch (Exception ignored) {
+//                }
 
                 songChanging = true;
 
@@ -6217,18 +6217,18 @@ public class Game extends GameShell {
     }
 
     public void init() {
-        world = Integer.parseInt(getParameter("nodeid"));
-        portOffset = Integer.parseInt(getParameter("portoff"));
-        String s = getParameter("lowmem");
-        if (s != null && s.equals("1"))
-            setLowMemory();
-        else
-            setHighMemory();
-        String s1 = getParameter("free");
-        if (s1 != null && s1.equals("1"))
-            memberServer = false;
-        else
-            memberServer = true;
+//        world = Integer.parseInt(getParameter("nodeid"));
+//        portOffset = Integer.parseInt(getParameter("portoff"));
+//        String s = getParameter("lowmem");
+//        if (s != null && s.equals("1"))
+//            setLowMemory();
+//        else
+//            setHighMemory();
+//        String s1 = getParameter("free");
+//        if (s1 != null && s1.equals("1"))
+//            memberServer = false;
+//        else
+//            memberServer = true;
         initializeApplet(765, 503);
     }
 
@@ -7363,13 +7363,13 @@ public class Game extends GameShell {
         if (SignLink.applet != null)
             return SignLink.applet.getCodeBase();
 
-        try {
-            if (super.gameFrame != null)
-                return new URL("http://" + Configuration.SERVER_ADDRESS + ":" + (Configuration.HTTP_PORT + portOffset));
-        } catch (Exception ignored) {
-        }
 
-        return super.getCodeBase();
+        try {
+            return new URL("http://" + Configuration.SERVER_ADDRESS + ":" + (Configuration.HTTP_PORT + portOffset));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private boolean method88(int tickDelta, int interfaceId) {
@@ -7820,12 +7820,12 @@ public class Game extends GameShell {
         throw new RuntimeException();
     }
 
-    public String getParameter(String s) {
-        if (SignLink.applet != null)
-            return SignLink.applet.getParameter(s);
-        else
-            return super.getParameter(s);
-    }
+//    public String getParameter(String s) {
+//        if (SignLink.applet != null)
+//            return SignLink.applet.getParameter(s);
+//        else
+//            return super.getParameter(s);
+//    }
 
     private void renderFlames() { //TODO: Needs more refactoring
         int c = 256;
@@ -8500,12 +8500,12 @@ public class Game extends GameShell {
         return i2 * (128 - _y) + j2 * _y >> 7;
     }
 
-    public AppletContext getAppletContext() {
-        if (SignLink.applet != null)
-            return SignLink.applet.getAppletContext();
-        else
-            return super.getAppletContext();
-    }
+//    public AppletContext getAppletContext() {
+//        if (SignLink.applet != null)
+//            return SignLink.applet.getAppletContext();
+//        else
+//            return super.getAppletContext();
+//    }
 
     private void method111(int i) {
         i = 21 / i;
