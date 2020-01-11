@@ -25,7 +25,7 @@ public class SoundTrack {
 		SoundTrack.buffer = new Buffer(SoundTrack._buffer);
 		SoundTrackInstrument.decode();
 		while (true) {
-			int trackId = buffer.getUnsignedLEShort();
+			int trackId = buffer.getUnsignedBEShort();
 			if (trackId == 65535)
 				return;
 			SoundTrack.tracks[trackId] = new SoundTrack(-524);
@@ -53,8 +53,8 @@ public class SoundTrack {
 			}
 		}
 
-		loopBegin = buffer.getUnsignedLEShort();
-		loopEnd = buffer.getUnsignedLEShort();
+		loopBegin = buffer.getUnsignedBEShort();
+		loopEnd = buffer.getUnsignedBEShort();
 	}
 
 	public int delay() {

@@ -24,7 +24,7 @@ public class FloorDefinition {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("flo.dat"));
-		count = buffer.getUnsignedLEShort();
+		count = buffer.getUnsignedBEShort();
 		if (cache == null)
 			cache = new FloorDefinition[count];
 		for (int floor = 0; floor < count; floor++) {

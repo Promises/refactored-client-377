@@ -28,8 +28,8 @@ public class SoundTrackEnvelope {
 		phaseDuration = new int[numPhases];
 		phasePeak = new int[numPhases];
 		for (int phase = 0; phase < numPhases; phase++) {
-			phaseDuration[phase] = buffer.getUnsignedLEShort();
-			phasePeak[phase] = buffer.getUnsignedLEShort();
+			phaseDuration[phase] = buffer.getUnsignedBEShort();
+			phasePeak[phase] = buffer.getUnsignedBEShort();
 		}
 
 	}

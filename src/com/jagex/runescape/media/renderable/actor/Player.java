@@ -276,7 +276,7 @@ public class Player extends Actor {
 			int lowerByte = buffer.getUnsignedByte();
 			appearance[index] = (upperByte << 8) + lowerByte;
 			if (index == 0 && appearance[0] == 65535) {
-				npcDefinition = ActorDefinition.getDefinition(buffer.getUnsignedLEShort());
+				npcDefinition = ActorDefinition.getDefinition(buffer.getUnsignedBEShort());
 				break;
 			}
 			if (appearance[index] >= 512 && appearance[index] - 512 < ItemDefinition.count) {
@@ -293,30 +293,30 @@ public class Player extends Actor {
 			appearanceColors[l] = j1;
 		}
 
-		super.idleAnimation = buffer.getUnsignedLEShort();
+		super.idleAnimation = buffer.getUnsignedBEShort();
 		if (super.idleAnimation == 65535)
 			super.idleAnimation = -1;
-		super.standTurnAnimationId = buffer.getUnsignedLEShort();
+		super.standTurnAnimationId = buffer.getUnsignedBEShort();
 		if (super.standTurnAnimationId == 65535)
 			super.standTurnAnimationId = -1;
-		super.walkAnimationId = buffer.getUnsignedLEShort();
+		super.walkAnimationId = buffer.getUnsignedBEShort();
 		if (super.walkAnimationId == 65535)
 			super.walkAnimationId = -1;
-		super.turnAroundAnimationId = buffer.getUnsignedLEShort();
+		super.turnAroundAnimationId = buffer.getUnsignedBEShort();
 		if (super.turnAroundAnimationId == 65535)
 			super.turnAroundAnimationId = -1;
-		super.turnRightAnimationId = buffer.getUnsignedLEShort();
+		super.turnRightAnimationId = buffer.getUnsignedBEShort();
 		if (super.turnRightAnimationId == 65535)
 			super.turnRightAnimationId = -1;
-		super.turnLeftAnimationId = buffer.getUnsignedLEShort();
+		super.turnLeftAnimationId = buffer.getUnsignedBEShort();
 		if (super.turnLeftAnimationId == 65535)
 			super.turnLeftAnimationId = -1;
-		super.runAnimationId = buffer.getUnsignedLEShort();
+		super.runAnimationId = buffer.getUnsignedBEShort();
 		if (super.runAnimationId == 65535)
 			super.runAnimationId = -1;
 		playerName = TextUtils.formatName(TextUtils.longToName(buffer.getLong()));
 		combatLevel = buffer.getUnsignedByte();
-		skillLevel = buffer.getUnsignedLEShort();
+		skillLevel = buffer.getUnsignedBEShort();
 		visible = true;
 		appearanceHash = 0L;
 		int k1 = appearance[5];

@@ -25,7 +25,7 @@ public class AnimationSequence {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("seq.dat"));
-		AnimationSequence.count = buffer.getUnsignedLEShort();
+		AnimationSequence.count = buffer.getUnsignedBEShort();
 		if (AnimationSequence.animations == null)
 			AnimationSequence.animations = new AnimationSequence[AnimationSequence.count];
 		for (int animation = 0; animation < count; animation++) {
@@ -59,16 +59,16 @@ public class AnimationSequence {
 					frame1Ids = new int[frameCount];
 					frameLenghts = new int[frameCount];
 					for (int frame = 0; frame < frameCount; frame++) {
-						getPrimaryFrame[frame] = buf.getUnsignedLEShort();
-						frame1Ids[frame] = buf.getUnsignedLEShort();
+						getPrimaryFrame[frame] = buf.getUnsignedBEShort();
+						frame1Ids[frame] = buf.getUnsignedBEShort();
 						if (frame1Ids[frame] == 65535)
 							frame1Ids[frame] = -1;
-						frameLenghts[frame] = buf.getUnsignedLEShort();
+						frameLenghts[frame] = buf.getUnsignedBEShort();
 					}
 
 					break;
 				case 2:
-					frameStep = buf.getUnsignedLEShort();
+					frameStep = buf.getUnsignedBEShort();
 					break;
 				case 3:
 					int flowCount = buf.getUnsignedByte();
@@ -85,10 +85,10 @@ public class AnimationSequence {
 					anInt301 = buf.getUnsignedByte();
 					break;
 				case 6:
-					getPlayerShieldDelta = buf.getUnsignedLEShort();
+					getPlayerShieldDelta = buf.getUnsignedBEShort();
 					break;
 				case 7:
-					getPlayerWeaponDelta = buf.getUnsignedLEShort();
+					getPlayerWeaponDelta = buf.getUnsignedBEShort();
 					break;
 				case 8:
 					anInt304 = buf.getUnsignedByte();

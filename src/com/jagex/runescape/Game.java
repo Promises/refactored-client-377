@@ -450,8 +450,8 @@ public class Game extends GameShell {
     private long aLong1172;
     private int cameraVertical = 128;
     private int cameraHorizontal;
-    private int anInt1186;
-    private int anInt1187;
+    private int cameraVelocityHorizontal;
+    private int cameraVelocityVertical;
     private int cameraRandomisationA;
     private int anInt1256 = 1;
     private int anIntArray1258[] = new int[100];
@@ -1120,8 +1120,8 @@ public class Game extends GameShell {
     void mouseWheelDragged(int i, int j) {
         if (!mouseWheelDown)
             return;
-        this.anInt1186 += i * 3;
-        this.anInt1187 += (j << 1);
+        this.cameraVelocityHorizontal += i * 3;
+        this.cameraVelocityVertical += (j << 1);
     }
 
     private void checkForGameUsages(int i) {
@@ -1138,19 +1138,19 @@ public class Game extends GameShell {
             if (currentCameraPositionV != k)
                 currentCameraPositionV += (k - currentCameraPositionV) / 16;
             if (super.keyStatus[1] == 1)
-                anInt1186 += (-24 - anInt1186) / 2;
+                cameraVelocityHorizontal += (-24 - cameraVelocityHorizontal) / 2;
             else if (super.keyStatus[2] == 1)
-                anInt1186 += (24 - anInt1186) / 2;
+                cameraVelocityHorizontal += (24 - cameraVelocityHorizontal) / 2;
             else
-                anInt1186 /= 2;
+                cameraVelocityHorizontal /= 2;
             if (super.keyStatus[3] == 1)
-                anInt1187 += (12 - anInt1187) / 2;
+                cameraVelocityVertical += (12 - cameraVelocityVertical) / 2;
             else if (super.keyStatus[4] == 1)
-                anInt1187 += (-12 - anInt1187) / 2;
+                cameraVelocityVertical += (-12 - cameraVelocityVertical) / 2;
             else
-                anInt1187 /= 2;
-            cameraHorizontal = cameraHorizontal + anInt1186 / 2 & 0x7ff;
-            cameraVertical += anInt1187 / 2;
+                cameraVelocityVertical /= 2;
+            cameraHorizontal = cameraHorizontal + cameraVelocityHorizontal / 2 & 0x7ff;
+            cameraVertical += cameraVelocityVertical / 2;
             if (cameraVertical < 128)
                 cameraVertical = 128;
             if (cameraVertical > 383)
@@ -1174,8 +1174,8 @@ public class Game extends GameShell {
 
             }
             int i2 = k1 * 192;
-            if (i2 > 0x17f00)
-                i2 = 0x17f00;
+            if (i2 > 98048)
+                i2 = 98048;
             if (i2 < 32768)
                 i2 = 32768;
             if (i2 > secondaryCameraVertical) {
@@ -1983,7 +1983,7 @@ public class Game extends GameShell {
                 if (available > 1) {
                     gameConnection.read(buffer.buffer, 0, 2);
                     buffer.currentPosition = 0;
-                    packetSize = buffer.getUnsignedLEShort();
+                    packetSize = buffer.getUnsignedBEShort();
                     available -= 2;
                 } else {
                     return false;
@@ -1999,7 +1999,7 @@ public class Game extends GameShell {
             if (opcode == 166) {
                 int yOffset = buffer.getLEShort();
                 int xOffset = buffer.getLEShort();
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 Widget widget = Widget.forId(interfaceId);
                 widget.xOffset = xOffset;
                 widget.yOffset = yOffset;
@@ -2010,7 +2010,7 @@ public class Game extends GameShell {
                 int rotationX = buffer.getShortUnsingedAdded();
                 int interfaceId = buffer.getLittleShortA();
                 int zoom = buffer.getShortUnsingedAdded();
-                int rotationY = buffer.getLEUnsignedShort();
+                int rotationY = buffer.getUnsignedLEShort();
                 Widget.forId(interfaceId).rotationX = rotationX;
                 Widget.forId(interfaceId).rotationY = rotationY;
                 Widget.forId(interfaceId).zoom = zoom;
@@ -2026,9 +2026,9 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 26) {
-                int k1 = buffer.getUnsignedLEShort();
+                int k1 = buffer.getUnsignedBEShort();
                 int k11 = buffer.getUnsignedByte();
-                int i17 = buffer.getUnsignedLEShort();
+                int i17 = buffer.getUnsignedBEShort();
                 if (i17 == 65535) {
                     if (currentSound < 50) {
                         sound[currentSound] = (short) k1;
@@ -2078,14 +2078,14 @@ public class Game extends GameShell {
             }
             if (opcode == 162) {
                 int j2 = buffer.getShortUnsingedAdded();
-                int interfaceId = buffer.getLEUnsignedShort();
+                int interfaceId = buffer.getUnsignedLEShort();
                 Widget.forId(interfaceId).modelType = 2;
                 Widget.forId(interfaceId).modelId = j2;
                 opcode = -1;
                 return true;
             }
             if (opcode == 109) {
-                int k2 = buffer.getUnsignedLEShort();
+                int k2 = buffer.getUnsignedBEShort();
                 method112((byte) 36, k2);
                 if (openInvOverLayId != -1) {
                     method44(openInvOverLayId);
@@ -2129,7 +2129,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 249) {
-                int fileId = buffer.getLEUnsignedShort();
+                int fileId = buffer.getUnsignedLEShort();
                 int j12 = buffer.method554();
                 if (musicEnabled && !lowMemory) {
                     nextSong = fileId;
@@ -2151,7 +2151,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 218) { // set interface colour(?)
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 int rgb = buffer.getShortUnsingedAdded();
                 int j17 = rgb >> 10 & 0x1f;
                 int j22 = rgb >> 5 & 0x1f;
@@ -2193,7 +2193,7 @@ public class Game extends GameShell {
             if (opcode == 199) {
                 headIconDrawType = buffer.getUnsignedByte();
                 if (headIconDrawType == 1)
-                    anInt1226 = buffer.getUnsignedLEShort();
+                    anInt1226 = buffer.getUnsignedBEShort();
                 if (headIconDrawType >= 2 && headIconDrawType <= 6) {
                     if (headIconDrawType == 2) {
                         anInt847 = 64;
@@ -2216,12 +2216,12 @@ public class Game extends GameShell {
                         anInt848 = 128;
                     }
                     headIconDrawType = 2;
-                    anInt844 = buffer.getUnsignedLEShort();
-                    anInt845 = buffer.getUnsignedLEShort();
+                    anInt844 = buffer.getUnsignedBEShort();
+                    anInt845 = buffer.getUnsignedBEShort();
                     anInt846 = buffer.getUnsignedByte();
                 }
                 if (headIconDrawType == 10)
-                    otherPlayerId = buffer.getUnsignedLEShort();
+                    otherPlayerId = buffer.getUnsignedBEShort();
                 opcode = -1;
                 return true;
             }
@@ -2229,7 +2229,7 @@ public class Game extends GameShell {
                 cutsceneActive = true;
                 anInt993 = buffer.getUnsignedByte();
                 anInt994 = buffer.getUnsignedByte();
-                anInt995 = buffer.getUnsignedLEShort();
+                anInt995 = buffer.getUnsignedBEShort();
                 anInt996 = buffer.getUnsignedByte();
                 anInt997 = buffer.getUnsignedByte();
                 if (anInt997 >= 100) {
@@ -2257,7 +2257,7 @@ public class Game extends GameShell {
             }
             if (opcode == 115) {
                 int j4 = buffer.method557();
-                int i13 = buffer.getLEUnsignedShort();
+                int i13 = buffer.getUnsignedLEShort();
                 anIntArray1005[i13] = j4;
                 if (widgetSettings[i13] != j4) {
                     widgetSettings[i13] = j4;
@@ -2303,14 +2303,14 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 76) { // open welcome screen
-                anInt1083 = buffer.getLEUnsignedShort();
+                anInt1083 = buffer.getUnsignedLEShort();
                 anInt1075 = buffer.getLittleShortA();
-                buffer.getUnsignedLEShort();
-                anInt1208 = buffer.getUnsignedLEShort();
-                anInt1170 = buffer.getLEUnsignedShort();
+                buffer.getUnsignedBEShort();
+                anInt1208 = buffer.getUnsignedBEShort();
+                anInt1170 = buffer.getUnsignedLEShort();
                 anInt1273 = buffer.getShortUnsingedAdded();
                 anInt1215 = buffer.getShortUnsingedAdded();
-                anInt992 = buffer.getUnsignedLEShort();
+                anInt992 = buffer.getUnsignedBEShort();
                 lastAddress = buffer.method555();
                 anInt1034 = buffer.getLittleShortA();
                 buffer.getByteAdded();
@@ -2380,7 +2380,7 @@ public class Game extends GameShell {
             }
             if (opcode == 82) { // make interface (in)visible maybe?
                 boolean flag = buffer.getUnsignedByte() == 1;
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 Widget.forId(interfaceId).hiddenUntilHovered = flag;
                 opcode = -1;
                 return true;
@@ -2452,11 +2452,11 @@ public class Game extends GameShell {
             }
             if (opcode == 134) { // set items in interface
                 redrawTabArea = true;
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 Widget inter = Widget.forId(interfaceId);
                 while (buffer.currentPosition < packetSize) {
                     int slot = buffer.getSmart();
-                    int id = buffer.getUnsignedLEShort();
+                    int id = buffer.getUnsignedBEShort();
                     int amount = buffer.getUnsignedByte();
                     if (amount == 255)
                         amount = buffer.getInt();
@@ -2705,9 +2705,9 @@ public class Game extends GameShell {
             }
             if (opcode == 206) { // update all items in interface
                 redrawTabArea = true;
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 Widget inter = Widget.forId(interfaceId);
-                int items = buffer.getUnsignedLEShort();
+                int items = buffer.getUnsignedBEShort();
                 for (int item = 0; item < items; item++) {
                     inter.items[item] = buffer.getLittleShortA();
                     int amount = buffer.getByteNegated();
@@ -2728,7 +2728,7 @@ public class Game extends GameShell {
                 int tmpChunkX = chunkX;
                 int tmpChunkY = chunkY;
                 if (opcode == 222) {
-                    tmpChunkY = buffer.getUnsignedLEShort();
+                    tmpChunkY = buffer.getUnsignedBEShort();
                     tmpChunkX = buffer.getLittleShortA();
                     aBoolean1163 = false;
                 }
@@ -2929,7 +2929,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 190) {
-                systemUpdateTime = buffer.getLEUnsignedShort() * 30;
+                systemUpdateTime = buffer.getUnsignedLEShort() * 30;
                 opcode = -1;
                 return true;
             }
@@ -2947,8 +2947,8 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 21) { // show a model on an interface??
-                int scale = buffer.getUnsignedLEShort();
-                int itemId = buffer.getLEUnsignedShort();
+                int scale = buffer.getUnsignedBEShort();
+                int itemId = buffer.getUnsignedLEShort();
                 int interfaceId = buffer.getLittleShortA();
                 if (itemId == 65535) {
                     Widget.forId(interfaceId).modelType = 0;
@@ -2969,7 +2969,7 @@ public class Game extends GameShell {
                 cutsceneActive = true;
                 anInt874 = buffer.getUnsignedByte();
                 anInt875 = buffer.getUnsignedByte();
-                anInt876 = buffer.getUnsignedLEShort();
+                anInt876 = buffer.getUnsignedBEShort();
                 anInt877 = buffer.getUnsignedByte();
                 anInt878 = buffer.getUnsignedByte();
                 if (anInt878 >= 100) {
@@ -3020,7 +3020,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 219) { // reset all items on interface?
-                int interfaceId = buffer.getLEUnsignedShort();
+                int interfaceId = buffer.getUnsignedLEShort();
                 Widget class13_2 = Widget.forId(interfaceId);
                 for (int k21 = 0; k21 < class13_2.items.length; k21++) {
                     class13_2.items[k21] = -1;
@@ -3052,7 +3052,7 @@ public class Game extends GameShell {
             }
             if (opcode == 126) {
                 playerMembers = buffer.getUnsignedByte();
-                thisPlayerServerId = buffer.getLEUnsignedShort();
+                thisPlayerServerId = buffer.getUnsignedLEShort();
                 opcode = -1;
                 return true;
             }
@@ -3063,7 +3063,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 253) { // open fullscreen interface
-                int k9 = buffer.getLEUnsignedShort();
+                int k9 = buffer.getUnsignedLEShort();
                 int k15 = buffer.getShortUnsingedAdded();
                 method112((byte) 36, k15);
                 if (k9 != -1)
@@ -3100,9 +3100,9 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 18) {
-                int l9 = buffer.getUnsignedLEShort();
+                int l9 = buffer.getUnsignedBEShort();
                 int interfaceId = buffer.getShortUnsingedAdded();
-                int l21 = buffer.getLEUnsignedShort();
+                int l21 = buffer.getUnsignedLEShort();
                 Widget.forId(interfaceId).anInt218 = (l9 << 16) + l21;
                 opcode = -1;
                 return true;
@@ -3134,7 +3134,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (opcode == 200) {
-                int interfaceId = buffer.getUnsignedLEShort();
+                int interfaceId = buffer.getUnsignedBEShort();
                 int scrollPosition = buffer.getLittleShortA();
                 Widget widget = Widget.forId(interfaceId);
                 if (widget != null && widget.type == 0) {
@@ -4602,7 +4602,7 @@ public class Game extends GameShell {
                 class50_sub1_sub4_sub3_sub1.idleAnimation = class50_sub1_sub4_sub3_sub1.npcDefinition.standAnimationId;
             }
             if ((i1 & 0x40) != 0) {
-                class50_sub1_sub4_sub3_sub1.anInt1609 = class50_sub1_sub2.getLEUnsignedShort();
+                class50_sub1_sub4_sub3_sub1.anInt1609 = class50_sub1_sub2.getUnsignedLEShort();
                 if (class50_sub1_sub4_sub3_sub1.anInt1609 == 65535)
                     class50_sub1_sub4_sub3_sub1.anInt1609 = -1;
             }
@@ -4615,7 +4615,7 @@ public class Game extends GameShell {
                 class50_sub1_sub4_sub3_sub1.anInt1597 = class50_sub1_sub2.getByteSubtracted();
             }
             if ((i1 & 4) != 0) {
-                class50_sub1_sub4_sub3_sub1.graphic = class50_sub1_sub2.getUnsignedLEShort();
+                class50_sub1_sub4_sub3_sub1.graphic = class50_sub1_sub2.getUnsignedBEShort();
                 int k1 = class50_sub1_sub2.method556();
                 class50_sub1_sub4_sub3_sub1.spotAnimationDelay = k1 >> 16;
                 class50_sub1_sub4_sub3_sub1.anInt1617 = pulseCycle + (k1 & 0xffff);
@@ -4632,10 +4632,10 @@ public class Game extends GameShell {
             }
             if ((i1 & 8) != 0) {
                 class50_sub1_sub4_sub3_sub1.anInt1598 = class50_sub1_sub2.getLittleShortA();
-                class50_sub1_sub4_sub3_sub1.anInt1599 = class50_sub1_sub2.getLEUnsignedShort();
+                class50_sub1_sub4_sub3_sub1.anInt1599 = class50_sub1_sub2.getUnsignedLEShort();
             }
             if ((i1 & 2) != 0) {
-                int l1 = class50_sub1_sub2.getUnsignedLEShort();
+                int l1 = class50_sub1_sub2.getUnsignedBEShort();
                 if (l1 == 65535)
                     l1 = -1;
                 int k2 = class50_sub1_sub2.getByteSubtracted();
@@ -4674,7 +4674,7 @@ public class Game extends GameShell {
 
     private void parsePlayerBlock(int id, Player player, int mask, Buffer buffer) {
         if ((mask & 8) != 0) {
-            int animation = buffer.getUnsignedLEShort();
+            int animation = buffer.getUnsignedBEShort();
 
             if (animation == 65535)
                 animation = -1;
@@ -4724,7 +4724,7 @@ public class Game extends GameShell {
             player.anInt1604 = buffer.getByteNegated();
             player.anInt1603 = buffer.getByteSubtracted();
             player.anInt1605 = buffer.getUnsignedByte();
-            player.anInt1606 = buffer.getUnsignedLEShort() + pulseCycle;
+            player.anInt1606 = buffer.getUnsignedBEShort() + pulseCycle;
             player.anInt1607 = buffer.getShortUnsingedAdded() + pulseCycle;
             player.anInt1608 = buffer.getUnsignedByte();
 
@@ -4739,8 +4739,8 @@ public class Game extends GameShell {
         }
 
         if ((mask & 2) != 0) {
-            player.anInt1598 = buffer.getUnsignedLEShort();
-            player.anInt1599 = buffer.getUnsignedLEShort();
+            player.anInt1598 = buffer.getUnsignedBEShort();
+            player.anInt1599 = buffer.getUnsignedBEShort();
         }
 
         if ((mask & 0x200) != 0) {
@@ -4782,7 +4782,7 @@ public class Game extends GameShell {
         }
 
         if ((mask & 0x40) != 0) {
-            int effectsAndColour = buffer.getUnsignedLEShort();
+            int effectsAndColour = buffer.getUnsignedBEShort();
             int rights = buffer.getByteNegated();
             int length = buffer.getByteAdded();
             int currentPosition = buffer.currentPosition;
@@ -10493,7 +10493,7 @@ public class Game extends GameShell {
 
     private void parsePlacementPacket(Buffer buf, int opcode) {
         if (opcode == 203) {
-            int objectId = buf.getUnsignedLEShort();
+            int objectId = buf.getUnsignedBEShort();
             int j3 = buf.getUnsignedByte();
             int modelType = j3 >> 2;
             int modelOrientation = j3 & 3;
@@ -10504,10 +10504,10 @@ public class Game extends GameShell {
             int y = placementY + (offset & 7);
             byte byte1 = buf.getSignedByteAdded();
             int duration = buf.getShortUnsingedAdded();
-            int id = buf.getLEUnsignedShort();
+            int id = buf.getUnsignedLEShort();
             byte byte2 = buf.getSignedByte();
             byte byte3 = buf.getSignedByteAdded();
-            int startDelay = buf.getUnsignedLEShort();
+            int startDelay = buf.getUnsignedBEShort();
             Player player;
             if (id == thisPlayerServerId)
                 player = localPlayer;
@@ -10571,7 +10571,7 @@ public class Game extends GameShell {
             return;
         }
         if (opcode == 142) {
-            int i1 = buf.getUnsignedLEShort();
+            int i1 = buf.getUnsignedBEShort();
             int l3 = buf.getByteAdded();
             int k6 = l3 >> 2;
             int j9 = l3 & 3;
@@ -10623,7 +10623,7 @@ public class Game extends GameShell {
             return;
         }
         if (opcode == 107) { // add ground item (dropped by npc or "auto spawn")
-            int id = buf.getUnsignedLEShort();
+            int id = buf.getUnsignedBEShort();
             int offset = buf.getByteNegated();
             int x = placementX + (offset >> 4 & 7);
             int y = placementY + (offset & 7);
@@ -10643,9 +10643,9 @@ public class Game extends GameShell {
             int offset = buf.getUnsignedByte();
             int x = placementX + (offset >> 4 & 7);
             int y = placementY + (offset & 7);
-            int id = buf.getUnsignedLEShort();
-            int amount = buf.getUnsignedLEShort();
-            int newAmount = buf.getUnsignedLEShort();
+            int id = buf.getUnsignedBEShort();
+            int amount = buf.getUnsignedBEShort();
+            int newAmount = buf.getUnsignedBEShort();
             if (x >= 0 && y >= 0 && x < 104 && y < 104) {
                 LinkedList list = groundItems[plane][x][y];
                 if (list != null) {
@@ -10668,11 +10668,11 @@ public class Game extends GameShell {
             int i10 = x + buf.getSignedByte();
             int l12 = y + buf.getSignedByte();
             int l14 = buf.getSignedShort();
-            int k16 = buf.getUnsignedLEShort();
+            int k16 = buf.getUnsignedBEShort();
             int i18 = buf.getUnsignedByte() * 4;
             int i19 = buf.getUnsignedByte() * 4;
-            int k19 = buf.getUnsignedLEShort();
-            int j20 = buf.getUnsignedLEShort();
+            int k19 = buf.getUnsignedBEShort();
+            int j20 = buf.getUnsignedBEShort();
             int i21 = buf.getUnsignedByte();
             int j21 = buf.getUnsignedByte();
             if (x >= 0 && y >= 0 && x < 104 && y < 104 && i10 >= 0 && l12 >= 0 && i10 < 104 && l12 < 104
@@ -10693,7 +10693,7 @@ public class Game extends GameShell {
             int offset = buf.getUnsignedByte();
             int x = placementX + (offset >> 4 & 7);
             int y = placementY + (offset & 7);
-            int soundId = buf.getUnsignedLEShort();
+            int soundId = buf.getUnsignedBEShort();
             int i13 = buf.getUnsignedByte();
             int i15 = i13 >> 4 & 0xf;
             int type = i13 & 7;
@@ -10712,9 +10712,9 @@ public class Game extends GameShell {
             int j2 = buf.getUnsignedByte();
             int i5 = placementX + (j2 >> 4 & 7);
             int l7 = placementY + (j2 & 7);
-            int k10 = buf.getUnsignedLEShort();
+            int k10 = buf.getUnsignedBEShort();
             int j13 = buf.getUnsignedByte();
-            int j15 = buf.getUnsignedLEShort();
+            int j15 = buf.getUnsignedBEShort();
             if (i5 >= 0 && l7 >= 0 && i5 < 104 && l7 < 104) {
                 i5 = i5 * 128 + 64;
                 l7 = l7 * 128 + 64;

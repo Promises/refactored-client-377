@@ -72,7 +72,7 @@ public class ChatCensor {
 	public static void loadFragmentsEnc(Buffer buffer) {
 		fragments = new int[buffer.getInt()];
 		for (int index = 0; index < fragments.length; index++)
-			fragments[index] = buffer.getUnsignedLEShort();
+			fragments[index] = buffer.getUnsignedBEShort();
 
 	}
 
