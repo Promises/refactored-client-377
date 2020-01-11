@@ -22,7 +22,7 @@ public class Configuration {
     /**
      * Port for establishing a connection to the on demand service.
      */
-    public static final int ONDEMAND_PORT = 43596;
+    public static final int ONDEMAND_PORT = 43594;
 
     /**
      * Port for establishing a connection to the update server.
@@ -38,7 +38,7 @@ public class Configuration {
     /**
      * Whether or not the update server should be used.
      */
-    public static final boolean JAGGRAB_ENABLED = true;
+    public static final boolean JAGGRAB_ENABLED = false;
 
     /**
      * Whether or not the network packets should be encrypted.
@@ -53,7 +53,7 @@ public class Configuration {
     /**
      * Modulus to be used in the RSA network encryption.
      */
-    public static final BigInteger RSA_MODULUS = new BigInteger("119568088839203297999728368933573315070738693395974011872885408638642676871679245723887367232256427712869170521351089799352546294030059890127723509653145359924771433131004387212857375068629466435244653901851504845054452735390701003613803443469723435116497545687393297329052988014281948392136928774011011998343");
+    public static final BigInteger RSA_MODULUS = new BigInteger("170266381807335046121774073514220583891686029487165562794998484549236036467227923571770256617931840775621072487838687650522710227973331693237285456731778528244126984080232314114323601116304887478969296070648644633713088027922830600712492972687351204275625149978223159432963210789506993409208545916714905193639");
 
     /**
      * Use static username/password pair.
@@ -64,8 +64,8 @@ public class Configuration {
      * Static username and password
      */
 
-    public static final String USERNAME = "qq";
-    public static final String PASSWORD = "";
+    public static final String USERNAME = "Promises";
+    public static final String PASSWORD = "Testing";
 
     /**
      * Do you want to render roofs
