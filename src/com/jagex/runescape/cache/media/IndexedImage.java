@@ -18,37 +18,37 @@ public class IndexedImage extends Rasterizer {
     public IndexedImage(Archive archive, String archiveName, int offset) {
         Buffer dataBuffer = new Buffer(archive.getFile(archiveName + ".dat"));
         Buffer indexBuffer = new Buffer(archive.getFile("index.dat"));
-        indexBuffer.currentPosition = dataBuffer.getUnsignedShort();
-        maxWidth = indexBuffer.getUnsignedShort();
-        maxHeight = indexBuffer.getUnsignedShort();
+        indexBuffer.currentPosition = dataBuffer.getUnsignedShortBE();
+        maxWidth = indexBuffer.getUnsignedShortBE();
+        maxHeight = indexBuffer.getUnsignedShortBE();
         int palleteLength = indexBuffer.getUnsignedByte();
         palette = new int[palleteLength];
         for (int index = 0; index < palleteLength - 1; index++)
-            palette[index + 1] = indexBuffer.get24BitInt();
+            palette[index + 1] = indexBuffer.getMediumBE();
 
         for (int counter = 0; counter < offset; counter++) {
             indexBuffer.currentPosition += 2;
-            dataBuffer.currentPosition += indexBuffer.getUnsignedShort() * indexBuffer.getUnsignedShort();
+            dataBuffer.currentPosition += indexBuffer.getUnsignedShortBE() * indexBuffer.getUnsignedShortBE();
             indexBuffer.currentPosition++;
         }
 
         xDrawOffset = indexBuffer.getUnsignedByte();
         yDrawOffset = indexBuffer.getUnsignedByte();
-        width = indexBuffer.getUnsignedShort();
-        height = indexBuffer.getUnsignedShort();
+        width = indexBuffer.getUnsignedShortBE();
+        height = indexBuffer.getUnsignedShortBE();
         int type = indexBuffer.getUnsignedByte();
         int pixelLength = width * height;
         pixels = new byte[pixelLength];
         if (type == 0) {
             for (int pixel = 0; pixel < pixelLength; pixel++)
-                pixels[pixel] = dataBuffer.getSignedByte();
+                pixels[pixel] = dataBuffer.getByte();
 
             return;
         }
         if (type == 1) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++)
-                    pixels[x + y * width] = dataBuffer.getSignedByte();
+                    pixels[x + y * width] = dataBuffer.getByte();
 
             }
 

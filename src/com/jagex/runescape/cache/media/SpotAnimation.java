@@ -24,7 +24,7 @@ public class SpotAnimation {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("spotanim.dat"));
-		SpotAnimation.spotAnimationCount = buffer.getUnsignedShort();
+		SpotAnimation.spotAnimationCount = buffer.getUnsignedShortBE();
 		if (SpotAnimation.cache == null)
 			SpotAnimation.cache = new SpotAnimation[SpotAnimation.spotAnimationCount];
 		for (int spotAnimation = 0; spotAnimation < spotAnimationCount; spotAnimation++) {
@@ -42,25 +42,25 @@ public class SpotAnimation {
 			if (attributeId == 0)
 				return;
 			if (attributeId == 1)
-				modelId = buffer.getUnsignedShort();
+				modelId = buffer.getUnsignedShortBE();
 			else if (attributeId == 2) {
-				animationId = buffer.getUnsignedShort();
+				animationId = buffer.getUnsignedShortBE();
 				if (AnimationSequence.animations != null)
 					sequences = AnimationSequence.animations[animationId];
 			} else if (attributeId == 4)
-				resizeXY = buffer.getUnsignedShort();
+				resizeXY = buffer.getUnsignedShortBE();
 			else if (attributeId == 5)
-				resizeZ = buffer.getUnsignedShort();
+				resizeZ = buffer.getUnsignedShortBE();
 			else if (attributeId == 6)
-				rotation = buffer.getUnsignedShort();
+				rotation = buffer.getUnsignedShortBE();
 			else if (attributeId == 7)
 				modelLightFalloff = buffer.getUnsignedByte();
 			else if (attributeId == 8)
 				modelLightAmbient = buffer.getUnsignedByte();
 			else if (attributeId >= 40 && attributeId < 50)
-				originalModelColors[attributeId - 40] = buffer.getUnsignedShort();
+				originalModelColors[attributeId - 40] = buffer.getUnsignedShortBE();
 			else if (attributeId >= 50 && attributeId < 60)
-				modifiedModelColors[attributeId - 50] = buffer.getUnsignedShort();
+				modifiedModelColors[attributeId - 50] = buffer.getUnsignedShortBE();
 			else
 				System.out.println("Error unrecognised spotanim config code: " + attributeId);
 		}

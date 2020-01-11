@@ -21,8 +21,8 @@ public class Archive {
 	 */
 	public Archive(byte[] dataBuffer) {
 		Buffer buffer = new Buffer(dataBuffer);
-		int uncompressed = buffer.get24BitInt();
-		int compressed = buffer.get24BitInt();
+		int uncompressed = buffer.getMediumBE();
+		int compressed = buffer.getMediumBE();
 		if (compressed != uncompressed) {
 			byte[] data = new byte[uncompressed];
 			BZip2Decompressor.decompress(data, uncompressed, dataBuffer, compressed, 6);
@@ -33,16 +33,16 @@ public class Archive {
 			archiveBuffer = dataBuffer;
 			this.compressed = false;
 		}
-		dataSize = buffer.getUnsignedShort();
+		dataSize = buffer.getUnsignedShortBE();
 		nameHashes = new int[dataSize];
 		uncompressedSizes = new int[dataSize];
 		compressedSizes = new int[dataSize];
 		startOffsets = new int[dataSize];
 		int offset = buffer.currentPosition + dataSize * 10;
 		for (int index = 0; index < dataSize; index++) {
-			nameHashes[index] = buffer.getInt();
-			uncompressedSizes[index] = buffer.get24BitInt();
-			compressedSizes[index] = buffer.get24BitInt();
+			nameHashes[index] = buffer.getIntBE();
+			uncompressedSizes[index] = buffer.getMediumBE();
+			compressedSizes[index] = buffer.getMediumBE();
 			startOffsets[index] = offset;
 			offset += compressedSizes[index];
 		}

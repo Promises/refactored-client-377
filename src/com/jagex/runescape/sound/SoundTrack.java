@@ -25,7 +25,7 @@ public class SoundTrack {
 		SoundTrack.buffer = new Buffer(SoundTrack._buffer);
 		SoundTrackInstrument.decode();
 		while (true) {
-			int trackId = buffer.getUnsignedShort();
+			int trackId = buffer.getUnsignedShortBE();
 			if (trackId == 65535)
 				return;
 			SoundTrack.tracks[trackId] = new SoundTrack(-524);
@@ -53,8 +53,8 @@ public class SoundTrack {
 			}
 		}
 
-		loopBegin = buffer.getUnsignedShort();
-		loopEnd = buffer.getUnsignedShort();
+		loopBegin = buffer.getUnsignedShortBE();
+		loopEnd = buffer.getUnsignedShortBE();
 	}
 
 	public int delay() {
@@ -81,19 +81,19 @@ public class SoundTrack {
 	public Buffer encode(int j) {
 		int size = mix(j);
 		SoundTrack.buffer.currentPosition = 0;
-		SoundTrack.buffer.putInt(0x52494646);    // "RIFF"
-		SoundTrack.buffer.putLEInt(36 + size); // chunk length
-		SoundTrack.buffer.putInt(0x57415645);    // "WAVE" (format)
-		SoundTrack.buffer.putInt(0x666d7420);    // "FMT " (subchunk id)
-		SoundTrack.buffer.putLEInt(16);       // subchunk size
-		SoundTrack.buffer.putLEShort(1);      // PCM
-		SoundTrack.buffer.putLEShort(1);      // channels (mono)
-		SoundTrack.buffer.putLEInt(22050);    // sample rate
-		SoundTrack.buffer.putLEInt(22050);    // byte rate
-		SoundTrack.buffer.putLEShort(1);      // block alignment
-		SoundTrack.buffer.putLEShort(8);      // bits per sample
-		SoundTrack.buffer.putInt(0x64617461); // "DATA" (subchunk id)
-		SoundTrack.buffer.putLEInt(size);   // length
+		SoundTrack.buffer.putIntBE(0x52494646);    // "RIFF"
+		SoundTrack.buffer.putIntLE(36 + size); // chunk length
+		SoundTrack.buffer.putIntBE(0x57415645);    // "WAVE" (format)
+		SoundTrack.buffer.putIntBE(0x666d7420);    // "FMT " (subchunk id)
+		SoundTrack.buffer.putIntLE(16);       // subchunk size
+		SoundTrack.buffer.putShortLECopy(1);      // PCM
+		SoundTrack.buffer.putShortLECopy(1);      // channels (mono)
+		SoundTrack.buffer.putIntLE(22050);    // sample rate
+		SoundTrack.buffer.putIntLE(22050);    // byte rate
+		SoundTrack.buffer.putShortLECopy(1);      // block alignment
+		SoundTrack.buffer.putShortLECopy(8);      // bits per sample
+		SoundTrack.buffer.putIntBE(0x64617461); // "DATA" (subchunk id)
+		SoundTrack.buffer.putIntLE(size);   // length
 		SoundTrack.buffer.currentPosition += size;
 		return SoundTrack.buffer;
 	}

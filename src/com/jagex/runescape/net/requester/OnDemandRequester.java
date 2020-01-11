@@ -14,6 +14,7 @@ import com.jagex.runescape.collection.Queue;
 import com.jagex.runescape.net.Buffer;
 import com.jagex.runescape.util.LinkedList;
 import com.jagex.runescape.util.SignLink;
+import tech.henning.client.Configuration;
 
 public class OnDemandRequester extends Requester implements Runnable {
 
@@ -438,7 +439,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 			fileVersions[version] = new int[versionCount];
 			filePriorities[version] = new byte[versionCount];
 			for (int file = 0; file < versionCount; file++)
-				fileVersions[version][file] = buffer.getUnsignedShort();
+				fileVersions[version][file] = buffer.getUnsignedShortBE();
 
 		}
 
@@ -449,7 +450,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 			Buffer buffer = new Buffer(data);
 			fileCrc[crc] = new int[crcCount];
 			for (int file = 0; file < crcCount; file++)
-				fileCrc[crc][file] = buffer.getInt();
+				fileCrc[crc][file] = buffer.getIntBE();
 
 		}
 
@@ -470,9 +471,9 @@ public class OnDemandRequester extends Requester implements Runnable {
 		regLandIndex = new int[count];
 		regShouldPreload = new int[count];
 		for (int reg = 0; reg < count; reg++) {
-			regHash[reg] = buffer.getUnsignedShort();
-			regMapIndex[reg] = buffer.getUnsignedShort();
-			regLandIndex[reg] = buffer.getUnsignedShort();
+			regHash[reg] = buffer.getUnsignedShortBE();
+			regMapIndex[reg] = buffer.getUnsignedShortBE();
+			regLandIndex[reg] = buffer.getUnsignedShortBE();
 			regShouldPreload[reg] = buffer.getUnsignedByte();
 		}
 
@@ -481,7 +482,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 		count = data.length / 2;
 		animIndex = new int[count];
 		for (int i = 0; i < count; i++)
-			animIndex[i] = buffer.getUnsignedShort();
+			animIndex[i] = buffer.getUnsignedShortBE();
 
 		data = archive.getFile("midi_index");
 		buffer = new Buffer(data);
@@ -566,7 +567,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 				if (currentTime - lastSocketOpen < 4000L)
 					return;
 				lastSocketOpen = currentTime;
-				socket = client.openSocket(43594 + Game.portOffset);
+				socket = client.openSocket(Configuration.ONDEMAND_PORT + Game.portOffset);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 				outputStream.write(15);

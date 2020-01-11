@@ -69,37 +69,37 @@ public class Buffer extends CacheableNode {
 		buffer[currentPosition++] = (byte) value;
 	}
 
-	public void putShort(int value) {
+	public void putShortBE(int value) {
 		buffer[currentPosition++] = (byte) (value >> 8);
 		buffer[currentPosition++] = (byte) value;
 	}
 
-	public void putLEShort(int value) {
+	public void putShortLECopy(int value) {
 		buffer[currentPosition++] = (byte) value;
 		buffer[currentPosition++] = (byte) (value >> 8);
 	}
 
-	public void putTriByte(int value) {
+	public void putMediumBE(int value) {
 		buffer[currentPosition++] = (byte) (value >> 16);
 		buffer[currentPosition++] = (byte) (value >> 8);
 		buffer[currentPosition++] = (byte) value;
 	}
 
-	public void putInt(int value) {
+	public void putIntBE(int value) {
 		buffer[currentPosition++] = (byte) (value >> 24);
 		buffer[currentPosition++] = (byte) (value >> 16);
 		buffer[currentPosition++] = (byte) (value >> 8);
 		buffer[currentPosition++] = (byte) value;
 	}
 
-	public void putLEInt(int value) {
+	public void putIntLE(int value) {
 		buffer[currentPosition++] = (byte) value;
 		buffer[currentPosition++] = (byte) (value >> 8);
 		buffer[currentPosition++] = (byte) (value >> 16);
 		buffer[currentPosition++] = (byte) (value >> 24);
 	}
 
-	public void putLong(long value) {
+	public void putLongBE(long value) {
 		buffer[currentPosition++] = (byte) (int) (value >> 56);
 		buffer[currentPosition++] = (byte) (int) (value >> 48);
 		buffer[currentPosition++] = (byte) (int) (value >> 40);
@@ -133,16 +133,16 @@ public class Buffer extends CacheableNode {
 		return buffer[currentPosition++] & 0xff;
 	}
 
-	public byte getSignedByte() {
+	public byte getByte() {
 		return buffer[currentPosition++];
 	}
 
-	public int getUnsignedShort() {
+	public int getUnsignedShortBE() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] & 0xff);
 	}
 
-	public int getSignedShort() {
+	public int getShortBE() {
 		currentPosition += 2;
 		int i = ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] & 0xff);
 		if (i > 32767)
@@ -150,21 +150,21 @@ public class Buffer extends CacheableNode {
 		return i;
 	}
 
-	public int get24BitInt() {
+	public int getMediumBE() {
 		currentPosition += 3;
 		return ((buffer[currentPosition - 3] & 0xff) << 16) + ((buffer[currentPosition - 2] & 0xff) << 8)
 				+ (buffer[currentPosition - 1] & 0xff);
 	}
 
-	public int getInt() {
+	public int getIntBE() {
 		currentPosition += 4;
 		return ((buffer[currentPosition - 4] & 0xff) << 24) + ((buffer[currentPosition - 3] & 0xff) << 16)
 				+ ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] & 0xff);
 	}
 
-	public long getLong() {
-		long l = getInt() & 0xffffffffL;
-		long l1 = getInt() & 0xffffffffL;
+	public long getLongBE() {
+		long l = getIntBE() & 0xffffffffL;
+		long l1 = getIntBE() & 0xffffffffL;
 		return (l << 32) + l1;
 	}
 
@@ -218,7 +218,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte() - 64;
 		else
-			return getUnsignedShort() - 49152;
+			return getUnsignedShortBE() - 49152;
 	}
 
 	public int getSmart() {
@@ -226,7 +226,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte();
 		else
-			return getUnsignedShort() - 32768;
+			return getUnsignedShortBE() - 32768;
 	}
 
 	public void encrypt(BigInteger modulus, BigInteger key) {
@@ -245,74 +245,73 @@ public class Buffer extends CacheableNode {
 		putBytes(bytes, 0, bytes.length);
 	}
 
-	public void putByteAdded(int value) {
+	public void putOffsetByte(int value) {
 		buffer[currentPosition++] = (byte) (value + 128);
 	}
 
-	public void putByteNegated(int value) {
+	public void putInvertedByte(int value) {
 		buffer[currentPosition++] = (byte) (-value);
 	}
 
-	public void putByteSubtracted(int value) {
+	public void putNegativeOffsetByte(int value) {
 		buffer[currentPosition++] = (byte) (128 - value);
 	}
 
-	public int getByteAdded() {
+	public int getUnsignedPostNegativeOffsetByte() {
 		return buffer[currentPosition++] - 128 & 0xff;
 	}
 
-	public int getByteNegated() {
+	public int getUnsignedInvertedByte() {
 		return -buffer[currentPosition++] & 0xff;
 	}
 
-	public int getByteSubtracted() {
+	public int getUnsignedPreNegativeOffsetByte() {
 		return 128 - buffer[currentPosition++] & 0xff;
 	}
 
-	public byte getSignedByteAdded() {
+	public byte getPostNegativeOffsetByte() {
 		return (byte) (buffer[currentPosition++] - 128);
 	}
 
-	public byte getSignedByteNegated() {
+	public byte getInvertedByte() {
 		return (byte) (-buffer[currentPosition++]);
 	}
 
-	public byte getSignedByteSubtracted() {
+	public byte getPreNegativeOffsetByte() {
 		return (byte) (128 - buffer[currentPosition++]);
 	}
 
-	// TODO should we remove the duplication?
-	public void putLEShortDup(int value) {
+	public void putShortLE(int value) {
 		buffer[currentPosition++] = (byte) value;
 		buffer[currentPosition++] = (byte) (value >> 8);
 	}
 
-	public void putShortAdded(int value) {
+	public void putOffsetShortBE(int value) {
 		buffer[currentPosition++] = (byte) (value >> 8);
 		buffer[currentPosition++] = (byte) (value + 128);
 	}
 
-	public void putLEShortAdded(int value) {
+	public void putOffsetShortLE(int value) {
 		buffer[currentPosition++] = (byte) (value + 128);
 		buffer[currentPosition++] = (byte) (value >> 8);
 	}
 
-	public int getUnsignedLEShort() {
+	public int getUnsignedShortLE() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 	}
 
-	public int getShortUnsingedAdded() {
+	public int getUnsignedNegativeOffsetShortBE() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] - 128 & 0xff);
 	}
 
-	public int getLittleShortA() {
+	public int getUnsignedNegativeOffsetShortLE() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] - 128 & 0xff);
 	}
 
-	public int getLEShort() {
+	public int getShortLE() {
 		currentPosition += 2;
 		int j = ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 		if (j > 0x7fff)
@@ -320,7 +319,7 @@ public class Buffer extends CacheableNode {
 		return j;
 	}
 
-	public int getShortA() {
+	public int getNegativeOffsetShortBE() {
 		currentPosition += 2;
 		int i = ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] - 128 & 0xff);
 		if (i > 32767)
@@ -328,25 +327,25 @@ public class Buffer extends CacheableNode {
 		return i;
 	}
 
-	public int method554() {
+	public int getMediumME() {
 		currentPosition += 3;
 		return ((buffer[currentPosition - 2] & 0xff) << 16) + ((buffer[currentPosition - 3] & 0xff) << 8)
 				+ (buffer[currentPosition - 1] & 0xff);
 	}
 
-	public int method555() {
+	public int getIntLE() {
 		currentPosition += 4;
 		return ((buffer[currentPosition - 1] & 0xff) << 24) + ((buffer[currentPosition - 2] & 0xff) << 16)
 				+ ((buffer[currentPosition - 3] & 0xff) << 8) + (buffer[currentPosition - 4] & 0xff);
 	}
 
-	public int method556() {
+	public int getIntME1() {
 		currentPosition += 4;
 		return ((buffer[currentPosition - 2] & 0xff) << 24) + ((buffer[currentPosition - 1] & 0xff) << 16)
 				+ ((buffer[currentPosition - 4] & 0xff) << 8) + (buffer[currentPosition - 3] & 0xff);
 	}
 
-	public int method557() {
+	public int getIntME2() {
 		currentPosition += 4;
 		return ((buffer[currentPosition - 3] & 0xff) << 24) + ((buffer[currentPosition - 4] & 0xff) << 16)
 				+ ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);

@@ -18,8 +18,8 @@ public class SoundTrackEnvelope {
 
 	public void decode(Buffer buffer) {
 		form = buffer.getUnsignedByte();
-		smart = buffer.getInt();
-		end = buffer.getInt();
+		smart = buffer.getIntBE();
+		end = buffer.getIntBE();
 		decodeShape(buffer);
 	}
 
@@ -28,8 +28,8 @@ public class SoundTrackEnvelope {
 		phaseDuration = new int[numPhases];
 		phasePeak = new int[numPhases];
 		for (int phase = 0; phase < numPhases; phase++) {
-			phaseDuration[phase] = buffer.getUnsignedShort();
-			phasePeak[phase] = buffer.getUnsignedShort();
+			phaseDuration[phase] = buffer.getUnsignedShortBE();
+			phasePeak[phase] = buffer.getUnsignedShortBE();
 		}
 
 	}

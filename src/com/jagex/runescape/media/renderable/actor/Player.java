@@ -263,8 +263,8 @@ public class Player extends Actor {
 	public void updateAppearance(Buffer buffer) {
 		buffer.currentPosition = 0;
 		gender = buffer.getUnsignedByte();
-		isSkulled = buffer.getSignedByte();
-		headIcon = buffer.getSignedByte();
+		isSkulled = buffer.getByte();
+		headIcon = buffer.getByte();
 		npcDefinition = null;
 		teamId = 0;
 		for (int index = 0; index < 12; index++) {
@@ -276,7 +276,7 @@ public class Player extends Actor {
 			int lowerByte = buffer.getUnsignedByte();
 			appearance[index] = (upperByte << 8) + lowerByte;
 			if (index == 0 && appearance[0] == 65535) {
-				npcDefinition = ActorDefinition.getDefinition(buffer.getUnsignedShort());
+				npcDefinition = ActorDefinition.getDefinition(buffer.getUnsignedShortBE());
 				break;
 			}
 			if (appearance[index] >= 512 && appearance[index] - 512 < ItemDefinition.count) {
@@ -293,30 +293,30 @@ public class Player extends Actor {
 			appearanceColors[l] = j1;
 		}
 
-		super.idleAnimation = buffer.getUnsignedShort();
+		super.idleAnimation = buffer.getUnsignedShortBE();
 		if (super.idleAnimation == 65535)
 			super.idleAnimation = -1;
-		super.standTurnAnimationId = buffer.getUnsignedShort();
+		super.standTurnAnimationId = buffer.getUnsignedShortBE();
 		if (super.standTurnAnimationId == 65535)
 			super.standTurnAnimationId = -1;
-		super.walkAnimationId = buffer.getUnsignedShort();
+		super.walkAnimationId = buffer.getUnsignedShortBE();
 		if (super.walkAnimationId == 65535)
 			super.walkAnimationId = -1;
-		super.turnAroundAnimationId = buffer.getUnsignedShort();
+		super.turnAroundAnimationId = buffer.getUnsignedShortBE();
 		if (super.turnAroundAnimationId == 65535)
 			super.turnAroundAnimationId = -1;
-		super.turnRightAnimationId = buffer.getUnsignedShort();
+		super.turnRightAnimationId = buffer.getUnsignedShortBE();
 		if (super.turnRightAnimationId == 65535)
 			super.turnRightAnimationId = -1;
-		super.turnLeftAnimationId = buffer.getUnsignedShort();
+		super.turnLeftAnimationId = buffer.getUnsignedShortBE();
 		if (super.turnLeftAnimationId == 65535)
 			super.turnLeftAnimationId = -1;
-		super.runAnimationId = buffer.getUnsignedShort();
+		super.runAnimationId = buffer.getUnsignedShortBE();
 		if (super.runAnimationId == 65535)
 			super.runAnimationId = -1;
-		playerName = TextUtils.formatName(TextUtils.longToName(buffer.getLong()));
+		playerName = TextUtils.formatName(TextUtils.longToName(buffer.getLongBE()));
 		combatLevel = buffer.getUnsignedByte();
-		skillLevel = buffer.getUnsignedShort();
+		skillLevel = buffer.getUnsignedShortBE();
 		visible = true;
 		appearanceHash = 0L;
 		int k1 = appearance[5];

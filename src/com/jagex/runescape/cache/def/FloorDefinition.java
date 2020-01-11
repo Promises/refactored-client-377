@@ -24,7 +24,7 @@ public class FloorDefinition {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("flo.dat"));
-		count = buffer.getUnsignedShort();
+		count = buffer.getUnsignedShortBE();
 		if (cache == null)
 			cache = new FloorDefinition[count];
 		for (int floor = 0; floor < count; floor++) {
@@ -42,7 +42,7 @@ public class FloorDefinition {
 				return;
 			switch (attributeId) {
 				case 1:
-					rgbColor = buffer.get24BitInt();
+					rgbColor = buffer.getMediumBE();
 					shiftRGBColors(rgbColor);
 					break;
 				case 2:
@@ -62,7 +62,7 @@ public class FloorDefinition {
 					int oldSaturation = saturation;
 					int oldLightness = lightness;
 					int oldHue = hue;
-					shiftRGBColors(buffer.get24BitInt());
+					shiftRGBColors(buffer.getMediumBE());
 					hue2 = oldHue2;
 					saturation = oldSaturation;
 					lightness = oldLightness;

@@ -105,7 +105,7 @@ public class Widget {
 	public static Widget forId(int id) {
 		if (interfaces[id] == null) {
 			Buffer buf = new Buffer(data[id]);
-			int j = buf.getUnsignedShort();
+			int j = buf.getUnsignedShortBE();
 			interfaces[id] = parse(j, buf, id);
 		}
 		return interfaces[id];
@@ -151,9 +151,9 @@ public class Widget {
 		widget.parentId = parentId;
 		widget.type = buffer.getUnsignedByte();
 		widget.actionType = buffer.getUnsignedByte();
-		widget.contentType = buffer.getUnsignedShort();
-		widget.width = buffer.getUnsignedShort();
-		widget.height = buffer.getUnsignedShort();
+		widget.contentType = buffer.getUnsignedShortBE();
+		widget.width = buffer.getUnsignedShortBE();
+		widget.height = buffer.getUnsignedShortBE();
 		widget.alpha = (byte) buffer.getUnsignedByte();
 		widget.hoveredPopup = buffer.getUnsignedByte();
 		if (widget.hoveredPopup != 0)
@@ -172,7 +172,7 @@ public class Widget {
 			widget.conditionValues = new int[conditionCount];
 			for (int condition = 0; condition < conditionCount; condition++) {
 				widget.conditionTypes[condition] = buffer.getUnsignedByte();
-				widget.conditionValues[condition] = buffer.getUnsignedShort();
+				widget.conditionValues[condition] = buffer.getUnsignedShortBE();
 			}
 
 		}
@@ -180,30 +180,30 @@ public class Widget {
 		if (cs1length > 0) {
 			widget.cs1opcodes = new int[cs1length][];
 			for (int blockIdx = 0; blockIdx < cs1length; blockIdx++) {
-				int cs1blocklen = buffer.getUnsignedShort();
+				int cs1blocklen = buffer.getUnsignedShortBE();
 				widget.cs1opcodes[blockIdx] = new int[cs1blocklen];
 				for (int cs1opcIdx = 0; cs1opcIdx < cs1blocklen; cs1opcIdx++)
-					widget.cs1opcodes[blockIdx][cs1opcIdx] = buffer.getUnsignedShort();
+					widget.cs1opcodes[blockIdx][cs1opcIdx] = buffer.getUnsignedShortBE();
 
 			}
 
 		}
 		if (widget.type == 0) {
-			widget.scrollLimit = buffer.getUnsignedShort();
+			widget.scrollLimit = buffer.getUnsignedShortBE();
 			widget.hiddenUntilHovered = buffer.getUnsignedByte() == 1;
-			int childrenCount = buffer.getUnsignedShort();
+			int childrenCount = buffer.getUnsignedShortBE();
 			widget.children = new int[childrenCount];
 			widget.childrenX = new int[childrenCount];
 			widget.childrenY = new int[childrenCount];
 			for (int child = 0; child < childrenCount; child++) {
-				widget.children[child] = buffer.getUnsignedShort();
-				widget.childrenX[child] = buffer.getSignedShort();
-				widget.childrenY[child] = buffer.getSignedShort();
+				widget.children[child] = buffer.getUnsignedShortBE();
+				widget.childrenX[child] = buffer.getShortBE();
+				widget.childrenY[child] = buffer.getShortBE();
 			}
 
 		}
 		if (widget.type == 1) {
-			widget.unknownOne = buffer.getUnsignedShort();
+			widget.unknownOne = buffer.getUnsignedShortBE();
 			widget.unknownTwo = buffer.getUnsignedByte() == 1;
 		}
 		if (widget.type == 2) {
@@ -221,8 +221,8 @@ public class Widget {
 			for (int sprite = 0; sprite < 20; sprite++) {
 				int hasSprite = buffer.getUnsignedByte();
 				if (hasSprite == 1) {
-					widget.imageX[sprite] = buffer.getSignedShort();
-					widget.imageY[sprite] = buffer.getSignedShort();
+					widget.imageX[sprite] = buffer.getShortBE();
+					widget.imageY[sprite] = buffer.getShortBE();
 					String spriteName = buffer.getString();
 					if (spriteName.length() > 0) {
 						int spriteId = spriteName.lastIndexOf(",");
@@ -254,11 +254,11 @@ public class Widget {
 			widget.enabledText = buffer.getString();
 		}
 		if (widget.type == 1 || widget.type == 3 || widget.type == 4)
-			widget.disabledColor = buffer.getInt();
+			widget.disabledColor = buffer.getIntBE();
 		if (widget.type == 3 || widget.type == 4) {
-			widget.enabledColor = buffer.getInt();
-			widget.disabledHoveredColor = buffer.getInt();
-			widget.enabledHoveredColor = buffer.getInt();
+			widget.enabledColor = buffer.getIntBE();
+			widget.disabledHoveredColor = buffer.getIntBE();
+			widget.enabledHoveredColor = buffer.getIntBE();
 		}
 		if (widget.type == 5) {
 			String spriteName = buffer.getString();
@@ -295,9 +295,9 @@ public class Widget {
 				widget.enabledAnimation = (widgetIndex - 1 << 8) + buffer.getUnsignedByte();
 			else
 				widget.enabledAnimation = -1;
-			widget.zoom = buffer.getUnsignedShort();
-			widget.rotationX = buffer.getUnsignedShort();
-			widget.rotationY = buffer.getUnsignedShort();
+			widget.zoom = buffer.getUnsignedShortBE();
+			widget.rotationX = buffer.getUnsignedShortBE();
+			widget.rotationY = buffer.getUnsignedShortBE();
 		}
 		if (widget.type == 7) {
 			widget.items = new int[widget.width * widget.height];
@@ -307,9 +307,9 @@ public class Widget {
 			if (fonts != null)
 				widget.typeFaces = fonts[typeFaceCount];
 			widget.typeFaceShadowed = buffer.getUnsignedByte() == 1;
-			widget.disabledColor = buffer.getInt();
-			widget.itemSpritePadsX = buffer.getSignedShort();
-			widget.itemSpritePadsY = buffer.getSignedShort();
+			widget.disabledColor = buffer.getIntBE();
+			widget.itemSpritePadsX = buffer.getShortBE();
+			widget.itemSpritePadsY = buffer.getShortBE();
 			widget.isInventory = buffer.getUnsignedByte() == 1;
 			widget.options = new String[5];
 			for (int optionId = 0; optionId < 5; optionId++) {
@@ -324,7 +324,7 @@ public class Widget {
 		if (widget.actionType == 2 || widget.type == 2) {
 			widget.optionCircumfix = buffer.getString();
 			widget.optionText = buffer.getString();
-			widget.optionAttributes = buffer.getUnsignedShort();
+			widget.optionAttributes = buffer.getUnsignedShortBE();
 		}
 		if (widget.actionType == 1 || widget.actionType == 4 || widget.actionType == 5 || widget.actionType == 6) {
 			widget.tooltip = buffer.getString();
@@ -348,14 +348,14 @@ public class Widget {
 		Widget.mediaArchive = mediaArchive;
 		Widget.fonts = fonts;
 		int parentId = -1;
-		int widgetCount = buffer.getUnsignedShort();
+		int widgetCount = buffer.getUnsignedShortBE();
 		interfaces = new Widget[widgetCount];
 		data = new byte[widgetCount][];
 		while (buffer.currentPosition < buffer.buffer.length) {
-			int widgetIndex = buffer.getUnsignedShort();
+			int widgetIndex = buffer.getUnsignedShortBE();
 			if (widgetIndex == 65535) {
-				parentId = buffer.getUnsignedShort();
-				widgetIndex = buffer.getUnsignedShort();
+				parentId = buffer.getUnsignedShortBE();
+				widgetIndex = buffer.getUnsignedShortBE();
 			}
 			int i1 = buffer.currentPosition;
 			Widget widget = parse(parentId, buffer, widgetIndex);

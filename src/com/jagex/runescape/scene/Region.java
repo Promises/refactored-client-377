@@ -1251,7 +1251,7 @@ public class Region {
 					break;
 				}
 				if (i_278_ <= 49) {
-					overlayFloorIds[i_276_][i_275_][i_277_] = class50_sub1_sub2.getSignedByte();
+					overlayFloorIds[i_276_][i_275_][i_277_] = class50_sub1_sub2.getByte();
 					overlayClippingPaths[i_276_][i_275_][i_277_] = (byte) ((i_278_ - 2) / 4);
 					overlayRotations[i_276_][i_275_][i_277_] = (byte) (i_278_ - 2 + i_274_ & 0x3);
 				} else if (i_278_ <= 81)

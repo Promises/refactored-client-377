@@ -17,7 +17,7 @@ public class IdentityKit {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("idk.dat"));
-		IdentityKit.count = buffer.getUnsignedShort();
+		IdentityKit.count = buffer.getUnsignedShortBE();
 		if (IdentityKit.cache == null)
 			IdentityKit.cache = new IdentityKit[IdentityKit.count];
 		for (int identityKit = 0; identityKit < count; identityKit++) {
@@ -38,15 +38,15 @@ public class IdentityKit {
 				int modelCount = buffer.getUnsignedByte();
 				modelId = new int[modelCount];
 				for (int model = 0; model < modelCount; model++)
-					modelId[model] = buffer.getUnsignedShort();
+					modelId[model] = buffer.getUnsignedShortBE();
 			} else if (attributeId == 3)
 				widgetDisplayed = true;
 			else if (attributeId >= 40 && attributeId < 50)
-				originalModelColors[attributeId - 40] = buffer.getUnsignedShort();
+				originalModelColors[attributeId - 40] = buffer.getUnsignedShortBE();
 			else if (attributeId >= 50 && attributeId < 60)
-				modifiedModelColors[attributeId - 50] = buffer.getUnsignedShort();
+				modifiedModelColors[attributeId - 50] = buffer.getUnsignedShortBE();
 			else if (attributeId >= 60 && attributeId < 70)
-				headModelIds[attributeId - 60] = buffer.getUnsignedShort();
+				headModelIds[attributeId - 60] = buffer.getUnsignedShortBE();
 			else
 				System.out.println("Error unrecognised config code: " + attributeId);
 		}
