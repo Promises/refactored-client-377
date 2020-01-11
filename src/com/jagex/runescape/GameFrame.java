@@ -11,7 +11,7 @@ public class GameFrame extends Frame {
 		this.gameStub = gameStub;
 		setTitle("Jagex");
 		setResizable(false);
-		setSize(width + 8, height + 28);
+		setSize(width, height + 22);
 		setVisible(true);
 		toFront();
 	}

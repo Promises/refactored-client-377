@@ -51,13 +51,13 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         width = _width;
         height = _height;
         gameFrame = new GameFrame(this, width, height);
-        gameGraphics = getParentComponent().getGraphics();
-        imageProducer = new ProducingGraphicsBuffer(width, height, getParentComponent());
-        this.setPreferredSize(new Dimension(width, height));
-        this.setMaximumSize(new Dimension(width, height));
-        this.setMinimumSize(new Dimension(width, height));
-        gameFrame.add(this);
-        gameFrame.pack();
+        gameGraphics = gameFrame.getGraphics();
+        imageProducer = new ProducingGraphicsBuffer(width, height, gameFrame);
+//        this.setPreferredSize(new Dimension(width, height));
+//        this.setMaximumSize(new Dimension(width, height));
+//        this.setMinimumSize(new Dimension(width, height));
+//        gameFrame.add(this);
+//        gameFrame.pack();
 
         startRunnable(this, 1);
     }
@@ -71,11 +71,11 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     }
 
     public void run() {
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-        this.addMouseWheelListener(this);
-        this.addKeyListener(this);
-        this.addFocusListener(this);
+        gameFrame.addMouseListener(this);
+        gameFrame.addMouseMotionListener(this);
+        gameFrame.addMouseWheelListener(this);
+        gameFrame.addKeyListener(this);
+        gameFrame.addFocusListener(this);
         if (gameFrame != null) {
             // Handle SIGTERM and exit
             gameFrame.addWindowListener(new WindowAdapter() {
@@ -219,8 +219,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 1;
-            mouseY -= 2;
+//            mouseX -= 2;
+            mouseY -= 24;
         }
         idleTime = 0;
         eventClickX = mouseX;
@@ -263,8 +263,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 1;
-            mouseY -= 2;
+//            mouseX -= 2;
+            mouseY -= 24;
         }
         if (mouseWheelDown) {
             mouseY = mouseWheelX - mouseevent.getX();
@@ -287,8 +287,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 1;
-            mouseY -= 2;
+//            mouseX -= 2;
+            mouseY -= 24;
         }
         idleTime = 0;
         this.mouseX = mouseX;
