@@ -1,4 +1,4 @@
-package tech.henning.client;
+package com.jagex.runescape.config;
 
 /**
  * Created by Promises on 16/06/17.

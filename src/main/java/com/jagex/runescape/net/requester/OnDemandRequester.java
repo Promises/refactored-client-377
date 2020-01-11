@@ -14,7 +14,7 @@ import com.jagex.runescape.collection.Queue;
 import com.jagex.runescape.net.Buffer;
 import com.jagex.runescape.util.LinkedList;
 import com.jagex.runescape.util.SignLink;
-import tech.henning.client.Configuration;
+import com.jagex.runescape.config.Configuration;
 
 public class OnDemandRequester extends Requester implements Runnable {
 
