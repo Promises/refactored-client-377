@@ -58,26 +58,26 @@ public class TypeFace extends Rasterizer {
     public TypeFace(boolean monospace, Archive archive, String archiveName) {
         Buffer dataBuffer = new Buffer(archive.getFile(archiveName + ".dat"));
         Buffer indexBuffer = new Buffer(archive.getFile("index.dat"));
-        indexBuffer.currentPosition = dataBuffer.getUnsignedShort() + 4;
+        indexBuffer.currentPosition = dataBuffer.getUnsignedShortBE() + 4;
         int k = indexBuffer.getUnsignedByte();
         if (k > 0)
             indexBuffer.currentPosition += 3 * (k - 1);
         for (int character = 0; character < 256; character++) {
             characterXOffsets[character] = indexBuffer.getUnsignedByte();
             characterYOffsets[character] = indexBuffer.getUnsignedByte();
-            int characterWidth = characterWidths[character] = indexBuffer.getUnsignedShort();
-            int characterHeight = characterHeights[character] = indexBuffer.getUnsignedShort();
+            int characterWidth = characterWidths[character] = indexBuffer.getUnsignedShortBE();
+            int characterHeight = characterHeights[character] = indexBuffer.getUnsignedShortBE();
             int characterType = indexBuffer.getUnsignedByte();
             int characterSize = characterWidth * characterHeight;
             characterPixels[character] = new byte[characterSize];
             if (characterType == 0) {
                 for (int pixel = 0; pixel < characterSize; pixel++)
-                    characterPixels[character][pixel] = dataBuffer.getSignedByte();
+                    characterPixels[character][pixel] = dataBuffer.getByte();
 
             } else if (characterType == 1) {
                 for (int characterX = 0; characterX < characterWidth; characterX++) {
                     for (int characterY = 0; characterY < characterHeight; characterY++)
-                        characterPixels[character][characterX + characterY * characterWidth] = dataBuffer.getSignedByte();
+                        characterPixels[character][characterX + characterY * characterWidth] = dataBuffer.getByte();
 
                 }
 

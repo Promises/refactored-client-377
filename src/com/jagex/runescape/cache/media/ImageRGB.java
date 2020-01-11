@@ -53,27 +53,27 @@ public class ImageRGB extends Rasterizer {
 	public ImageRGB(Archive archive, String archiveName, int archiveIndex) {
 		Buffer dataBuffer = new Buffer(archive.getFile(archiveName + ".dat"));
 		Buffer indexBuffer = new Buffer(archive.getFile("index.dat"));
-		indexBuffer.currentPosition = dataBuffer.getUnsignedShort();
-		maxWidth = indexBuffer.getUnsignedShort();
-		maxHeight = indexBuffer.getUnsignedShort();
+		indexBuffer.currentPosition = dataBuffer.getUnsignedShortBE();
+		maxWidth = indexBuffer.getUnsignedShortBE();
+		maxHeight = indexBuffer.getUnsignedShortBE();
 		int length = indexBuffer.getUnsignedByte();
 		int[] pixels = new int[length];
 		for (int pixel = 0; pixel < length - 1; pixel++) {
-			pixels[pixel + 1] = indexBuffer.get24BitInt();
+			pixels[pixel + 1] = indexBuffer.getMediumBE();
 			if (pixels[pixel + 1] == 0)
 				pixels[pixel + 1] = 1;
 		}
 
 		for (int index = 0; index < archiveIndex; index++) {
 			indexBuffer.currentPosition += 2;
-			dataBuffer.currentPosition += indexBuffer.getUnsignedShort() * indexBuffer.getUnsignedShort();
+			dataBuffer.currentPosition += indexBuffer.getUnsignedShortBE() * indexBuffer.getUnsignedShortBE();
 			indexBuffer.currentPosition++;
 		}
 
 		offsetX = indexBuffer.getUnsignedByte();
 		offsetY = indexBuffer.getUnsignedByte();
-		width = indexBuffer.getUnsignedShort();
-		height = indexBuffer.getUnsignedShort();
+		width = indexBuffer.getUnsignedShortBE();
+		height = indexBuffer.getUnsignedShortBE();
 		int type = indexBuffer.getUnsignedByte();
 		int pixelCount = width * height;
 		this.pixels = new int[pixelCount];

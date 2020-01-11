@@ -25,7 +25,7 @@ public class AnimationSequence {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("seq.dat"));
-		AnimationSequence.count = buffer.getUnsignedShort();
+		AnimationSequence.count = buffer.getUnsignedShortBE();
 		if (AnimationSequence.animations == null)
 			AnimationSequence.animations = new AnimationSequence[AnimationSequence.count];
 		for (int animation = 0; animation < count; animation++) {
@@ -59,16 +59,16 @@ public class AnimationSequence {
 					frame1Ids = new int[frameCount];
 					frameLenghts = new int[frameCount];
 					for (int frame = 0; frame < frameCount; frame++) {
-						getPrimaryFrame[frame] = buf.getUnsignedShort();
-						frame1Ids[frame] = buf.getUnsignedShort();
+						getPrimaryFrame[frame] = buf.getUnsignedShortBE();
+						frame1Ids[frame] = buf.getUnsignedShortBE();
 						if (frame1Ids[frame] == 65535)
 							frame1Ids[frame] = -1;
-						frameLenghts[frame] = buf.getUnsignedShort();
+						frameLenghts[frame] = buf.getUnsignedShortBE();
 					}
 
 					break;
 				case 2:
-					frameStep = buf.getUnsignedShort();
+					frameStep = buf.getUnsignedShortBE();
 					break;
 				case 3:
 					int flowCount = buf.getUnsignedByte();
@@ -85,10 +85,10 @@ public class AnimationSequence {
 					anInt301 = buf.getUnsignedByte();
 					break;
 				case 6:
-					getPlayerShieldDelta = buf.getUnsignedShort();
+					getPlayerShieldDelta = buf.getUnsignedShortBE();
 					break;
 				case 7:
-					getPlayerWeaponDelta = buf.getUnsignedShort();
+					getPlayerWeaponDelta = buf.getUnsignedShortBE();
 					break;
 				case 8:
 					anInt304 = buf.getUnsignedByte();
@@ -103,7 +103,7 @@ public class AnimationSequence {
 					anInt307 = buf.getUnsignedByte();
 					break;
 				case 12:
-					buf.getInt(); //dummy
+					buf.getIntBE(); //dummy
 					break;
 				default:
 					System.out.println("Error unrecognised seq config code: " + attributeId);

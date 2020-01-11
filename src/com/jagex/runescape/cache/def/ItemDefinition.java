@@ -191,12 +191,12 @@ public class ItemDefinition {
 	public static void load(Archive archive) {
 		buffer = new Buffer(archive.getFile("obj.dat"));
 		Buffer buffer = new Buffer(archive.getFile("obj.idx"));
-		count = buffer.getUnsignedShort();
+		count = buffer.getUnsignedShortBE();
 		offsets = new int[count];
 		int index = 2;
 		for (int i = 0; i < count; i++) {
 			offsets[i] = index;
-			index += buffer.getUnsignedShort();
+			index += buffer.getUnsignedShortBE();
 		}
 
 		cache = new ItemDefinition[10];
@@ -276,43 +276,43 @@ public class ItemDefinition {
 			if (opcode == 0)
 				return;
 			if (opcode == 1)
-				modelId = buffer.getUnsignedShort();
+				modelId = buffer.getUnsignedShortBE();
 			else if (opcode == 2)
 				name = buffer.getString();
 			else if (opcode == 3)
 				description = buffer.getStringBytes();
 			else if (opcode == 4)
-				modelScale = buffer.getUnsignedShort();
+				modelScale = buffer.getUnsignedShortBE();
 			else if (opcode == 5)
-				modelRotationX = buffer.getUnsignedShort();
+				modelRotationX = buffer.getUnsignedShortBE();
 			else if (opcode == 6)
-				modelRotationY = buffer.getUnsignedShort();
+				modelRotationY = buffer.getUnsignedShortBE();
 			else if (opcode == 7) {
-				modelOffsetX = buffer.getUnsignedShort();
+				modelOffsetX = buffer.getUnsignedShortBE();
 				if (modelOffsetX > 32767)
 					modelOffsetX -= 0x10000;
 			} else if (opcode == 8) {
-				modelOffsetY = buffer.getUnsignedShort();
+				modelOffsetY = buffer.getUnsignedShortBE();
 				if (modelOffsetY > 32767)
 					modelOffsetY -= 0x10000;
 			} else if (opcode == 10)
-				buffer.getUnsignedShort(); // Dummy
+				buffer.getUnsignedShortBE(); // Dummy
 			else if (opcode == 11)
 				stackable = true;
 			else if (opcode == 12)
-				value = buffer.getInt();
+				value = buffer.getIntBE();
 			else if (opcode == 16)
 				members = true;
 			else if (opcode == 23) {
-				primaryMaleModel = buffer.getUnsignedShort();
-				maleTranslation = buffer.getSignedByte();
+				primaryMaleModel = buffer.getUnsignedShortBE();
+				maleTranslation = buffer.getByte();
 			} else if (opcode == 24)
-				secondaryMaleModel = buffer.getUnsignedShort();
+				secondaryMaleModel = buffer.getUnsignedShortBE();
 			else if (opcode == 25) {
-				primaryFemaleModel = buffer.getUnsignedShort();
-				femaleTranslation = buffer.getSignedByte();
+				primaryFemaleModel = buffer.getUnsignedShortBE();
+				femaleTranslation = buffer.getByte();
 			} else if (opcode == 26)
-				secondaryFemaleModel = buffer.getUnsignedShort();
+				secondaryFemaleModel = buffer.getUnsignedShortBE();
 			else if (opcode >= 30 && opcode < 35) {
 				if (groundActions == null)
 					groundActions = new String[5];
@@ -328,45 +328,45 @@ public class ItemDefinition {
 				originalColours = new int[colorCount];
 				destColors = new int[colorCount];
 				for (int k = 0; k < colorCount; k++) {
-					originalColours[k] = buffer.getUnsignedShort();
-					destColors[k] = buffer.getUnsignedShort();
+					originalColours[k] = buffer.getUnsignedShortBE();
+					destColors[k] = buffer.getUnsignedShortBE();
 				}
 
 			} else if (opcode == 78)
-				tertiaryMaleEquipmentModel = buffer.getUnsignedShort();
+				tertiaryMaleEquipmentModel = buffer.getUnsignedShortBE();
 			else if (opcode == 79)
-				tertiaryFemaleEquipmentModel = buffer.getUnsignedShort();
+				tertiaryFemaleEquipmentModel = buffer.getUnsignedShortBE();
 			else if (opcode == 90)
-				primaryMaleHeadPiece = buffer.getUnsignedShort();
+				primaryMaleHeadPiece = buffer.getUnsignedShortBE();
 			else if (opcode == 91)
-				primaryFemaleHeadPiece = buffer.getUnsignedShort();
+				primaryFemaleHeadPiece = buffer.getUnsignedShortBE();
 			else if (opcode == 92)
-				secondaryMaleHeadPiece = buffer.getUnsignedShort();
+				secondaryMaleHeadPiece = buffer.getUnsignedShortBE();
 			else if (opcode == 93)
-				secondaryFemaleHeadPiece = buffer.getUnsignedShort();
+				secondaryFemaleHeadPiece = buffer.getUnsignedShortBE();
 			else if (opcode == 95)
-				anInt339 = buffer.getUnsignedShort();
+				anInt339 = buffer.getUnsignedShortBE();
 			else if (opcode == 97)
-				notedInfoId = buffer.getUnsignedShort();
+				notedInfoId = buffer.getUnsignedShortBE();
 			else if (opcode == 98)
-				notedTemplateId = buffer.getUnsignedShort();
+				notedTemplateId = buffer.getUnsignedShortBE();
 			else if (opcode >= 100 && opcode < 110) {
 				if (stackIds == null) {
 					stackIds = new int[10];
 					stackAmounts = new int[10];
 				}
-				stackIds[opcode - 100] = buffer.getUnsignedShort();
-				stackAmounts[opcode - 100] = buffer.getUnsignedShort();
+				stackIds[opcode - 100] = buffer.getUnsignedShortBE();
+				stackAmounts[opcode - 100] = buffer.getUnsignedShortBE();
 			} else if (opcode == 110)
-				groundScaleX = buffer.getUnsignedShort();
+				groundScaleX = buffer.getUnsignedShortBE();
 			else if (opcode == 111)
-				groundScaleY = buffer.getUnsignedShort();
+				groundScaleY = buffer.getUnsignedShortBE();
 			else if (opcode == 112)
-				groundScaleZ = buffer.getUnsignedShort();
+				groundScaleZ = buffer.getUnsignedShortBE();
 			else if (opcode == 113)
-				ambience = buffer.getSignedByte();
+				ambience = buffer.getByte();
 			else if (opcode == 114)
-				diffusion = buffer.getSignedByte() * 5;
+				diffusion = buffer.getByte() * 5;
 			else if (opcode == 115)
 				team = buffer.getUnsignedByte();
 		}

@@ -41,7 +41,7 @@ public class ChatCensor {
 	}
 
 	public static void loadTopLevelDomains(Buffer buffer) {
-		int length = buffer.getInt();
+		int length = buffer.getIntBE();
 		topLevelDomains = new char[length][];
 		topLevelDomainsType = new int[length];
 		for (int index = 0; index < length; index++) {
@@ -56,7 +56,7 @@ public class ChatCensor {
 	}
 
 	public static void loadBadEnc(Buffer buffer) {
-		int length = buffer.getInt();
+		int length = buffer.getIntBE();
 		badWords = new char[length][];
 		badBytes = new byte[length][][];
 		loadBadWords(buffer, badWords, badBytes);
@@ -64,15 +64,15 @@ public class ChatCensor {
 	}
 
 	public static void loadDomainEnc(Buffer buffer) {
-		int length = buffer.getInt();
+		int length = buffer.getIntBE();
 		domains = new char[length][];
 		loadDomains(buffer, domains);
 	}
 
 	public static void loadFragmentsEnc(Buffer buffer) {
-		fragments = new int[buffer.getInt()];
+		fragments = new int[buffer.getIntBE()];
 		for (int index = 0; index < fragments.length; index++)
-			fragments[index] = buffer.getUnsignedShort();
+			fragments[index] = buffer.getUnsignedShortBE();
 
 	}
 

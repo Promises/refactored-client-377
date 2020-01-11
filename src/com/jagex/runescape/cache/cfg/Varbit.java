@@ -14,7 +14,7 @@ public class Varbit {
 
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("varbit.dat"));
-		count = buffer.getUnsignedShort();
+		count = buffer.getUnsignedShortBE();
 
 		if (cache == null)
 			cache = new Varbit[count];
@@ -37,7 +37,7 @@ public class Varbit {
 			if (attribute == 0)
 				return;
 			if (attribute == 1) {
-				configId = buf.getUnsignedShort();
+				configId = buf.getUnsignedShortBE();
 				leastSignificantBit = buf.getUnsignedByte();
 				mostSignificantBit = buf.getUnsignedByte();
 			} else if (attribute == 10)
@@ -45,9 +45,9 @@ public class Varbit {
 			else if (attribute == 2)
 				aBoolean829 = true;
 			else if (attribute == 3)
-				buf.getInt(); // dummy
+				buf.getIntBE(); // dummy
 			else if (attribute == 4)
-				buf.getInt(); // dummy
+				buf.getIntBE(); // dummy
 			else if (attribute == 5)
 				aBoolean832 = false;
 			else
