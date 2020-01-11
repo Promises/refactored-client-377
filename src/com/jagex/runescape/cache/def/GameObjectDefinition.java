@@ -145,12 +145,12 @@ public class GameObjectDefinition {
     public static void load(Archive archive) {
         buffer = new Buffer(archive.getFile("loc.dat"));
         Buffer buffer = new Buffer(archive.getFile("loc.idx"));
-        definitionCount = buffer.getUnsignedBEShort();
+        definitionCount = buffer.getUnsignedShort();
         bufferOffsets = new int[definitionCount];
         int offset = 2;
         for (int index = 0; index < definitionCount; index++) {
             bufferOffsets[index] = offset;
-            offset += buffer.getUnsignedBEShort();
+            offset += buffer.getUnsignedShort();
         }
 
         cache = new GameObjectDefinition[20];
@@ -285,7 +285,7 @@ public class GameObjectDefinition {
                                 modelTypes = new int[k];
                                 modelIds = new int[k];
                                 for (int k1 = 0; k1 < k; k1++) {
-                                    modelIds[k1] = buf.getUnsignedBEShort();
+                                    modelIds[k1] = buf.getUnsignedShort();
                                     modelTypes[k1] = buf.getUnsignedByte();
                                 }
 
@@ -306,7 +306,7 @@ public class GameObjectDefinition {
                                 modelTypes = null;
                                 modelIds = new int[l];
                                 for (int l1 = 0; l1 < l; l1++)
-                                    modelIds[l1] = buf.getUnsignedBEShort();
+                                    modelIds[l1] = buf.getUnsignedShort();
 
                             } else {
                                 buf.currentPosition += l * 2;
@@ -339,7 +339,7 @@ public class GameObjectDefinition {
                         aBoolean797 = true;
                         break;
                     case 24:
-                        animationId = buf.getUnsignedBEShort();
+                        animationId = buf.getUnsignedShort();
                         if (animationId == 65535)
                             animationId = -1;
                         break;
@@ -360,13 +360,13 @@ public class GameObjectDefinition {
                             modifiedModelColors = new int[i1];
                             anIntArray792 = new int[i1];
                             for (int i2 = 0; i2 < i1; i2++) {
-                                modifiedModelColors[i2] = buf.getUnsignedBEShort();
-                                anIntArray792[i2] = buf.getUnsignedBEShort();
+                                modifiedModelColors[i2] = buf.getUnsignedShort();
+                                anIntArray792[i2] = buf.getUnsignedShort();
                             }
 
                             break;
                         case 60:
-                            icon = buf.getUnsignedBEShort();
+                            icon = buf.getUnsignedShort();
                             break;
                         case 62:
                             unknown3 = true;
@@ -375,16 +375,16 @@ public class GameObjectDefinition {
                             unknown2 = false;
                             break;
                         case 65:
-                            modelSizeX = buf.getUnsignedBEShort();
+                            modelSizeX = buf.getUnsignedShort();
                             break;
                         case 66:
-                            modelSizeY = buf.getUnsignedBEShort();
+                            modelSizeY = buf.getUnsignedShort();
                             break;
                         case 67:
-                            modelSizeZ = buf.getUnsignedBEShort();
+                            modelSizeZ = buf.getUnsignedShort();
                             break;
                         case 68:
-                            anInt795 = buf.getUnsignedBEShort();
+                            anInt795 = buf.getUnsignedShort();
                             break;
                         case 69:
                             anInt764 = buf.getUnsignedByte();
@@ -419,16 +419,16 @@ public class GameObjectDefinition {
                 }
                 continue label0;
             } while (attribute != 77);
-            varbitId = buf.getUnsignedBEShort();
+            varbitId = buf.getUnsignedShort();
             if (varbitId == 65535)
                 varbitId = -1;
-            configId = buf.getUnsignedBEShort();
+            configId = buf.getUnsignedShort();
             if (configId == 65535)
                 configId = -1;
             int j1 = buf.getUnsignedByte();
             childrenIds = new int[j1 + 1];
             for (int j2 = 0; j2 <= j1; j2++) {
-                childrenIds[j2] = buf.getUnsignedBEShort();
+                childrenIds[j2] = buf.getUnsignedShort();
                 if (childrenIds[j2] == 65535)
                     childrenIds[j2] = -1;
             }

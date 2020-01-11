@@ -24,10 +24,10 @@ public class Animation {
 	public static void method236(byte[] bs) {
 		Buffer buffer = new Buffer(bs);
 		buffer.currentPosition = bs.length - 8;
-		int i = buffer.getUnsignedBEShort();
-		int j = buffer.getUnsignedBEShort();
-		int k = buffer.getUnsignedBEShort();
-		int l = buffer.getUnsignedBEShort();
+		int i = buffer.getUnsignedShort();
+		int j = buffer.getUnsignedShort();
+		int k = buffer.getUnsignedShort();
+		int l = buffer.getUnsignedShort();
 		int i1 = 0;
 		Buffer buffer_5_ = new Buffer(bs);
 		buffer_5_.currentPosition = i1;
@@ -44,13 +44,13 @@ public class Animation {
 		Buffer buffer_9_ = new Buffer(bs);
 		buffer_9_.currentPosition = i1;
 		Skins skins = new Skins(buffer_9_);
-		int animationAmount = buffer_5_.getUnsignedBEShort();
+		int animationAmount = buffer_5_.getUnsignedShort();
 		int ai[] = new int[500];
 		int ai1[] = new int[500];
 		int ai2[] = new int[500];
 		int ai3[] = new int[500];
 		for (int k1 = 0; k1 < animationAmount; k1++) {
-			int l1 = buffer_5_.getUnsignedBEShort();
+			int l1 = buffer_5_.getUnsignedShort();
 			Animation animation = cache[l1] = new Animation();
 			animation.anInt431 = class50_sub1_sub2_4.getUnsignedByte();
 			animation.animationSkins = skins;

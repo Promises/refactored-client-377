@@ -137,7 +137,7 @@ public class Buffer extends CacheableNode {
 		return buffer[currentPosition++];
 	}
 
-	public int getUnsignedBEShort() {
+	public int getUnsignedShort() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] & 0xff);
 	}
@@ -218,7 +218,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte() - 64;
 		else
-			return getUnsignedBEShort() - 49152;
+			return getUnsignedShort() - 49152;
 	}
 
 	public int getSmart() {
@@ -226,7 +226,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte();
 		else
-			return getUnsignedBEShort() - 32768;
+			return getUnsignedShort() - 32768;
 	}
 
 	public void encrypt(BigInteger modulus, BigInteger key) {

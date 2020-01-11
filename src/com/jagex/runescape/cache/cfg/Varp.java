@@ -25,7 +25,7 @@ public class Varp {
 	public static void load(Archive archive) {
 		Buffer buffer = new Buffer(archive.getFile("varp.dat"));
 		currentIndex = 0;
-		count = buffer.getUnsignedBEShort();
+		count = buffer.getUnsignedShort();
 
 		if (cache == null)
 			cache = new Varp[count];
@@ -58,7 +58,7 @@ public class Varp {
 			} else if (attribute == 4)
 				aBoolean711 = false;
 			else if (attribute == 5)
-				anInt712 = buffer.getUnsignedBEShort();
+				anInt712 = buffer.getUnsignedShort();
 			else if (attribute == 6)
 				aBoolean713 = true;
 			else if (attribute == 7)

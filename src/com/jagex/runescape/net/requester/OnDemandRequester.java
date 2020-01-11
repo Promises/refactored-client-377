@@ -438,7 +438,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 			fileVersions[version] = new int[versionCount];
 			filePriorities[version] = new byte[versionCount];
 			for (int file = 0; file < versionCount; file++)
-				fileVersions[version][file] = buffer.getUnsignedBEShort();
+				fileVersions[version][file] = buffer.getUnsignedShort();
 
 		}
 
@@ -470,9 +470,9 @@ public class OnDemandRequester extends Requester implements Runnable {
 		regLandIndex = new int[count];
 		regShouldPreload = new int[count];
 		for (int reg = 0; reg < count; reg++) {
-			regHash[reg] = buffer.getUnsignedBEShort();
-			regMapIndex[reg] = buffer.getUnsignedBEShort();
-			regLandIndex[reg] = buffer.getUnsignedBEShort();
+			regHash[reg] = buffer.getUnsignedShort();
+			regMapIndex[reg] = buffer.getUnsignedShort();
+			regLandIndex[reg] = buffer.getUnsignedShort();
 			regShouldPreload[reg] = buffer.getUnsignedByte();
 		}
 
@@ -481,7 +481,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 		count = data.length / 2;
 		animIndex = new int[count];
 		for (int i = 0; i < count; i++)
-			animIndex[i] = buffer.getUnsignedBEShort();
+			animIndex[i] = buffer.getUnsignedShort();
 
 		data = archive.getFile("midi_index");
 		buffer = new Buffer(data);

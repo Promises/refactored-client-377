@@ -74,13 +74,13 @@ public class SoundFilter {
 		numPairs[0] = numPair >> 4;
 		numPairs[1] = numPair & 0xf;
 		if (numPair != 0) {
-			unity[0] = buffer.getUnsignedBEShort();
-			unity[1] = buffer.getUnsignedBEShort();
+			unity[0] = buffer.getUnsignedShort();
+			unity[1] = buffer.getUnsignedShort();
 			int migrated = buffer.getUnsignedByte();
 			for (int dir = 0; dir < 2; dir++) {
 				for (int term = 0; term < numPairs[dir]; term++) {
-					pairPhase[dir][0][term] = buffer.getUnsignedBEShort();
-					magnitude[dir][0][term] = buffer.getUnsignedBEShort();
+					pairPhase[dir][0][term] = buffer.getUnsignedShort();
+					magnitude[dir][0][term] = buffer.getUnsignedShort();
 				}
 
 			}
@@ -88,8 +88,8 @@ public class SoundFilter {
 			for (int dir = 0; dir < 2; dir++) {
 				for (int term = 0; term < numPairs[dir]; term++)
 					if ((migrated & 1 << dir * 4 << term) != 0) {
-						pairPhase[dir][1][term] = buffer.getUnsignedBEShort();
-						magnitude[dir][1][term] = buffer.getUnsignedBEShort();
+						pairPhase[dir][1][term] = buffer.getUnsignedShort();
+						magnitude[dir][1][term] = buffer.getUnsignedShort();
 					} else {
 						pairPhase[dir][1][term] = pairPhase[dir][0][term];
 						magnitude[dir][1][term] = magnitude[dir][0][term];

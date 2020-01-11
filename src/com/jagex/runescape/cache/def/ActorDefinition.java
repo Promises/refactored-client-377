@@ -71,7 +71,7 @@ public class ActorDefinition {
                 int modelCount = buffer.getUnsignedByte();
                 modelIds = new int[modelCount];
                 for (int model = 0; model < modelCount; model++)
-                    modelIds[model] = buffer.getUnsignedBEShort();
+                    modelIds[model] = buffer.getUnsignedShort();
 
             } else if (attributeId == 2)
                 name = buffer.getString();
@@ -80,14 +80,14 @@ public class ActorDefinition {
             else if (attributeId == 12)
                 boundaryDimension = buffer.getSignedByte();
             else if (attributeId == 13)
-                standAnimationId = buffer.getUnsignedBEShort();
+                standAnimationId = buffer.getUnsignedShort();
             else if (attributeId == 14)
-                walkAnimationId = buffer.getUnsignedBEShort();
+                walkAnimationId = buffer.getUnsignedShort();
             else if (attributeId == 17) {
-                walkAnimationId = buffer.getUnsignedBEShort();
-                turnAroundAnimationId = buffer.getUnsignedBEShort();
-                turnRightAnimationId = buffer.getUnsignedBEShort();
-                turnLeftAnimationId = buffer.getUnsignedBEShort();
+                walkAnimationId = buffer.getUnsignedShort();
+                turnAroundAnimationId = buffer.getUnsignedShort();
+                turnRightAnimationId = buffer.getUnsignedShort();
+                turnLeftAnimationId = buffer.getUnsignedShort();
             } else if (attributeId >= 30 && attributeId < 40) {
                 if (actions == null)
                     actions = new String[5];
@@ -99,30 +99,30 @@ public class ActorDefinition {
                 modifiedModelColors = new int[modelColorCount];
                 originalModelColors = new int[modelColorCount];
                 for (int colour = 0; colour < modelColorCount; colour++) {
-                    modifiedModelColors[colour] = buffer.getUnsignedBEShort();
-                    originalModelColors[colour] = buffer.getUnsignedBEShort();
+                    modifiedModelColors[colour] = buffer.getUnsignedShort();
+                    originalModelColors[colour] = buffer.getUnsignedShort();
                 }
 
             } else if (attributeId == 60) {
                 int additionalModelCount = buffer.getUnsignedByte();
                 headModelIndexes = new int[additionalModelCount];
                 for (int model = 0; model < additionalModelCount; model++)
-                    headModelIndexes[model] = buffer.getUnsignedBEShort();
+                    headModelIndexes[model] = buffer.getUnsignedShort();
 
             } else if (attributeId == 90)
-                anInt648 = buffer.getUnsignedBEShort();
+                anInt648 = buffer.getUnsignedShort();
             else if (attributeId == 91)
-                anInt627 = buffer.getUnsignedBEShort();
+                anInt627 = buffer.getUnsignedShort();
             else if (attributeId == 92)
-                anInt637 = buffer.getUnsignedBEShort();
+                anInt637 = buffer.getUnsignedShort();
             else if (attributeId == 93)
                 minimapVisible = false;
             else if (attributeId == 95)
-                combatLevel = buffer.getUnsignedBEShort();
+                combatLevel = buffer.getUnsignedShort();
             else if (attributeId == 97)
-                sizeXZ = buffer.getUnsignedBEShort();
+                sizeXZ = buffer.getUnsignedShort();
             else if (attributeId == 98)
-                sizeY = buffer.getUnsignedBEShort();
+                sizeY = buffer.getUnsignedShort();
             else if (attributeId == 99)
                 visible = true;
             else if (attributeId == 100)
@@ -130,20 +130,20 @@ public class ActorDefinition {
             else if (attributeId == 101)
                 contrast = buffer.getSignedByte() * 5;
             else if (attributeId == 102)
-                headIcon = buffer.getUnsignedBEShort();
+                headIcon = buffer.getUnsignedShort();
             else if (attributeId == 103)
-                degreesToTurn = buffer.getUnsignedBEShort();
+                degreesToTurn = buffer.getUnsignedShort();
             else if (attributeId == 106) {
-                varBitId = buffer.getUnsignedBEShort();
+                varBitId = buffer.getUnsignedShort();
                 if (varBitId == 65535)
                     varBitId = -1;
-                settingId = buffer.getUnsignedBEShort();
+                settingId = buffer.getUnsignedShort();
                 if (settingId == 65535)
                     settingId = -1;
                 int childrenCount = buffer.getUnsignedByte();
                 childrenIds = new int[childrenCount + 1];
                 for (int child = 0; child <= childrenCount; child++) {
-                    childrenIds[child] = buffer.getUnsignedBEShort();
+                    childrenIds[child] = buffer.getUnsignedShort();
                     if (childrenIds[child] == 65535)
                         childrenIds[child] = -1;
                 }
@@ -214,12 +214,12 @@ public class ActorDefinition {
     public static void load(Archive archive) {
         buffer = new Buffer(archive.getFile("npc.dat"));
         Buffer buffer = new Buffer(archive.getFile("npc.idx"));
-        size = buffer.getUnsignedBEShort();
+        size = buffer.getUnsignedShort();
         bufferOffsets = new int[size];
         int offset = 2;
         for (int bufferIndex = 0; bufferIndex < size; bufferIndex++) {
             bufferOffsets[bufferIndex] = offset;
-            offset += buffer.getUnsignedBEShort();
+            offset += buffer.getUnsignedShort();
         }
 
         cache = new ActorDefinition[20];
