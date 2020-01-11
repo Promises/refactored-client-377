@@ -14,6 +14,7 @@ import com.jagex.runescape.collection.Queue;
 import com.jagex.runescape.net.Buffer;
 import com.jagex.runescape.util.LinkedList;
 import com.jagex.runescape.util.SignLink;
+import tech.henning.client.Configuration;
 
 public class OnDemandRequester extends Requester implements Runnable {
 
@@ -566,7 +567,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 				if (currentTime - lastSocketOpen < 4000L)
 					return;
 				lastSocketOpen = currentTime;
-				socket = client.openSocket(43594 + Game.portOffset);
+				socket = client.openSocket(Configuration.ONDEMAND_PORT + Game.portOffset);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 				outputStream.write(15);

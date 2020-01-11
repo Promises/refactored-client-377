@@ -20,6 +20,11 @@ public class Configuration {
     public static final int GAME_PORT = 43594;
 
     /**
+     * Port for establishing a connection to the on demand service.
+     */
+    public static final int ONDEMAND_PORT = 43596;
+
+    /**
      * Port for establishing a connection to the update server.
      */
     public static final int JAGGRAB_PORT = 43595;
