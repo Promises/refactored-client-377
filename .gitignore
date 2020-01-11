@@ -59,4 +59,4 @@ gradlew.bat
 .gradle/
 
 # Config
-config/EXAMPLE-client-config.yaml
+config/client-config.yaml
