@@ -11,6 +11,7 @@ import java.awt.event.*;
 public class GameShell extends Canvas implements Runnable, MouseListener, MouseMotionListener, KeyListener,
         MouseWheelListener, FocusListener, WindowListener {
 
+
     private int gameState;
     private int deltime = 20;
     public int mindel = 1;
@@ -19,6 +20,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public boolean dumpRequested = false;
     public int width;
     public int height;
+    public int extraWidth = 0;
+    public int extraHeight = 22;
     public Graphics gameGraphics;
     public ProducingGraphicsBuffer imageProducer;
     public ImageRGB aClass50_Sub1_Sub1_Sub1Array16[] = new ImageRGB[6];
@@ -52,6 +55,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         height = _height;
         gameFrame = new GameFrame(this, width, height);
         gameGraphics = gameFrame.getGraphics();
+//        this.height = this.height + this.extraHeight;
+//        gameGraphics.translate(extraWidth, extraHeight);
         imageProducer = new ProducingGraphicsBuffer(width, height, gameFrame);
 //        this.setPreferredSize(new Dimension(width, height));
 //        this.setMaximumSize(new Dimension(width, height));
@@ -65,7 +70,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public final void initializeApplet(int width, int height) {
         this.width = width;
         this.height = height;
-        gameGraphics = getParentComponent().getGraphics();
+        gameGraphics = gameFrame.getGraphics();
         imageProducer = new ProducingGraphicsBuffer(this.width, this.height, getParentComponent());
         startRunnable(this, 1);
     }
@@ -201,16 +206,12 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
             exit();
     }
 
-    public void update(Graphics graphics) {
-        if (gameGraphics == null)
-            gameGraphics = graphics;
+    public void update() {
         clearScreen = true;
         redraw();
     }
 
-    public void paint(Graphics graphics) {
-        if (gameGraphics == null)
-            gameGraphics = graphics;
+    public void paint() {
         clearScreen = true;
         redraw();
     }
@@ -219,8 +220,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 2;
-            mouseY -= 24;
+            mouseX -= extraWidth;
+            mouseY -= 2 + extraHeight;
         }
         idleTime = 0;
         eventClickX = mouseX;
@@ -263,8 +264,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 2;
-            mouseY -= 24;
+            mouseX -= extraWidth;
+            mouseY -= 2 + extraHeight;
         }
         if (mouseWheelDown) {
             mouseY = mouseWheelX - mouseevent.getX();
@@ -287,8 +288,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int mouseX = mouseevent.getX();
         int mouseY = mouseevent.getY();
         if (gameFrame != null) {
-//            mouseX -= 2;
-            mouseY -= 24;
+            mouseX -= extraWidth;
+            mouseY -= 2 + extraHeight;
         }
         idleTime = 0;
         this.mouseX = mouseX;
@@ -532,9 +533,9 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
 
     public void drawLoadingText(int percent, String desc) {
         while (gameGraphics == null) {
-            gameGraphics = getParentComponent().getGraphics();
+            gameGraphics = gameFrame.getGraphics();
             try {
-                getParentComponent().repaint();
+                gameFrame.repaint();
             } catch (Exception _ex) {
             }
             try {
