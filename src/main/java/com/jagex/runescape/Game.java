@@ -48,10 +48,10 @@ import com.jagex.runescape.scene.util.CollisionMap;
 import com.jagex.runescape.sound.SoundPlayer;
 import com.jagex.runescape.sound.SoundTrack;
 import com.jagex.runescape.util.*;
-import tech.henning.client.Actions;
-import tech.henning.client.Configuration;
+import com.jagex.runescape.config.Actions;
+import com.jagex.runescape.config.Configuration;
 
-import static tech.henning.client.Configuration.*;
+import static com.jagex.runescape.config.Configuration.*;
 
 @SuppressWarnings("serial")
 public class Game extends GameShell {
@@ -570,6 +570,7 @@ public class Game extends GameShell {
     public static void main(String args[]) {
         try {
             System.out.println("RS2 user client - release #" + 377);
+            Configuration.read();
             world = 1;
             portOffset = 0;
             setHighMemory();

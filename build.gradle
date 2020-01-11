@@ -1,0 +1,12 @@
+group 'com.jagex.runescape'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.yaml:snakeyaml:1.25'
+}

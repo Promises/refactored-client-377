@@ -51,3 +51,12 @@ atlassian-ide-plugin.xml
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
+
+# Gradle
+gradlew
+gradlew.bat
+/gradle/
+.gradle/
+
+# Config
+config/EXAMPLE-client-config.yaml
