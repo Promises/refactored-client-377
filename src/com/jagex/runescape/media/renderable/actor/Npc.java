@@ -1,6 +1,4 @@
-package com.jagex.runescape.media.renderable.actor;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) 
+package com.jagex.runescape.media.renderable.actor;
 
 import com.jagex.runescape.cache.def.ActorDefinition;
 import com.jagex.runescape.cache.media.AnimationSequence;
@@ -49,11 +47,11 @@ public class Npc extends Actor {
 					animationModel.scaleT(spotanimation.resizeZ, spotanimation.resizeXY, 9, spotanimation.resizeXY);
 				animationModel.applyLighting(64 + spotanimation.modelLightFalloff, 850 + spotanimation.modelLightAmbient, -30, -50, -30, true);
 				Model[] models = { model, animationModel };
-				model = new Model(2, 0, models);
+				model = new Model(models);
 			}
 		}
 		if (npcDefinition.boundaryDimension == 1)
-			model.oneSquareModel = true;
+			model.singleTile = true;
 		return model;
 	}
 

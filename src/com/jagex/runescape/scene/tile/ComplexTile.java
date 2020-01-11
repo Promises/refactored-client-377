@@ -2,233 +2,231 @@ package com.jagex.runescape.scene.tile;
 
 public class ComplexTile {
 
-	public ComplexTile(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int j2, int k2, int l2, int i3,
-					   int j3, int k3, int l3, int i4, int j4, int k4, int l4) {
-		aBoolean413 = true;
-		if (l != j3 || l != k || l != i)
-			aBoolean413 = false;
-		anInt414 = i3;
-		anInt415 = l4;
-		anInt416 = i4;
-		anInt417 = l1;
+	public ComplexTile(int tileX, int yA, int yB, int yC, int yD, int tileZ, int rotation, int texture, int shape, int cA, int cAA, int cB, int cBA, int cC, int cCA, int cD, int cDA, int overlayRGB,
+                       int underlayRGB) {
+        flat = yA == yB && yA == yD && yA == yC;
+		this.shape = shape;
+		this.rotation = rotation;
+		this.underlayRGB = underlayRGB;
+		this.overlayRGB = overlayRGB;
 		char c = '\200';
 		int i5 = c / 2;
 		int j5 = c / 4;
 		int k5 = (c * 3) / 4;
-		int ai[] = anIntArrayArray426[i3];
-		int l5 = ai.length;
-		anIntArray403 = new int[l5];
-		anIntArray404 = new int[l5];
-		anIntArray405 = new int[l5];
-		int ai1[] = new int[l5];
-		int ai2[] = new int[l5];
-		int i6 = i1 * c;
-		int j6 = k4 * c;
-		for (int k6 = 0; k6 < l5; k6++) {
-			int l6 = ai[k6];
-			if ((l6 & 1) == 0 && l6 <= 8)
-				l6 = (l6 - l4 - l4 - 1 & 7) + 1;
-			if (l6 > 8 && l6 <= 12)
-				l6 = (l6 - 9 - l4 & 3) + 9;
-			if (l6 > 12 && l6 <= 16)
-				l6 = (l6 - 13 - l4 & 3) + 13;
-			int i7;
-			int k7;
-			int i8;
-			int k8;
-			int j9;
-			if (l6 == 1) {
-				i7 = i6;
-				k7 = j6;
-				i8 = l;
-				k8 = l2;
-				j9 = j;
-			} else if (l6 == 2) {
-				i7 = i6 + i5;
-				k7 = j6;
-				i8 = l + j3 >> 1;
-				k8 = l2 + i2 >> 1;
-				j9 = j + j4 >> 1;
-			} else if (l6 == 3) {
-				i7 = i6 + c;
-				k7 = j6;
-				i8 = j3;
-				k8 = i2;
-				j9 = j4;
-			} else if (l6 == 4) {
-				i7 = i6 + c;
-				k7 = j6 + i5;
-				i8 = j3 + k >> 1;
-				k8 = i2 + j1 >> 1;
-				j9 = j4 + j2 >> 1;
-			} else if (l6 == 5) {
-				i7 = i6 + c;
-				k7 = j6 + c;
-				i8 = k;
-				k8 = j1;
-				j9 = j2;
-			} else if (l6 == 6) {
-				i7 = i6 + i5;
-				k7 = j6 + c;
-				i8 = k + i >> 1;
-				k8 = j1 + k1 >> 1;
-				j9 = j2 + k3 >> 1;
-			} else if (l6 == 7) {
-				i7 = i6;
-				k7 = j6 + c;
-				i8 = i;
-				k8 = k1;
-				j9 = k3;
-			} else if (l6 == 8) {
-				i7 = i6;
-				k7 = j6 + i5;
-				i8 = i + l >> 1;
-				k8 = k1 + l2 >> 1;
-				j9 = k3 + j >> 1;
-			} else if (l6 == 9) {
-				i7 = i6 + i5;
-				k7 = j6 + j5;
-				i8 = l + j3 >> 1;
-				k8 = l2 + i2 >> 1;
-				j9 = j + j4 >> 1;
-			} else if (l6 == 10) {
-				i7 = i6 + k5;
-				k7 = j6 + i5;
-				i8 = j3 + k >> 1;
-				k8 = i2 + j1 >> 1;
-				j9 = j4 + j2 >> 1;
-			} else if (l6 == 11) {
-				i7 = i6 + i5;
-				k7 = j6 + k5;
-				i8 = k + i >> 1;
-				k8 = j1 + k1 >> 1;
-				j9 = j2 + k3 >> 1;
-			} else if (l6 == 12) {
-				i7 = i6 + j5;
-				k7 = j6 + i5;
-				i8 = i + l >> 1;
-				k8 = k1 + l2 >> 1;
-				j9 = k3 + j >> 1;
-			} else if (l6 == 13) {
-				i7 = i6 + j5;
-				k7 = j6 + j5;
-				i8 = l;
-				k8 = l2;
-				j9 = j;
-			} else if (l6 == 14) {
-				i7 = i6 + k5;
-				k7 = j6 + j5;
-				i8 = j3;
-				k8 = i2;
-				j9 = j4;
-			} else if (l6 == 15) {
-				i7 = i6 + k5;
-				k7 = j6 + k5;
-				i8 = k;
-				k8 = j1;
-				j9 = j2;
+        int[] shapedTileMesh = shapedTilePointData[shape];
+		int shapedTileMeshLength = shapedTileMesh.length;
+		originalVertexX = new int[shapedTileMeshLength];
+		originalVertexY = new int[shapedTileMeshLength];
+		originalVertexZ = new int[shapedTileMeshLength];
+        int[] vertexColourOverlay = new int[shapedTileMeshLength];
+        int[] vertexColourUnderlay = new int[shapedTileMeshLength];
+		int i6 = tileX * c;
+		int j6 = tileZ * c;
+		for (int vertex = 0; vertex < shapedTileMeshLength; vertex++) {
+			int vertexType = shapedTileMesh[vertex];
+			if ((vertexType & 1) == 0 && vertexType <= 8)
+				vertexType = (vertexType - rotation - rotation - 1 & 7) + 1;
+			if (vertexType > 8 && vertexType <= 12)
+				vertexType = (vertexType - 9 - rotation & 3) + 9;
+			if (vertexType > 12 && vertexType <= 16)
+				vertexType = (vertexType - 13 - rotation & 3) + 13;
+			int vertexX;
+			int vertexZ;
+			int vertexY;
+			int vertexCOverlay;
+			int vertexCUnderlay;
+			if (vertexType == 1) {
+				vertexX = i6;
+				vertexZ = j6;
+				vertexY = yA;
+				vertexCOverlay = cA;
+				vertexCUnderlay = cAA;
+			} else if (vertexType == 2) {
+				vertexX = i6 + i5;
+				vertexZ = j6;
+				vertexY = yA + yB >> 1;
+				vertexCOverlay = cA + cB >> 1;
+				vertexCUnderlay = cAA + cBA >> 1;
+			} else if (vertexType == 3) {
+				vertexX = i6 + c;
+				vertexZ = j6;
+				vertexY = yB;
+				vertexCOverlay = cB;
+				vertexCUnderlay = cBA;
+			} else if (vertexType == 4) {
+				vertexX = i6 + c;
+				vertexZ = j6 + i5;
+				vertexY = yB + yD >> 1;
+				vertexCOverlay = cB + cD >> 1;
+				vertexCUnderlay = cBA + cDA >> 1;
+			} else if (vertexType == 5) {
+				vertexX = i6 + c;
+				vertexZ = j6 + c;
+				vertexY = yD;
+				vertexCOverlay = cD;
+				vertexCUnderlay = cDA;
+			} else if (vertexType == 6) {
+				vertexX = i6 + i5;
+				vertexZ = j6 + c;
+				vertexY = yD + yC >> 1;
+				vertexCOverlay = cD + cC >> 1;
+				vertexCUnderlay = cDA + cCA >> 1;
+			} else if (vertexType == 7) {
+				vertexX = i6;
+				vertexZ = j6 + c;
+				vertexY = yC;
+				vertexCOverlay = cC;
+				vertexCUnderlay = cCA;
+			} else if (vertexType == 8) {
+				vertexX = i6;
+				vertexZ = j6 + i5;
+				vertexY = yC + yA >> 1;
+				vertexCOverlay = cC + cA >> 1;
+				vertexCUnderlay = cCA + cAA >> 1;
+			} else if (vertexType == 9) {
+				vertexX = i6 + i5;
+				vertexZ = j6 + j5;
+				vertexY = yA + yB >> 1;
+				vertexCOverlay = cA + cB >> 1;
+				vertexCUnderlay = cAA + cBA >> 1;
+			} else if (vertexType == 10) {
+				vertexX = i6 + k5;
+				vertexZ = j6 + i5;
+				vertexY = yB + yD >> 1;
+				vertexCOverlay = cB + cD >> 1;
+				vertexCUnderlay = cBA + cDA >> 1;
+			} else if (vertexType == 11) {
+				vertexX = i6 + i5;
+				vertexZ = j6 + k5;
+				vertexY = yD + yC >> 1;
+				vertexCOverlay = cD + cC >> 1;
+				vertexCUnderlay = cDA + cCA >> 1;
+			} else if (vertexType == 12) {
+				vertexX = i6 + j5;
+				vertexZ = j6 + i5;
+				vertexY = yC + yA >> 1;
+				vertexCOverlay = cC + cA >> 1;
+				vertexCUnderlay = cCA + cAA >> 1;
+			} else if (vertexType == 13) {
+				vertexX = i6 + j5;
+				vertexZ = j6 + j5;
+				vertexY = yA;
+				vertexCOverlay = cA;
+				vertexCUnderlay = cAA;
+			} else if (vertexType == 14) {
+				vertexX = i6 + k5;
+				vertexZ = j6 + j5;
+				vertexY = yB;
+				vertexCOverlay = cB;
+				vertexCUnderlay = cBA;
+			} else if (vertexType == 15) {
+				vertexX = i6 + k5;
+				vertexZ = j6 + k5;
+				vertexY = yD;
+				vertexCOverlay = cD;
+				vertexCUnderlay = cDA;
 			} else {
-				i7 = i6 + j5;
-				k7 = j6 + k5;
-				i8 = i;
-				k8 = k1;
-				j9 = k3;
+				vertexX = i6 + j5;
+				vertexZ = j6 + k5;
+				vertexY = yC;
+				vertexCOverlay = cC;
+				vertexCUnderlay = cCA;
 			}
-			anIntArray403[k6] = i7;
-			anIntArray404[k6] = i8;
-			anIntArray405[k6] = k7;
-			ai1[k6] = k8;
-			ai2[k6] = j9;
+			originalVertexX[vertex] = vertexX;
+			originalVertexY[vertex] = vertexY;
+			originalVertexZ[vertex] = vertexZ;
+			vertexColourOverlay[vertex] = vertexCOverlay;
+			vertexColourUnderlay[vertex] = vertexCUnderlay;
 		}
 
-		int ai3[] = anIntArrayArray427[i3];
-		int j7 = ai3.length / 4;
-		anIntArray409 = new int[j7];
-		anIntArray410 = new int[j7];
-		anIntArray411 = new int[j7];
-		anIntArray406 = new int[j7];
-		anIntArray407 = new int[j7];
-		anIntArray408 = new int[j7];
-		if (l3 != -1)
-			anIntArray412 = new int[j7];
-		int l7 = 0;
-		for (int j8 = 0; j8 < j7; j8++) {
-			int l8 = ai3[l7];
-			int k9 = ai3[l7 + 1];
-			int i10 = ai3[l7 + 2];
-			int j10 = ai3[l7 + 3];
-			l7 += 4;
-			if (k9 < 4)
-				k9 = k9 - l4 & 3;
-			if (i10 < 4)
-				i10 = i10 - l4 & 3;
-			if (j10 < 4)
-				j10 = j10 - l4 & 3;
-			anIntArray409[j8] = k9;
-			anIntArray410[j8] = i10;
-			anIntArray411[j8] = j10;
-			if (l8 == 0) {
-				anIntArray406[j8] = ai1[k9];
-				anIntArray407[j8] = ai1[i10];
-				anIntArray408[j8] = ai1[j10];
-				if (anIntArray412 != null)
-					anIntArray412[j8] = -1;
+        int[] shapedTileElements = shapedTileElementData[shape];
+		int vertexCount = shapedTileElements.length / 4;
+		triangleA = new int[vertexCount];
+		triangleB = new int[vertexCount];
+		triangleC = new int[vertexCount];
+		triangleHSLA = new int[vertexCount];
+		triangleHSLB = new int[vertexCount];
+		triangleHSLC = new int[vertexCount];
+		if (texture != -1)
+			triangleTexture = new int[vertexCount];
+		int offset = 0;
+		for (int vertex = 0; vertex < vertexCount; vertex++) {
+			int overlayOrUnderlay = shapedTileElements[offset];
+			int idxA = shapedTileElements[offset + 1];
+			int idxB = shapedTileElements[offset + 2];
+			int idxC = shapedTileElements[offset + 3];
+			offset += 4;
+			if (idxA < 4)
+				idxA = idxA - rotation & 3;
+			if (idxB < 4)
+				idxB = idxB - rotation & 3;
+			if (idxC < 4)
+				idxC = idxC - rotation & 3;
+			triangleA[vertex] = idxA;
+			triangleB[vertex] = idxB;
+			triangleC[vertex] = idxC;
+			if (overlayOrUnderlay == 0) {
+				triangleHSLA[vertex] = vertexColourOverlay[idxA];
+				triangleHSLB[vertex] = vertexColourOverlay[idxB];
+				triangleHSLC[vertex] = vertexColourOverlay[idxC];
+				if (triangleTexture != null)
+					triangleTexture[vertex] = -1;
 			} else {
-				anIntArray406[j8] = ai2[k9];
-				anIntArray407[j8] = ai2[i10];
-				anIntArray408[j8] = ai2[j10];
-				if (anIntArray412 != null)
-					anIntArray412[j8] = l3;
+				triangleHSLA[vertex] = vertexColourUnderlay[idxA];
+				triangleHSLB[vertex] = vertexColourUnderlay[idxB];
+				triangleHSLC[vertex] = vertexColourUnderlay[idxC];
+				if (triangleTexture != null)
+					triangleTexture[vertex] = texture;
 			}
 		}
 
-		int i9 = l;
-		int l9 = j3;
-		if (j3 < i9)
-			i9 = j3;
-		if (j3 > l9)
-			l9 = j3;
-		if (k < i9)
-			i9 = k;
-		if (k > l9)
-			l9 = k;
-		if (i < i9)
-			i9 = i;
-		if (i > l9)
-			l9 = i;
+		int i9 = yA;
+		int l9 = yB;
+		if (yB < i9)
+			i9 = yB;
+		if (yB > l9)
+			l9 = yB;
+		if (yD < i9)
+			i9 = yD;
+		if (yD > l9)
+			l9 = yD;
+		if (yC < i9)
+			i9 = yC;
+		if (yC > l9)
+			l9 = yC;
 	}
 
-	public int anIntArray403[];
-	public int anIntArray404[];
-	public int anIntArray405[];
-	public int anIntArray406[];
-	public int anIntArray407[];
-	public int anIntArray408[];
-	public int anIntArray409[];
-	public int anIntArray410[];
-	public int anIntArray411[];
-	public int anIntArray412[];
-	public boolean aBoolean413;
-	public int anInt414;
-	public int anInt415;
-	public int anInt416;
-	public int anInt417;
-	public static int anIntArray418[] = new int[6];
-	public static int anIntArray419[] = new int[6];
-	public static int anIntArray420[] = new int[6];
-	public static int anIntArray421[] = new int[6];
-	public static int anIntArray422[] = new int[6];
-	public static final int anIntArrayArray426[][] = { { 1, 3, 5, 7 }, { 1, 3, 5, 7 }, { 1, 3, 5, 7 },
-			{ 1, 3, 5, 7, 6 }, { 1, 3, 5, 7, 6 }, { 1, 3, 5, 7, 6 }, { 1, 3, 5, 7, 6 }, { 1, 3, 5, 7, 2, 6 },
-			{ 1, 3, 5, 7, 2, 8 }, { 1, 3, 5, 7, 2, 8 }, { 1, 3, 5, 7, 11, 12 }, { 1, 3, 5, 7, 11, 12 },
-			{ 1, 3, 5, 7, 13, 14 } };
-	public static final int anIntArrayArray427[][] = { { 0, 1, 2, 3, 0, 0, 1, 3 }, { 1, 1, 2, 3, 1, 0, 1, 3 },
-			{ 0, 1, 2, 3, 1, 0, 1, 3 }, { 0, 0, 1, 2, 0, 0, 2, 4, 1, 0, 4, 3 }, { 0, 0, 1, 4, 0, 0, 4, 3, 1, 1, 2, 4 },
-			{ 0, 0, 4, 3, 1, 0, 1, 2, 1, 0, 2, 4 }, { 0, 1, 2, 4, 1, 0, 1, 4, 1, 0, 4, 3 },
-			{ 0, 4, 1, 2, 0, 4, 2, 5, 1, 0, 4, 5, 1, 0, 5, 3 }, { 0, 4, 1, 2, 0, 4, 2, 3, 0, 4, 3, 5, 1, 0, 4, 5 },
-			{ 0, 0, 4, 5, 1, 4, 1, 2, 1, 4, 2, 3, 1, 4, 3, 5 },
-			{ 0, 0, 1, 5, 0, 1, 4, 5, 0, 1, 2, 4, 1, 0, 5, 3, 1, 5, 4, 3, 1, 4, 2, 3 },
-			{ 1, 0, 1, 5, 1, 1, 4, 5, 1, 1, 2, 4, 0, 0, 5, 3, 0, 5, 4, 3, 0, 4, 2, 3 },
-			{ 1, 0, 5, 4, 1, 0, 1, 5, 0, 0, 4, 3, 0, 4, 5, 3, 0, 5, 2, 3, 0, 1, 2, 5 } };
+    public int[] originalVertexX;
+    public int[] originalVertexY;
+    public int[] originalVertexZ;
+    public int[] triangleHSLA;
+    public int[] triangleHSLB;
+    public int[] triangleHSLC;
+    public int[] triangleA;
+    public int[] triangleB;
+    public int[] triangleC;
+    public int[] triangleTexture;
+	public boolean flat;
+	public int shape;
+	public int rotation;
+	public int underlayRGB;
+	public int overlayRGB;
+    public static int[] screenX = new int[6];
+    public static int[] screenY = new int[6];
+    public static int[] viewspaceX = new int[6];
+    public static int[] viewspaceY = new int[6];
+    public static int[] viewspaceZ = new int[6];
+    public static final int[][] shapedTilePointData = {{1, 3, 5, 7}, {1, 3, 5, 7}, {1, 3, 5, 7},
+            {1, 3, 5, 7, 6}, {1, 3, 5, 7, 6}, {1, 3, 5, 7, 6}, {1, 3, 5, 7, 6}, {1, 3, 5, 7, 2, 6},
+            {1, 3, 5, 7, 2, 8}, {1, 3, 5, 7, 2, 8}, {1, 3, 5, 7, 11, 12}, {1, 3, 5, 7, 11, 12},
+            {1, 3, 5, 7, 13, 14}};
+    public static final int[][] shapedTileElementData = {{0, 1, 2, 3, 0, 0, 1, 3}, {1, 1, 2, 3, 1, 0, 1, 3},
+            {0, 1, 2, 3, 1, 0, 1, 3}, {0, 0, 1, 2, 0, 0, 2, 4, 1, 0, 4, 3}, {0, 0, 1, 4, 0, 0, 4, 3, 1, 1, 2, 4},
+            {0, 0, 4, 3, 1, 0, 1, 2, 1, 0, 2, 4}, {0, 1, 2, 4, 1, 0, 1, 4, 1, 0, 4, 3},
+            {0, 4, 1, 2, 0, 4, 2, 5, 1, 0, 4, 5, 1, 0, 5, 3}, {0, 4, 1, 2, 0, 4, 2, 3, 0, 4, 3, 5, 1, 0, 4, 5},
+            {0, 0, 4, 5, 1, 4, 1, 2, 1, 4, 2, 3, 1, 4, 3, 5},
+            {0, 0, 1, 5, 0, 1, 4, 5, 0, 1, 2, 4, 1, 0, 5, 3, 1, 5, 4, 3, 1, 4, 2, 3},
+            {1, 0, 1, 5, 1, 1, 4, 5, 1, 1, 2, 4, 0, 0, 5, 3, 0, 5, 4, 3, 0, 4, 2, 3},
+            {1, 0, 5, 4, 1, 0, 1, 5, 0, 0, 4, 3, 0, 4, 5, 3, 0, 5, 2, 3, 0, 1, 2, 5}};
 
 }

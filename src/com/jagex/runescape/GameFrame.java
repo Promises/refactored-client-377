@@ -1,6 +1,4 @@
-package com.jagex.runescape;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) 
+package com.jagex.runescape;
 
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -21,7 +19,7 @@ public class GameFrame extends Frame {
 	@Override
 	public Graphics getGraphics() {
 		Graphics graphics = super.getGraphics();
-		graphics.translate(4, 24);
+		graphics.translate(0, 22);
 		return graphics;
 	}
 

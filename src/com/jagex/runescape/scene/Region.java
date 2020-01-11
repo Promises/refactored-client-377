@@ -120,7 +120,7 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, 22, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.addGroundDecoration(i_19_, i_17_, 669, i_28_, i_27_, i_26_, i_21_, class50_sub1_sub4);
+				class22.addGroundDecoration(i_19_, i_17_, i_21_, i_26_, i_27_, class50_sub1_sub4, i_28_);
 				if (class47.solid && class47.actionsBoolean)
 					class46.markBlocked(i_19_, i_17_);
 			} else if (i_16_ == 10 || i_16_ == 11) {
@@ -143,8 +143,8 @@ public class Region {
 						i_30_ = class47.sizeX;
 						i_31_ = class47.sizeY;
 					}
-					class22.method251(i_21_, i_30_, i_17_, class50_sub1_sub4, i_28_, i_29_, i_19_, -896, i_31_, i_26_,
-							i_27_);
+					class22.addEntityB(i_19_, i_17_, i_21_, i_26_, i_29_, i_31_, i_30_, i_27_, class50_sub1_sub4, i_28_
+					);
 				}
 				if (class47.solid)
 					class46.method413(i_17_, i_18_, class47.sizeY, class47.sizeX, class47.walkable, i_19_,
@@ -156,7 +156,7 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, i_16_, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.method251(i_21_, 1, i_17_, class50_sub1_sub4, i_28_, 0, i_19_, -896, 1, i_26_, i_27_);
+				class22.addEntityB(i_19_, i_17_, i_21_, i_26_, 0, 1, 1, i_27_, class50_sub1_sub4, i_28_);
 				if (class47.solid)
 					class46.method413(i_17_, i_18_, class47.sizeY, class47.sizeX, class47.walkable, i_19_,
 							(byte) 52);
@@ -167,8 +167,8 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, 0, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.method249(anIntArray158[i_18_], class50_sub1_sub4, i_27_, i_17_, i_28_, i_19_, null, i_26_, 0,
-						i_21_);
+				class22.addWall(i_19_, i_17_, i_21_, i_26_, anIntArray158[i_18_], 0, i_27_, class50_sub1_sub4, null, i_28_
+				);
 				if (class47.solid)
 					class46.markWall(i_19_, i_17_, i_16_, i_18_, class47.walkable);
 			} else if (i_16_ == 1) {
@@ -178,8 +178,8 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, 1, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.method249(anIntArray167[i_18_], class50_sub1_sub4, i_27_, i_17_, i_28_, i_19_, null, i_26_, 0,
-						i_21_);
+				class22.addWall(i_19_, i_17_, i_21_, i_26_, anIntArray167[i_18_], 0, i_27_, class50_sub1_sub4, null, i_28_
+				);
 				if (class47.solid)
 					class46.markWall(i_19_, i_17_, i_16_, i_18_, class47.walkable);
 			} else if (i_16_ == 2) {
@@ -195,8 +195,8 @@ public class Region {
 					class50_sub1_sub4_33_ = new GameObject(i, i_32_, 2, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
 				}
-				class22.method249(anIntArray158[i_18_], class50_sub1_sub4, i_27_, i_17_, i_28_, i_19_, class50_sub1_sub4_33_, i_26_, anIntArray158[i_32_],
-						i_21_);
+				class22.addWall(i_19_, i_17_, i_21_, i_26_, anIntArray158[i_18_], anIntArray158[i_32_], i_27_, class50_sub1_sub4, class50_sub1_sub4_33_, i_28_
+				);
 				if (class47.solid)
 					class46.markWall(i_19_, i_17_, i_16_, i_18_, class47.walkable);
 			} else if (i_16_ == 3) {
@@ -206,8 +206,8 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, 3, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.method249(anIntArray167[i_18_], class50_sub1_sub4, i_27_, i_17_, i_28_, i_19_, null, i_26_, 0,
-						i_21_);
+				class22.addWall(i_19_, i_17_, i_21_, i_26_, anIntArray167[i_18_], 0, i_27_, class50_sub1_sub4, null, i_28_
+				);
 				if (class47.solid)
 					class46.markWall(i_19_, i_17_, i_16_, i_18_, class47.walkable);
 			} else if (i_16_ == 9) {
@@ -217,7 +217,7 @@ public class Region {
 				else
 					class50_sub1_sub4 = new GameObject(i, i_18_, i_16_, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                             true);
-				class22.method251(i_21_, 1, i_17_, class50_sub1_sub4, i_28_, 0, i_19_, -896, 1, i_26_, i_27_);
+				class22.addEntityB(i_19_, i_17_, i_21_, i_26_, 0, 1, 1, i_27_, class50_sub1_sub4, i_28_);
 				if (class47.solid)
 					class46.method413(i_17_, i_18_, class47.sizeY, class47.sizeX, class47.walkable, i_19_,
 							(byte) 52);
@@ -251,8 +251,8 @@ public class Region {
 					else
 						class50_sub1_sub4 = new GameObject(i, 0, 4, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                                 true);
-					class22.addWallDecoration(i_21_, anIntArray158[i_18_], i_18_ * 512, i_27_, i_28_, i_19_, 0, i_17_, 0,
-							i_26_, class50_sub1_sub4, -930);
+					class22.addWallDecoration(i_19_, i_17_, i_21_, i_26_, 0, 0, i_18_ * 512, i_27_, class50_sub1_sub4, i_28_, anIntArray158[i_18_]
+					);
 				} else if (i_16_ == 5) {
 					int i_37_ = 16;
 					int i_38_ = class22.method267(i_21_, i_19_, i_17_);
@@ -264,9 +264,8 @@ public class Region {
 					else
 						class50_sub1_sub4 = new GameObject(i, 0, 4, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                                 true);
-					class22.addWallDecoration(i_21_, anIntArray158[i_18_], i_18_ * 512, i_27_, i_28_, i_19_,
-							anIntArray143[i_18_] * i_37_, i_17_, anIntArray161[i_18_] * i_37_, i_26_,
-							class50_sub1_sub4, -930);
+					class22.addWallDecoration(i_19_, i_17_, i_21_, i_26_, anIntArray161[i_18_] * i_37_, anIntArray143[i_18_] * i_37_, i_18_ * 512, i_27_, class50_sub1_sub4, i_28_, anIntArray158[i_18_]
+					);
 				} else if (i_16_ == 6) {
 					Renderable class50_sub1_sub4;
 					if (class47.animationId == -1 && class47.childrenIds == null)
@@ -274,8 +273,8 @@ public class Region {
 					else
 						class50_sub1_sub4 = new GameObject(i, 0, 4, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                                 true);
-					class22.addWallDecoration(i_21_, 256, i_18_, i_27_, i_28_, i_19_, 0, i_17_, 0, i_26_, class50_sub1_sub4,
-							-930);
+					class22.addWallDecoration(i_19_, i_17_, i_21_, i_26_, 0, 0, i_18_, i_27_, class50_sub1_sub4, i_28_, 256
+					);
 				} else if (i_16_ == 7) {
 					Renderable class50_sub1_sub4;
 					if (class47.animationId == -1 && class47.childrenIds == null)
@@ -283,8 +282,8 @@ public class Region {
 					else
 						class50_sub1_sub4 = new GameObject(i, 0, 4, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                                 true);
-					class22.addWallDecoration(i_21_, 512, i_18_, i_27_, i_28_, i_19_, 0, i_17_, 0, i_26_, class50_sub1_sub4,
-							-930);
+					class22.addWallDecoration(i_19_, i_17_, i_21_, i_26_, 0, 0, i_18_, i_27_, class50_sub1_sub4, i_28_, 512
+					);
 				} else if (i_16_ == 8) {
 					Renderable class50_sub1_sub4;
 					if (class47.animationId == -1 && class47.childrenIds == null)
@@ -292,8 +291,8 @@ public class Region {
 					else
 						class50_sub1_sub4 = new GameObject(i, 0, 4, i_23_, i_24_, i_22_, i_25_, class47.animationId,
                                 true);
-					class22.addWallDecoration(i_21_, 768, i_18_, i_27_, i_28_, i_19_, 0, i_17_, 0, i_26_, class50_sub1_sub4,
-							-930);
+					class22.addWallDecoration(i_19_, i_17_, i_21_, i_26_, 0, 0, i_18_, i_27_, class50_sub1_sub4, i_28_, 768
+					);
 				}
 			}
 		}
@@ -472,7 +471,7 @@ public class Region {
 								if (hslBitsetUnmodified != -1)
 									rgbBitsetRandomized = (Rasterizer3D.getRgbLookupTableId[trimHSLLightness(hslBitsetRandomized, 96)]);
 								if (overlayFloorId == 0)
-									scene.method246(plane, x, y, 0, 0, -1, vertexSouthWest, vertexSouthEast, vertexNorthEast, vertexNorthWest,
+									scene.renderTile(plane, x, y, 0, 0, -1, vertexSouthWest, vertexSouthEast, vertexNorthEast, vertexNorthWest,
 											trimHSLLightness(hslBitsetUnmodified, lightSouthWest), trimHSLLightness(hslBitsetUnmodified, lightSouthEast), trimHSLLightness(hslBitsetUnmodified, lightNorthEast),
 											trimHSLLightness(hslBitsetUnmodified, lightNorthWest), 0, 0, 0, 0, rgbBitsetRandomized, 0);
 								else {
@@ -493,7 +492,7 @@ public class Region {
 										hslBitset = getHSLBitset(floor.hue2, floor.saturation, floor.lightness);
 										rgbBitset = (Rasterizer3D.getRgbLookupTableId[method182(floor.hslColor2, 96)]);
 									}
-									scene.method246(plane, x, y, clippingPath, clippingPathRotation, textureid, vertexSouthWest, vertexSouthEast, vertexNorthEast,
+									scene.renderTile(plane, x, y, clippingPath, clippingPathRotation, textureid, vertexSouthWest, vertexSouthEast, vertexNorthEast,
 											vertexNorthWest, trimHSLLightness(hslBitsetUnmodified, lightSouthWest), trimHSLLightness(hslBitsetUnmodified, lightSouthEast), trimHSLLightness(hslBitsetUnmodified,
 													lightNorthEast), trimHSLLightness(hslBitsetUnmodified, lightNorthWest), method182(hslBitset, lightSouthWest),
 											method182(hslBitset, lightSouthEast), method182(hslBitset, lightNorthEast),
@@ -506,10 +505,10 @@ public class Region {
 			}
 			for (int i_104_ = 1; i_104_ < regionSizeY - 1; i_104_++) {
 				for (int i_105_ = 1; i_105_ < regionSizeX - 1; i_105_++)
-					scene.method245(plane, i_105_, i_104_, getVisibilityPlaneFor(i_104_, plane, i_105_, (byte) 0));
+					scene.setTileLogicHeight(plane, i_105_, i_104_, getVisibilityPlaneFor(i_104_, plane, i_105_, (byte) 0));
 			}
 		}
-		scene.method272((byte) 2, -10, -50, -50);
+		scene.shadeModels(-10, -50, -50);
 		for (int y = 0; y < regionSizeX; y++) {
 			for (int x = 0; x < regionSizeY; x++) {
 				if ((renderRuleFlags[1][y][x] & 0x2) == 2)
@@ -558,8 +557,8 @@ public class Region {
 								int highestOcclussionVertexHeightOffset = 240;
 								int highestOcclussionVertexHeight = ((vertexHeights[higestOcclussionPlane][x][lowestOcclussionY]) - highestOcclussionVertexHeightOffset);
 								int lowestOcclussionVertexHeight = (vertexHeights[lowestOcclussionPlane][x][lowestOcclussionY]);
-								Scene.createCullingOcclussionBox(x * 128, lowestOcclussionVertexHeight, x * 128, higestOcclussionY * 128 + 128,
-										currentPlane, lowestOcclussionY * 128, highestOcclussionVertexHeight, 1);
+								Scene.createCullingCluster(currentPlane, x * 128, x * 128, higestOcclussionY * 128 + 128, lowestOcclussionY * 128, highestOcclussionVertexHeight, lowestOcclussionVertexHeight,
+										1);
 								for (int occludedPlane = lowestOcclussionPlane; occludedPlane <= higestOcclussionPlane; occludedPlane++) {
 									for (int occludedY = lowestOcclussionY; occludedY <= higestOcclussionY; occludedY++)
 										tileCullingBitsets[occludedPlane][x][occludedY] &= renderRule1 ^ 0xffffffff;
@@ -596,8 +595,8 @@ public class Region {
 								int i_134_ = 240;
 								int i_135_ = ((vertexHeights[i_130_][i_127_][y]) - i_134_);
 								int i_136_ = (vertexHeights[i_129_][i_127_][y]);
-								Scene.createCullingOcclussionBox(i_127_ * 128, i_136_, i_128_ * 128 + 128, y * 128,
-										currentPlane, y * 128, i_135_, 2);
+								Scene.createCullingCluster(currentPlane, i_128_ * 128 + 128, i_127_ * 128, y * 128, y * 128, i_135_, i_136_,
+										2);
 								for (int i_137_ = i_129_; i_137_ <= i_130_; i_137_++) {
 									for (int i_138_ = i_127_; i_138_ <= i_128_; i_138_++)
 										tileCullingBitsets[i_137_][i_138_][y] &= renderRule2 ^ 0xffffffff;
@@ -631,8 +630,8 @@ public class Region {
 							}
 							if ((i_140_ - i_139_ + 1) * (i_142_ - i_141_ + 1) >= 4) {
 								int i_145_ = (vertexHeights[plane][i_139_][i_141_]);
-								Scene.createCullingOcclussionBox(i_139_ * 128, i_145_, i_140_ * 128 + 128, i_142_ * 128 + 128,
-										currentPlane, i_141_ * 128, i_145_, 4);
+								Scene.createCullingCluster(currentPlane, i_140_ * 128 + 128, i_139_ * 128, i_142_ * 128 + 128, i_141_ * 128, i_145_, i_145_,
+										4);
 								for (int i_146_ = i_139_; i_146_ <= i_140_; i_146_++) {
 									for (int i_147_ = i_141_; i_147_ <= i_142_; i_147_++)
 										tileCullingBitsets[plane][i_146_][i_147_] &= renderRule3 ^ 0xffffffff;
@@ -786,7 +785,7 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, face, 22, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addGroundDecoration(x, y, 669, objectConfig, hash, vertexMix, plane, renderable);
+					scene.addGroundDecoration(x, y, plane, vertexMix, hash, renderable, objectConfig);
 					if (gameObjectDefinition.solid && gameObjectDefinition.actionsBoolean && collisionMap != null)
 						collisionMap.markBlocked(x, y);
 				}
@@ -810,8 +809,8 @@ public class Region {
 						sizeX = gameObjectDefinition.sizeX;
 						sizeY = gameObjectDefinition.sizeY;
 					}
-					if (scene.method251(plane, sizeX, y, renderable, objectConfig, i_198_, x, -896, sizeY,
-							vertexMix, hash)
+					if (scene.addEntityB(x, y, plane, vertexMix, i_198_, sizeY, sizeX, hash, renderable, objectConfig
+					)
 							&& gameObjectDefinition.unknown2) {
 						Model model;
 						if (renderable instanceof Model)
@@ -821,7 +820,7 @@ public class Region {
 						if (model != null) {
 							for (int sizeXCounter = 0; sizeXCounter <= sizeX; sizeXCounter++) {
 								for (int sizeYCounter = 0; sizeYCounter <= sizeY; sizeYCounter++) {
-									int shadowIntensity = model.shadowIntensity / 4;
+									int shadowIntensity = model.diagonal2DAboveOrigin / 4;
 									if (shadowIntensity > 30)
 										shadowIntensity = 30;
 									if (shadowIntensity > (tileShadowIntensity[plane][x + sizeXCounter][y + sizeYCounter]))
@@ -841,7 +840,7 @@ public class Region {
 				else
 					renderable = new GameObject(objectId, face, type, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
-				scene.method251(plane, 1, y, renderable, objectConfig, 0, x, -896, 1, vertexMix, hash);
+				scene.addEntityB(x, y, plane, vertexMix, 0, 1, 1, hash, renderable, objectConfig);
 				if (type >= 12 && type <= 17 && type != 13 && plane > 0)
 					tileCullingBitsets[plane][x][y] |= 0x924;
 				if (gameObjectDefinition.solid && collisionMap != null)
@@ -854,8 +853,8 @@ public class Region {
 				else
 					renderable = new GameObject(objectId, face, 0, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
-				scene.method249(anIntArray158[face], renderable, hash, y, objectConfig, x, null, vertexMix, 0,
-						plane);
+				scene.addWall(x, y, plane, vertexMix, anIntArray158[face], 0, hash, renderable, null, objectConfig
+				);
 				if (face == 0) {
 					if (gameObjectDefinition.unknown2) {
 						tileShadowIntensity[plane][x][y] = (byte) 50;
@@ -888,7 +887,7 @@ public class Region {
 				if (gameObjectDefinition.solid && collisionMap != null)
 					collisionMap.markWall(x, y, type, face, gameObjectDefinition.walkable);
 				if (gameObjectDefinition.unknown4 != 16)
-					scene.method257(y, gameObjectDefinition.unknown4, plane, x);
+					scene.displaceWallDecoration(x, y, plane, gameObjectDefinition.unknown4);
 			} else if (type == 1) {
 				Renderable renderable;
 				if (gameObjectDefinition.animationId == -1 && gameObjectDefinition.childrenIds == null)
@@ -896,8 +895,8 @@ public class Region {
 				else
 					renderable = new GameObject(objectId, face, 1, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
-				scene.method249(anIntArray167[face], renderable, hash, y, objectConfig, x, null, vertexMix, 0,
-						plane);
+				scene.addWall(x, y, plane, vertexMix, anIntArray167[face], 0, hash, renderable, null, objectConfig
+				);
 				if (gameObjectDefinition.unknown2) {
 					if (face == 0)
 						tileShadowIntensity[plane][x][y + 1] = (byte) 50;
@@ -923,8 +922,8 @@ public class Region {
 					renderable1 = new GameObject(objectId, i_204_, 2, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
 				}
-				scene.method249(anIntArray158[face], renderable, hash, y, objectConfig, x, renderable1, vertexMix, anIntArray158[i_204_],
-						plane);
+				scene.addWall(x, y, plane, vertexMix, anIntArray158[face], anIntArray158[i_204_], hash, renderable, renderable1, objectConfig
+				);
 				if (gameObjectDefinition.aBoolean797) {
 					if (face == 0) {
 						tileCullingBitsets[plane][x][y] |= 0x249;
@@ -943,7 +942,7 @@ public class Region {
 				if (gameObjectDefinition.solid && collisionMap != null)
 					collisionMap.markWall(x, y, type, face, gameObjectDefinition.walkable);
 				if (gameObjectDefinition.unknown4 != 16)
-					scene.method257(y, gameObjectDefinition.unknown4, plane, x);
+					scene.displaceWallDecoration(x, y, plane, gameObjectDefinition.unknown4);
 			} else if (type == 3) {
 				Renderable renderable;
 				if (gameObjectDefinition.animationId == -1 && gameObjectDefinition.childrenIds == null)
@@ -951,8 +950,8 @@ public class Region {
 				else
 					renderable = new GameObject(objectId, face, 3, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
-				scene.method249(anIntArray167[face], renderable, hash, y, objectConfig, x, null, vertexMix, 0,
-						plane);
+				scene.addWall(x, y, plane, vertexMix, anIntArray167[face], 0, hash, renderable, null, objectConfig
+				);
 				if (gameObjectDefinition.unknown2) {
 					if (face == 0)
 						tileShadowIntensity[plane][x][y + 1] = (byte) 50;
@@ -972,7 +971,7 @@ public class Region {
 				else
 					renderable = new GameObject(objectId, face, type, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                             true);
-				scene.method251(plane, 1, y, renderable, objectConfig, 0, x, -896, 1, vertexMix, hash);
+				scene.addEntityB(x, y, plane, vertexMix, 0, 1, 1, hash, renderable, objectConfig);
 				if (gameObjectDefinition.solid && collisionMap != null)
 					collisionMap.method413(y, face, gameObjectDefinition.sizeY, gameObjectDefinition.sizeX, gameObjectDefinition.walkable, x,
 							(byte) 52);
@@ -1006,8 +1005,8 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, 0, 4, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addWallDecoration(plane, anIntArray158[face], face * 512, hash, objectConfig, x, 0, y, 0,
-							vertexMix, renderable, -930);
+					scene.addWallDecoration(x, y, plane, vertexMix, 0, 0, face * 512, hash, renderable, objectConfig, anIntArray158[face]
+					);
 				} else if (type == 5) {
 					int offset = 16;
 					int i_210_ = scene.method267(plane, x, y);
@@ -1019,9 +1018,8 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, 0, 4, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addWallDecoration(plane, anIntArray158[face], face * 512, hash, objectConfig, x,
-							anIntArray143[face] * offset, y, anIntArray161[face] * offset, vertexMix,
-							renderable, -930);
+					scene.addWallDecoration(x, y, plane, vertexMix, anIntArray161[face] * offset, anIntArray143[face] * offset, face * 512, hash, renderable, objectConfig, anIntArray158[face]
+					);
 				} else if (type == 6) {
 					Renderable renderable;
 					if (gameObjectDefinition.animationId == -1 && gameObjectDefinition.childrenIds == null)
@@ -1029,8 +1027,8 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, 0, 4, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addWallDecoration(plane, 256, face, hash, objectConfig, x, 0, y, 0, vertexMix, renderable,
-							-930);
+					scene.addWallDecoration(x, y, plane, vertexMix, 0, 0, face, hash, renderable, objectConfig, 256
+					);
 				} else if (type == 7) {
 					Renderable renderable;
 					if (gameObjectDefinition.animationId == -1 && gameObjectDefinition.childrenIds == null)
@@ -1038,8 +1036,8 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, 0, 4, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addWallDecoration(plane, 512, face, hash, objectConfig, x, 0, y, 0, vertexMix, renderable,
-							-930);
+					scene.addWallDecoration(x, y, plane, vertexMix, 0, 0, face, hash, renderable, objectConfig, 512
+					);
 				} else if (type == 8) {
 					Renderable renderable;
 					if (gameObjectDefinition.animationId == -1 && gameObjectDefinition.childrenIds == null)
@@ -1047,8 +1045,8 @@ public class Region {
 					else
 						renderable = new GameObject(objectId, 0, 4, vertexHeightRight, vertexHeightTopRight, vertexHeight, vertexHeightTop, gameObjectDefinition.animationId,
                                 true);
-					scene.addWallDecoration(plane, 768, face, hash, objectConfig, x, 0, y, 0, vertexMix, renderable,
-							-930);
+					scene.addWallDecoration(x, y, plane, vertexMix, 0, 0, face, hash, renderable, objectConfig, 768
+					);
 				}
 			}
 		}

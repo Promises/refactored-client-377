@@ -33,7 +33,7 @@ public class Configuration {
     /**
      * Whether or not the update server should be used.
      */
-    public static final boolean JAGGRAB_ENABLED = true;
+    public static final boolean JAGGRAB_ENABLED = false;
 
     /**
      * Whether or not the network packets should be encrypted.
@@ -49,5 +49,22 @@ public class Configuration {
      * Modulus to be used in the RSA network encryption.
      */
     public static final BigInteger RSA_MODULUS = new BigInteger("119568088839203297999728368933573315070738693395974011872885408638642676871679245723887367232256427712869170521351089799352546294030059890127723509653145359924771433131004387212857375068629466435244653901851504845054452735390701003613803443469723435116497545687393297329052988014281948392136928774011011998343");
+
+    /**
+     * Use static username/password pair.
+     */
+    public static final boolean USE_STATIC_DETAILS = true;
+
+    /**
+     * Static username and password
+     */
+
+    public static final String USERNAME = "qq";
+    public static final String PASSWORD = "";
+
+    /**
+     * Do you want to render roofs
+     */
+    public static final boolean ROOFS_ENABLED = true;
 
 }

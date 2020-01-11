@@ -53,9 +53,9 @@ public class ImageRGB extends Rasterizer {
 	public ImageRGB(Archive archive, String archiveName, int archiveIndex) {
 		Buffer dataBuffer = new Buffer(archive.getFile(archiveName + ".dat"));
 		Buffer indexBuffer = new Buffer(archive.getFile("index.dat"));
-		indexBuffer.currentPosition = dataBuffer.getUnsignedLEShort();
-		maxWidth = indexBuffer.getUnsignedLEShort();
-		maxHeight = indexBuffer.getUnsignedLEShort();
+		indexBuffer.currentPosition = dataBuffer.getUnsignedShort();
+		maxWidth = indexBuffer.getUnsignedShort();
+		maxHeight = indexBuffer.getUnsignedShort();
 		int length = indexBuffer.getUnsignedByte();
 		int[] pixels = new int[length];
 		for (int pixel = 0; pixel < length - 1; pixel++) {
@@ -66,14 +66,14 @@ public class ImageRGB extends Rasterizer {
 
 		for (int index = 0; index < archiveIndex; index++) {
 			indexBuffer.currentPosition += 2;
-			dataBuffer.currentPosition += indexBuffer.getUnsignedLEShort() * indexBuffer.getUnsignedLEShort();
+			dataBuffer.currentPosition += indexBuffer.getUnsignedShort() * indexBuffer.getUnsignedShort();
 			indexBuffer.currentPosition++;
 		}
 
 		offsetX = indexBuffer.getUnsignedByte();
 		offsetY = indexBuffer.getUnsignedByte();
-		width = indexBuffer.getUnsignedLEShort();
-		height = indexBuffer.getUnsignedLEShort();
+		width = indexBuffer.getUnsignedShort();
+		height = indexBuffer.getUnsignedShort();
 		int type = indexBuffer.getUnsignedByte();
 		int pixelCount = width * height;
 		this.pixels = new int[pixelCount];
@@ -199,7 +199,7 @@ public class ImageRGB extends Rasterizer {
 
 	}
 
-	public void drawImage(int y, int x) {
+	public void drawImage(int x, int y) {
 		x += offsetX;
 		y += offsetY;
 		int rasterizerOffset = x + y * Rasterizer.width;

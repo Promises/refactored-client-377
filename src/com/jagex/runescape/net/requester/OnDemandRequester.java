@@ -99,7 +99,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 						onDemandNode.buffer = null;
 						if (onDemandNode.immediate)
 							synchronized (completed) {
-								completed.insertBack(onDemandNode);
+								completed.pushBack(onDemandNode);
 							}
 						else
 							onDemandNode.remove();
@@ -135,7 +135,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 					}
 					if (onDemandNode.immediate)
 						synchronized (completed) {
-							completed.insertBack(onDemandNode);
+							completed.pushBack(onDemandNode);
 						}
 					else
 						onDemandNode.remove();
@@ -172,12 +172,12 @@ public class OnDemandRequester extends Requester implements Runnable {
 				break;
 			OnDemandNode class50_sub1_sub3;
 			synchronized (immediateRequests) {
-				class50_sub1_sub3 = (OnDemandNode) immediateRequests.removeFirst();
+				class50_sub1_sub3 = (OnDemandNode) immediateRequests.pop();
 			}
 			while (class50_sub1_sub3 != null) {
 				if (filePriorities[class50_sub1_sub3.type][class50_sub1_sub3.id] != 0) {
 					filePriorities[class50_sub1_sub3.type][class50_sub1_sub3.id] = 0;
-					toRequest.insertBack(class50_sub1_sub3);
+					toRequest.pushBack(class50_sub1_sub3);
 					sendRequest(class50_sub1_sub3);
 					expectData = true;
 					if (anInt1334 < anInt1350)
@@ -188,7 +188,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 						return;
 				}
 				synchronized (immediateRequests) {
-					class50_sub1_sub3 = (OnDemandNode) immediateRequests.removeFirst();
+					class50_sub1_sub3 = (OnDemandNode) immediateRequests.pop();
 				}
 			}
 			for (int j = 0; j < 4; j++) {
@@ -201,7 +201,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 						class50_sub1_sub3_1.type = j;
 						class50_sub1_sub3_1.id = l;
 						class50_sub1_sub3_1.immediate = false;
-						toRequest.insertBack(class50_sub1_sub3_1);
+						toRequest.pushBack(class50_sub1_sub3_1);
 						sendRequest(class50_sub1_sub3_1);
 						expectData = true;
 						if (anInt1334 < anInt1350)
@@ -252,7 +252,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 			onDemandNode.id = id;
 			onDemandNode.immediate = true;
 			synchronized (wanted) {
-				wanted.insertBack(onDemandNode);
+				wanted.pushBack(onDemandNode);
 			}
 			immediateRequests1.push(onDemandNode);
 		}
@@ -261,7 +261,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 	public OnDemandNode next() {
 		OnDemandNode onDemandNode;
 		synchronized (completed) {
-			onDemandNode = (OnDemandNode) completed.removeFirst();
+			onDemandNode = (OnDemandNode) completed.pop();
 		}
 		if (onDemandNode == null)
 			return null;
@@ -390,13 +390,13 @@ public class OnDemandRequester extends Requester implements Runnable {
 				anInt1343++;
 
 		while (immediateRequestsSent < 10) {
-			OnDemandNode class50_sub1_sub3_1 = (OnDemandNode) aClass6_1351.removeFirst();
+			OnDemandNode class50_sub1_sub3_1 = (OnDemandNode) aClass6_1351.pop();
 			if (class50_sub1_sub3_1 == null)
 				break;
 			if (filePriorities[class50_sub1_sub3_1.type][class50_sub1_sub3_1.id] != 0)
 				anInt1334++;
 			filePriorities[class50_sub1_sub3_1.type][class50_sub1_sub3_1.id] = 0;
-			toRequest.insertBack(class50_sub1_sub3_1);
+			toRequest.pushBack(class50_sub1_sub3_1);
 			immediateRequestsSent++;
 			sendRequest(class50_sub1_sub3_1);
 			expectData = true;
@@ -438,7 +438,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 			fileVersions[version] = new int[versionCount];
 			filePriorities[version] = new byte[versionCount];
 			for (int file = 0; file < versionCount; file++)
-				fileVersions[version][file] = buffer.getUnsignedLEShort();
+				fileVersions[version][file] = buffer.getUnsignedShort();
 
 		}
 
@@ -470,9 +470,9 @@ public class OnDemandRequester extends Requester implements Runnable {
 		regLandIndex = new int[count];
 		regShouldPreload = new int[count];
 		for (int reg = 0; reg < count; reg++) {
-			regHash[reg] = buffer.getUnsignedLEShort();
-			regMapIndex[reg] = buffer.getUnsignedLEShort();
-			regLandIndex[reg] = buffer.getUnsignedLEShort();
+			regHash[reg] = buffer.getUnsignedShort();
+			regMapIndex[reg] = buffer.getUnsignedShort();
+			regLandIndex[reg] = buffer.getUnsignedShort();
 			regShouldPreload[reg] = buffer.getUnsignedByte();
 		}
 
@@ -481,7 +481,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 		count = data.length / 2;
 		animIndex = new int[count];
 		for (int i = 0; i < count; i++)
-			animIndex[i] = buffer.getUnsignedLEShort();
+			animIndex[i] = buffer.getUnsignedShort();
 
 		data = archive.getFile("midi_index");
 		buffer = new Buffer(data);
@@ -515,14 +515,14 @@ public class OnDemandRequester extends Requester implements Runnable {
 		class50_sub1_sub3.id = i;
 		class50_sub1_sub3.immediate = false;
 		synchronized (immediateRequests) {
-			immediateRequests.insertBack(class50_sub1_sub3);
+			immediateRequests.pushBack(class50_sub1_sub3);
 		}
 	}
 
 	public void localComplete(boolean flag) {
 		OnDemandNode class50_sub1_sub3;
 		synchronized (wanted) {
-			class50_sub1_sub3 = (OnDemandNode) wanted.removeFirst();
+			class50_sub1_sub3 = (OnDemandNode) wanted.pop();
 		}
 		if (!flag) {
 			for (int i = 1; i > 0; i++);
@@ -537,14 +537,14 @@ public class OnDemandRequester extends Requester implements Runnable {
 				abyte0 = null;
 			synchronized (wanted) {
 				if (abyte0 == null) {
-					aClass6_1351.insertBack(class50_sub1_sub3);
+					aClass6_1351.pushBack(class50_sub1_sub3);
 				} else {
 					class50_sub1_sub3.buffer = abyte0;
 					synchronized (completed) {
-						completed.insertBack(class50_sub1_sub3);
+						completed.pushBack(class50_sub1_sub3);
 					}
 				}
-				class50_sub1_sub3 = (OnDemandNode) wanted.removeFirst();
+				class50_sub1_sub3 = (OnDemandNode) wanted.pop();
 			}
 		}
 	}

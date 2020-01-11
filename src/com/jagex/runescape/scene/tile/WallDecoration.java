@@ -7,12 +7,12 @@ public class WallDecoration {
 	public WallDecoration() {
 	}
 
-	public int plane;
-	public int y;
+	public int z;
 	public int x;
-	public int faceUnknown;
+	public int y;
+	public int configBits;
 	public int face;
 	public Renderable renderable;
-	public int hash;
+	public int uid;
 	public byte config;
 }

@@ -33,7 +33,7 @@ public class Archive {
 			archiveBuffer = dataBuffer;
 			this.compressed = false;
 		}
-		dataSize = buffer.getUnsignedLEShort();
+		dataSize = buffer.getUnsignedShort();
 		nameHashes = new int[dataSize];
 		uncompressedSizes = new int[dataSize];
 		compressedSizes = new int[dataSize];

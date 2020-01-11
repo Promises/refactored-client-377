@@ -1,6 +1,4 @@
-package com.jagex.runescape.sound;// Decompiled by Jad v1.5.8f. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) 
+package com.jagex.runescape.sound;
 
 import com.jagex.runescape.net.Buffer;
 
@@ -27,7 +25,7 @@ public class SoundTrack {
 		SoundTrack.buffer = new Buffer(SoundTrack._buffer);
 		SoundTrackInstrument.decode();
 		while (true) {
-			int trackId = buffer.getUnsignedLEShort();
+			int trackId = buffer.getUnsignedShort();
 			if (trackId == 65535)
 				return;
 			SoundTrack.tracks[trackId] = new SoundTrack(-524);
@@ -55,8 +53,8 @@ public class SoundTrack {
 			}
 		}
 
-		loopBegin = buffer.getUnsignedLEShort();
-		loopEnd = buffer.getUnsignedLEShort();
+		loopBegin = buffer.getUnsignedShort();
+		loopEnd = buffer.getUnsignedShort();
 	}
 
 	public int delay() {

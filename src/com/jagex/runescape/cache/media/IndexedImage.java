@@ -18,9 +18,9 @@ public class IndexedImage extends Rasterizer {
     public IndexedImage(Archive archive, String archiveName, int offset) {
         Buffer dataBuffer = new Buffer(archive.getFile(archiveName + ".dat"));
         Buffer indexBuffer = new Buffer(archive.getFile("index.dat"));
-        indexBuffer.currentPosition = dataBuffer.getUnsignedLEShort();
-        maxWidth = indexBuffer.getUnsignedLEShort();
-        maxHeight = indexBuffer.getUnsignedLEShort();
+        indexBuffer.currentPosition = dataBuffer.getUnsignedShort();
+        maxWidth = indexBuffer.getUnsignedShort();
+        maxHeight = indexBuffer.getUnsignedShort();
         int palleteLength = indexBuffer.getUnsignedByte();
         palette = new int[palleteLength];
         for (int index = 0; index < palleteLength - 1; index++)
@@ -28,14 +28,14 @@ public class IndexedImage extends Rasterizer {
 
         for (int counter = 0; counter < offset; counter++) {
             indexBuffer.currentPosition += 2;
-            dataBuffer.currentPosition += indexBuffer.getUnsignedLEShort() * indexBuffer.getUnsignedLEShort();
+            dataBuffer.currentPosition += indexBuffer.getUnsignedShort() * indexBuffer.getUnsignedShort();
             indexBuffer.currentPosition++;
         }
 
         xDrawOffset = indexBuffer.getUnsignedByte();
         yDrawOffset = indexBuffer.getUnsignedByte();
-        width = indexBuffer.getUnsignedLEShort();
-        height = indexBuffer.getUnsignedLEShort();
+        width = indexBuffer.getUnsignedShort();
+        height = indexBuffer.getUnsignedShort();
         int type = indexBuffer.getUnsignedByte();
         int pixelLength = width * height;
         pixels = new byte[pixelLength];

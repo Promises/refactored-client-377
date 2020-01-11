@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 
+import static tech.henning.client.Configuration.CACHE_NAME;
+
 public final class SignLink implements Runnable {
 	
 	public static final int CLIENT_REVISION = 377;
@@ -293,14 +295,13 @@ public final class SignLink implements Runnable {
 	}
 
 	public static String cacheLocation() {
-		String name = ".377cache";
-		File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + name + System.getProperty("file.separator"));
+		File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + CACHE_NAME + System.getProperty("file.separator"));
 		if (!file.exists()) {
 			if (!file.mkdir()) {
 				return secondaryLocation();
 			}
 		}
-		return System.getProperty("user.home") + System.getProperty("file.separator") + name + System.getProperty("file.separator");
+		return System.getProperty("user.home") + System.getProperty("file.separator") + CACHE_NAME + System.getProperty("file.separator");
 	}
 
 	public static String secondaryLocation() {

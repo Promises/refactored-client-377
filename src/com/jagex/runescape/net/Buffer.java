@@ -29,13 +29,13 @@ public class Buffer extends CacheableNode {
 			Buffer buffer = null;
 			if (sizeMode == 0 && smallBufferCount > 0) {
 				smallBufferCount--;
-				buffer = (Buffer) smallBuffers.removeFirst();
+				buffer = (Buffer) smallBuffers.pop();
 			} else if (sizeMode == 1 && mediumBufferCount > 0) {
 				mediumBufferCount--;
-				buffer = (Buffer) mediumBuffers.removeFirst();
+				buffer = (Buffer) mediumBuffers.pop();
 			} else if (sizeMode == 2 && largeBufferCount > 0) {
 				largeBufferCount--;
-				buffer = (Buffer) largeBuffers.removeFirst();
+				buffer = (Buffer) largeBuffers.pop();
 			}
 			if (buffer != null) {
 				buffer.currentPosition = 0;
@@ -137,7 +137,7 @@ public class Buffer extends CacheableNode {
 		return buffer[currentPosition++];
 	}
 
-	public int getUnsignedLEShort() {
+	public int getUnsignedShort() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] & 0xff);
 	}
@@ -218,7 +218,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte() - 64;
 		else
-			return getUnsignedLEShort() - 49152;
+			return getUnsignedShort() - 49152;
 	}
 
 	public int getSmart() {
@@ -226,7 +226,7 @@ public class Buffer extends CacheableNode {
 		if (peek < 128)
 			return getUnsignedByte();
 		else
-			return getUnsignedLEShort() - 32768;
+			return getUnsignedShort() - 32768;
 	}
 
 	public void encrypt(BigInteger modulus, BigInteger key) {
@@ -297,12 +297,12 @@ public class Buffer extends CacheableNode {
 		buffer[currentPosition++] = (byte) (value >> 8);
 	}
 
-	public int method549() {
+	public int getUnsignedLEShort() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 	}
 
-	public int method550() {
+	public int getShortUnsingedAdded() {
 		currentPosition += 2;
 		return ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] - 128 & 0xff);
 	}
@@ -312,7 +312,7 @@ public class Buffer extends CacheableNode {
 		return ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] - 128 & 0xff);
 	}
 
-	public int method552() {
+	public int getLEShort() {
 		currentPosition += 2;
 		int j = ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 		if (j > 0x7fff)
@@ -320,7 +320,7 @@ public class Buffer extends CacheableNode {
 		return j;
 	}
 
-	public int method553() {
+	public int getShortA() {
 		currentPosition += 2;
 		int i = ((buffer[currentPosition - 2] & 0xff) << 8) + (buffer[currentPosition - 1] - 128 & 0xff);
 		if (i > 32767)

@@ -145,12 +145,12 @@ public class GameObjectDefinition {
     public static void load(Archive archive) {
         buffer = new Buffer(archive.getFile("loc.dat"));
         Buffer buffer = new Buffer(archive.getFile("loc.idx"));
-        definitionCount = buffer.getUnsignedLEShort();
+        definitionCount = buffer.getUnsignedShort();
         bufferOffsets = new int[definitionCount];
         int offset = 2;
         for (int index = 0; index < definitionCount; index++) {
             bufferOffsets[index] = offset;
-            offset += buffer.getUnsignedLEShort();
+            offset += buffer.getUnsignedShort();
         }
 
         cache = new GameObjectDefinition[20];
@@ -231,29 +231,29 @@ public class GameObjectDefinition {
             needsTranslation = true;
         else
             needsTranslation = false;
-        Model animtedModel = new Model(modifiedModelColors == null, subModel, Animation.exists(animationId));
+        Model animatedModel = new Model(modifiedModelColors == null, subModel, Animation.exists(animationId));
         if (animationId != -1) {
-            animtedModel.createBones();
-            animtedModel.applyTransform(animationId);
-            animtedModel.triangleSkin = null;
-            animtedModel.vectorSkin = null;
+            animatedModel.createBones();
+            animatedModel.applyTransform(animationId);
+            animatedModel.triangleSkin = null;
+            animatedModel.vectorSkin = null;
         }
         while (face-- > 0)
-            animtedModel.rotate90Degrees();
+            animatedModel.rotate90Degrees();
         if (modifiedModelColors != null) {
             for (int k2 = 0; k2 < modifiedModelColors.length; k2++)
-                animtedModel.replaceColor(modifiedModelColors[k2], anIntArray792[k2]);
+                animatedModel.replaceColor(modifiedModelColors[k2], anIntArray792[k2]);
 
         }
         if (scale)
-            animtedModel.scaleT(modelSizeY, modelSizeZ, 9, modelSizeX);
+            animatedModel.scaleT(modelSizeY, modelSizeZ, 9, modelSizeX);
         if (needsTranslation)
-            animtedModel.translate(translateX, translateZ, translateY);
-        animtedModel.applyLighting(64 + modelLightFalloff, 768 + modelLightAmbient * 5, -50, -10, -50, !nonFlatShading);
+            animatedModel.translate(translateX, translateZ, translateY);
+        animatedModel.applyLighting(64 + modelLightFalloff, 768 + modelLightAmbient * 5, -50, -10, -50, !nonFlatShading);
         if (anInt794 == 1)
-            animtedModel.anInt1675 = animtedModel.modelHeight;
-        animatedModelCache.put(animtedModel, hash);
-        return animtedModel;
+            animatedModel.anInt1675 = animatedModel.modelHeight;
+        animatedModelCache.put(animatedModel, hash);
+        return animatedModel;
     }
 
     public boolean isModelCached() {
@@ -285,7 +285,7 @@ public class GameObjectDefinition {
                                 modelTypes = new int[k];
                                 modelIds = new int[k];
                                 for (int k1 = 0; k1 < k; k1++) {
-                                    modelIds[k1] = buf.getUnsignedLEShort();
+                                    modelIds[k1] = buf.getUnsignedShort();
                                     modelTypes[k1] = buf.getUnsignedByte();
                                 }
 
@@ -306,7 +306,7 @@ public class GameObjectDefinition {
                                 modelTypes = null;
                                 modelIds = new int[l];
                                 for (int l1 = 0; l1 < l; l1++)
-                                    modelIds[l1] = buf.getUnsignedLEShort();
+                                    modelIds[l1] = buf.getUnsignedShort();
 
                             } else {
                                 buf.currentPosition += l * 2;
@@ -339,7 +339,7 @@ public class GameObjectDefinition {
                         aBoolean797 = true;
                         break;
                     case 24:
-                        animationId = buf.getUnsignedLEShort();
+                        animationId = buf.getUnsignedShort();
                         if (animationId == 65535)
                             animationId = -1;
                         break;
@@ -360,13 +360,13 @@ public class GameObjectDefinition {
                             modifiedModelColors = new int[i1];
                             anIntArray792 = new int[i1];
                             for (int i2 = 0; i2 < i1; i2++) {
-                                modifiedModelColors[i2] = buf.getUnsignedLEShort();
-                                anIntArray792[i2] = buf.getUnsignedLEShort();
+                                modifiedModelColors[i2] = buf.getUnsignedShort();
+                                anIntArray792[i2] = buf.getUnsignedShort();
                             }
 
                             break;
                         case 60:
-                            icon = buf.getUnsignedLEShort();
+                            icon = buf.getUnsignedShort();
                             break;
                         case 62:
                             unknown3 = true;
@@ -375,16 +375,16 @@ public class GameObjectDefinition {
                             unknown2 = false;
                             break;
                         case 65:
-                            modelSizeX = buf.getUnsignedLEShort();
+                            modelSizeX = buf.getUnsignedShort();
                             break;
                         case 66:
-                            modelSizeY = buf.getUnsignedLEShort();
+                            modelSizeY = buf.getUnsignedShort();
                             break;
                         case 67:
-                            modelSizeZ = buf.getUnsignedLEShort();
+                            modelSizeZ = buf.getUnsignedShort();
                             break;
                         case 68:
-                            anInt795 = buf.getUnsignedLEShort();
+                            anInt795 = buf.getUnsignedShort();
                             break;
                         case 69:
                             anInt764 = buf.getUnsignedByte();
@@ -419,16 +419,16 @@ public class GameObjectDefinition {
                 }
                 continue label0;
             } while (attribute != 77);
-            varbitId = buf.getUnsignedLEShort();
+            varbitId = buf.getUnsignedShort();
             if (varbitId == 65535)
                 varbitId = -1;
-            configId = buf.getUnsignedLEShort();
+            configId = buf.getUnsignedShort();
             if (configId == 65535)
                 configId = -1;
             int j1 = buf.getUnsignedByte();
             childrenIds = new int[j1 + 1];
             for (int j2 = 0; j2 <= j1; j2++) {
-                childrenIds[j2] = buf.getUnsignedLEShort();
+                childrenIds[j2] = buf.getUnsignedShort();
                 if (childrenIds[j2] == 65535)
                     childrenIds[j2] = -1;
             }
@@ -454,7 +454,7 @@ public class GameObjectDefinition {
         if (model == null)
             return null;
         if (adjustToTerrain || nonFlatShading)
-            model = new Model(adjustToTerrain, nonFlatShading, 0, model);
+            model = new Model(adjustToTerrain, nonFlatShading, model);
         if (adjustToTerrain) {
             int l1 = (vertexHeight + vertexHeightRight + vertexHeightTopRight + vertexHeightTop) / 4;
             for (int i2 = 0; i2 < model.vertexCount; i2++) {

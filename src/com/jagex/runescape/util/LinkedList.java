@@ -12,7 +12,7 @@ public class LinkedList {
 		head.previous = head;
 	}
 
-	public void insertBack(Node node) {
+	public void pushBack(Node node) {
 		if (node.previous != null)
 			node.remove();
 		node.previous = head.previous;
@@ -21,7 +21,7 @@ public class LinkedList {
 		node.next.previous = node;
 	}
 
-	public void addFirst(Node node) {
+	public void push(Node node) {
 		if (node.previous != null)
 			node.remove();
 		node.previous = head;
@@ -30,7 +30,7 @@ public class LinkedList {
 		node.next.previous = node;
 	}
 
-	public Node removeFirst() {
+	public Node pop() {
 		Node node = head.next;
 		if (node == head) {
 			return null;
