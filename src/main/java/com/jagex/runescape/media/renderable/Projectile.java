@@ -92,11 +92,11 @@ public class Projectile extends Renderable {
 		return projectileModel;
 	}
 
-	public Projectile(int sceneId, int endHeight, int startDistanceFromTarget, int projectileY, int i1, int speed, int startSlope, int targetedEntityIndex, int height, int projectileX,
-			int delay) {
+	public Projectile(int sceneId, int endHeight, int startDistanceFromTarget, int projectileY, int graphicsId, int speed, int startSlope,
+					  int targetedEntityIndex, int height, int projectileX, int delay) {
 		this.aBoolean1561 = false;
 		this.aBoolean1573 = true;
-		this.animation = SpotAnimation.cache[i1];
+		this.animation = SpotAnimation.cache[graphicsId];
 		this.sceneId = sceneId;
 		this.startX = projectileX;
 		this.startY = projectileY;
