@@ -1998,7 +1998,7 @@ public class Game extends GameShell {
             thirdLastOpcode = secondLastOpcode;
             secondLastOpcode = lastOpcode;
             lastOpcode = opcode;
-            if (opcode == 166) {
+            if (opcode == UPDATE_INTERFACE_POSITION) {
                 int yOffset = buffer.getShortLE();
                 int xOffset = buffer.getShortLE();
                 int interfaceId = buffer.getUnsignedShortBE();
@@ -2008,7 +2008,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 186) {
+            if (opcode == UPDATE_INTERFACE_MODEL_DISPLAY) {
                 int rotationX = buffer.getUnsignedNegativeOffsetShortBE();
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 int zoom = buffer.getUnsignedNegativeOffsetShortBE();
@@ -2019,7 +2019,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 216) {
+            if (opcode == SET_INTERFACE_MODEL_1) {
                 int j1 = buffer.getUnsignedNegativeOffsetShortLE();
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 Widget.forId(interfaceId).modelType = 1;
@@ -2027,33 +2027,33 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 26) {
-                int k1 = buffer.getUnsignedShortBE();
-                int k11 = buffer.getUnsignedByte();
-                int i17 = buffer.getUnsignedShortBE();
-                if (i17 == 65535) {
+            if (opcode == PLAY_SOUND) {
+                int soundId = buffer.getUnsignedShortBE();
+                int type = buffer.getUnsignedByte();
+                int delay = buffer.getUnsignedShortBE();
+                if (delay == 65535) {
                     if (currentSound < 50) {
-                        sound[currentSound] = (short) k1;
-                        soundType[currentSound] = k11;
+                        sound[currentSound] = (short) soundId;
+                        soundType[currentSound] = type;
                         soundDelay[currentSound] = 0;
                         currentSound++;
                     }
                 } else if (aBoolean1301 && !lowMemory && currentSound < 50) {
-                    sound[currentSound] = k1;
-                    soundType[currentSound] = k11;
-                    soundDelay[currentSound] = i17 + SoundTrack.trackDelays[k1];
+                    sound[currentSound] = soundId;
+                    soundType[currentSound] = type;
+                    soundDelay[currentSound] = delay + SoundTrack.trackDelays[soundId];
                     currentSound++;
                 }
                 opcode = -1;
                 return true;
             }
-            if (opcode == 182) { // interface config/setting
-                int configId = buffer.getUnsignedNegativeOffsetShortBE();
-                byte configValue = buffer.getPreNegativeOffsetByte();
-                anIntArray1005[configId] = configValue;
-                if (widgetSettings[configId] != configValue) {
-                    widgetSettings[configId] = configValue;
-                    updateVarp(0, configId);
+            if (opcode == UPDATE_INTERFACE_SETTING_SMALL) {
+                int settingIndex = buffer.getUnsignedNegativeOffsetShortBE();
+                byte settingValue = buffer.getPreNegativeOffsetByte();
+                anIntArray1005[settingIndex] = settingValue;
+                if (widgetSettings[settingIndex] != settingValue) {
+                    widgetSettings[settingIndex] = settingValue;
+                    updateVarp(0, settingIndex);
                     redrawTabArea = true;
                     if (dialogueId != -1)
                         redrawChatbox = true;
@@ -2061,34 +2061,34 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 13) {
-                for (int i2 = 0; i2 < players.length; i2++)
-                    if (players[i2] != null)
-                        players[i2].emoteAnimation = -1;
+            if (opcode == RESET_MOB_ANIMATIONS) {
+                for (int p = 0; p < players.length; p++)
+                    if (players[p] != null)
+                        players[p].emoteAnimation = -1;
 
-                for (int l11 = 0; l11 < npcs.length; l11++)
-                    if (npcs[l11] != null)
-                        npcs[l11].emoteAnimation = -1;
+                for (int n = 0; n < npcs.length; n++)
+                    if (npcs[n] != null)
+                        npcs[n].emoteAnimation = -1;
 
                 opcode = -1;
                 return true;
             }
-            if (opcode == 156) {
+            if (opcode == SET_MINIMAP_STATE) {
                 minimapState = buffer.getUnsignedByte();
                 opcode = -1;
                 return true;
             }
-            if (opcode == 162) {
-                int j2 = buffer.getUnsignedNegativeOffsetShortBE();
+            if (opcode == SET_INTERFACE_MODEL_2) {
+                int modelId = buffer.getUnsignedNegativeOffsetShortBE();
                 int interfaceId = buffer.getUnsignedShortLE();
                 Widget.forId(interfaceId).modelType = 2;
-                Widget.forId(interfaceId).modelId = j2;
+                Widget.forId(interfaceId).modelId = modelId;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 109) {
-                int k2 = buffer.getUnsignedShortBE();
-                method112((byte) 36, k2);
+            if (opcode == SHOW_CHATBOX_INTERFACE) {
+                int interfaceId = buffer.getUnsignedShortBE();
+                method112((byte) 36, interfaceId);
                 if (openInvOverLayId != -1) {
                     method44(openInvOverLayId);
                     openInvOverLayId = -1;
@@ -2108,16 +2108,16 @@ public class Game extends GameShell {
                     method44(openInterfaceId);
                     openInterfaceId = -1;
                 }
-                if (backDialogueId != k2) {
+                if (backDialogueId != interfaceId) {
                     method44(backDialogueId);
-                    backDialogueId = k2;
+                    backDialogueId = interfaceId;
                 }
                 aBoolean1239 = false;
                 redrawChatbox = true;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 220) {
+            if (opcode == PLAY_SONG) {
                 int songID = buffer.getUnsignedNegativeOffsetShortLE();
                 if (songID == 65535)
                     songID = -1;
@@ -2130,29 +2130,29 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 249) {
-                int fileId = buffer.getUnsignedShortLE();
-                int j12 = buffer.getMediumME();
+            if (opcode == PLAY_TEMP_SONG) {
+                int temporarySong = buffer.getUnsignedShortLE();
+                int previousSong = buffer.getMediumME();
                 if (musicEnabled && !lowMemory) {
-                    nextSong = fileId;
+                    nextSong = temporarySong;
                     songChanging = false;
-                    onDemandRequester.request(2, nextSong); // request something from cache!?!
-                    previousSong = j12;
+                    onDemandRequester.request(2, this.nextSong);
+                    this.previousSong = previousSong;
                 }
                 opcode = -1;
                 return true;
             }
-            if (opcode == 158) {
-                int j3 = buffer.getShortLE();
-                if (j3 != dialogueId) {
+            if (opcode == SHOW_DIALOG) {
+                int interfaceId = buffer.getShortLE();
+                if (interfaceId != dialogueId) {
                     method44(dialogueId);
-                    dialogueId = j3;
+                    dialogueId = interfaceId;
                 }
                 redrawChatbox = true;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 218) { // set interface colour(?)
+            if (opcode == UPDATE_INTERFACE_COLOR) {
                 int interfaceId = buffer.getUnsignedShortBE();
                 int rgb = buffer.getUnsignedNegativeOffsetShortBE();
                 int j17 = rgb >> 10 & 0x1f;
@@ -2162,7 +2162,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 157) { // update player option
+            if (opcode == UPDATE_PLAYER_CONTEXT_OPTION) {
                 int slot = buffer.getUnsignedInvertedByte();
                 String option = buffer.getString();
                 int alwaysOnTop = buffer.getUnsignedByte();
@@ -2175,7 +2175,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 6) {
+            if (opcode == SET_CHAT_INPUT_TYPE_2) {
                 messagePromptRaised = false;
                 inputType = 2;
                 inputInputMessage = "";
@@ -2183,7 +2183,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 201) {
+            if (opcode == UPDATE_CHAT_SETTINGS) {
                 publicChatMode = buffer.getUnsignedByte();
                 privateChatMode = buffer.getUnsignedByte();
                 tradeMode = buffer.getUnsignedByte();
@@ -2192,7 +2192,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 199) {
+            if (opcode == SHOW_HINT_ICON) {
                 headIconDrawType = buffer.getUnsignedByte();
                 if (headIconDrawType == 1)
                     anInt1226 = buffer.getUnsignedShortBE();
@@ -2227,7 +2227,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 167) {
+            if (opcode == MOVE_CUTSCENE_CAMERA) {
                 cutsceneActive = true;
                 anInt993 = buffer.getUnsignedByte();
                 anInt994 = buffer.getUnsignedByte();
@@ -2252,18 +2252,18 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 5) {
-                logout(); // simulate a crash??
+            if (opcode == SEND_LOGOUT) {
+                logout();
                 opcode = -1;
                 return false;
             }
-            if (opcode == 115) {
-                int j4 = buffer.getIntME2();
-                int i13 = buffer.getUnsignedShortLE();
-                anIntArray1005[i13] = j4;
-                if (widgetSettings[i13] != j4) {
-                    widgetSettings[i13] = j4;
-                    updateVarp(0, i13);
+            if (opcode == UPDATE_INTERFACE_SETTING_LARGE) {
+                int settingValue = buffer.getIntME2();
+                int settingIndex = buffer.getUnsignedShortLE();
+                anIntArray1005[settingIndex] = settingValue;
+                if (widgetSettings[settingIndex] != settingValue) {
+                    widgetSettings[settingIndex] = settingValue;
+                    updateVarp(0, settingIndex);
                     redrawTabArea = true;
                     if (dialogueId != -1)
                         redrawChatbox = true;
@@ -2271,7 +2271,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 29) { // close open interfaces??
+            if (opcode == CLOSE_ALL_INTERFACES) {
                 if (openInvOverLayId != -1) {
                     method44(openInvOverLayId);
                     openInvOverLayId = -1;
@@ -2304,7 +2304,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 76) { // open welcome screen
+            if (opcode == SHOW_WELCOME_SCREEN) { // @TODO rename all these vars
                 anInt1083 = buffer.getUnsignedShortLE();
                 anInt1075 = buffer.getUnsignedNegativeOffsetShortLE();
                 buffer.getUnsignedShortBE();
@@ -2320,7 +2320,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 63) { // server message
+            if (opcode == CHATBOX_MESSAGE) { // server message
                 String message = buffer.getString();
                 if (message.endsWith(":tradereq:")) {
                     String s3 = message.substring(0, message.indexOf(":"));
@@ -2369,44 +2369,44 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 50) {
-                int k4 = buffer.getShortBE();
-                if (k4 >= 0)
-                    method112((byte) 36, k4);
-                if (k4 != walkableWidgetId) {
+            if (opcode == SHOW_WALKABLE_INTERFACE) {
+                int interfaceId = buffer.getShortBE();
+                if (interfaceId >= 0)
+                    method112((byte) 36, interfaceId);
+                if (interfaceId != walkableWidgetId) {
                     method44(walkableWidgetId);
-                    walkableWidgetId = k4;
+                    walkableWidgetId = interfaceId;
                 }
                 opcode = -1;
                 return true;
             }
-            if (opcode == 82) { // make interface (in)visible maybe?
-                boolean flag = buffer.getUnsignedByte() == 1;
+            if (opcode == UPDATE_INTERFACE_HIDDEN_ON_HOVER_STATE) {
+                boolean hiddenUntilHovered = buffer.getUnsignedByte() == 1;
                 int interfaceId = buffer.getUnsignedShortBE();
-                Widget.forId(interfaceId).hiddenUntilHovered = flag;
+                Widget.forId(interfaceId).hiddenUntilHovered = hiddenUntilHovered;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 174) {
+            if (opcode == UPDATE_CARRY_WEIGHT) {
                 if (currentTabId == 12)
                     redrawTabArea = true;
                 userWeight = buffer.getShortBE();
                 opcode = -1;
                 return true;
             }
-            if (opcode == 233) {
+            if (opcode == 233) { // ???
                 anInt1319 = buffer.getUnsignedByte();
                 opcode = -1;
                 return true;
             }
-            if (opcode == 61) {
+            if (opcode == 61) { // ??? reset destination x? why?
                 destinationX = 0;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 128) {
-                int interfaceId = buffer.getUnsignedNegativeOffsetShortBE();
-                int invOverlayId = buffer.getUnsignedNegativeOffsetShortLE();
+            if (opcode == SHOW_SIDEBAR_AND_GAME_INTERFACE) {
+                int gameInterfaceId = buffer.getUnsignedNegativeOffsetShortBE();
+                int sidebarInterfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 if (backDialogueId != -1) {
                     method44(backDialogueId);
                     backDialogueId = -1;
@@ -2421,13 +2421,13 @@ public class Game extends GameShell {
                     method44(anInt960);
                     anInt960 = -1;
                 }
-                if (openInterfaceId != interfaceId) {
+                if (openInterfaceId != gameInterfaceId) {
                     method44(openInterfaceId);
-                    openInterfaceId = interfaceId;
+                    openInterfaceId = gameInterfaceId;
                 }
-                if (openInvOverLayId != invOverlayId) {
+                if (openInvOverLayId != sidebarInterfaceId) {
                     method44(openInvOverLayId);
-                    openInvOverLayId = invOverlayId;
+                    openInvOverLayId = sidebarInterfaceId;
                 }
                 if (inputType != 0) {
                     inputType = 0;
@@ -2439,50 +2439,50 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 67) {
-                int i5 = buffer.getUnsignedByte();
-                int l13 = buffer.getUnsignedByte();
-                int i18 = buffer.getUnsignedByte();
-                int l22 = buffer.getUnsignedByte();
-                customCameraActive[i5] = true;
-                cameraJitter[i5] = l13;
-                cameraAmplitude[i5] = i18;
-                cameraFrequency[i5] = l22;
-                quakeTimes[i5] = 0;
+            if (opcode == CAMERA_SHAKE) {
+                int slot = buffer.getUnsignedByte();
+                int jitter = buffer.getUnsignedByte();
+                int amplitude = buffer.getUnsignedByte();
+                int frequency = buffer.getUnsignedByte();
+                customCameraActive[slot] = true;
+                cameraJitter[slot] = jitter;
+                cameraAmplitude[slot] = amplitude;
+                cameraFrequency[slot] = frequency;
+                quakeTimes[slot] = 0;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 134) { // set items in interface
+            if (opcode == UPDATE_INTERFACE_ITEMS_BY_SLOT) {
                 redrawTabArea = true;
                 int interfaceId = buffer.getUnsignedShortBE();
-                Widget inter = Widget.forId(interfaceId);
+                Widget widget = Widget.forId(interfaceId);
                 while (buffer.currentPosition < packetSize) {
                     int slot = buffer.getSmart();
                     int id = buffer.getUnsignedShortBE();
                     int amount = buffer.getUnsignedByte();
                     if (amount == 255)
                         amount = buffer.getIntBE();
-                    if (slot >= 0 && slot < inter.items.length) {
-                        inter.items[slot] = id;
-                        inter.itemAmounts[slot] = amount;
+                    if (slot >= 0 && slot < widget.items.length) {
+                        widget.items[slot] = id;
+                        widget.itemAmounts[slot] = amount;
                     }
                 }
                 opcode = -1;
                 return true;
             }
-            if (opcode == 78) { // update friend status
-                long friend = buffer.getLongBE();
-                int nodeId = buffer.getUnsignedByte();
-                String friendName = TextUtils.formatName(TextUtils.longToName(friend));
+            if (opcode == UPDATE_FRIEND) { // update friend status
+                long friendNameLong = buffer.getLongBE();
+                int worldId = buffer.getUnsignedByte();
+                String friendName = TextUtils.formatName(TextUtils.longToName(friendNameLong));
                 for (int k25 = 0; k25 < friendsCount; k25++) {
-                    if (friend != friends[k25])
+                    if (friendNameLong != friends[k25])
                         continue;
-                    if (friendWorlds[k25] != nodeId) {
-                        friendWorlds[k25] = nodeId;
+                    if (friendWorlds[k25] != worldId) {
+                        friendWorlds[k25] = worldId;
                         redrawTabArea = true;
-                        if (nodeId > 0)
+                        if (worldId > 0)
                             addChatMessage("", friendName + " has logged in.", 5);
-                        if (nodeId == 0)
+                        if (worldId == 0)
                             addChatMessage("", friendName + " has logged out.", 5);
                     }
                     friendName = null;
@@ -2490,26 +2490,27 @@ public class Game extends GameShell {
                 }
 
                 if (friendName != null && friendsCount < 200) {
-                    friends[friendsCount] = friend;
+                    friends[friendsCount] = friendNameLong;
                     friendUsernames[friendsCount] = friendName;
-                    friendWorlds[friendsCount] = nodeId;
+                    friendWorlds[friendsCount] = worldId;
                     friendsCount++;
                     redrawTabArea = true;
                 }
                 for (boolean flag5 = false; !flag5; ) {
                     flag5 = true;
-                    for (int j30 = 0; j30 < friendsCount - 1; j30++)
-                        if (friendWorlds[j30] != world && friendWorlds[j30 + 1] == world
-                                || friendWorlds[j30] == 0 && friendWorlds[j30 + 1] != 0) {
-                            int l31 = friendWorlds[j30];
-                            friendWorlds[j30] = friendWorlds[j30 + 1];
-                            friendWorlds[j30 + 1] = l31;
-                            String s10 = friendUsernames[j30];
-                            friendUsernames[j30] = friendUsernames[j30 + 1];
-                            friendUsernames[j30 + 1] = s10;
-                            long l33 = friends[j30];
-                            friends[j30] = friends[j30 + 1];
-                            friends[j30 + 1] = l33;
+                    // Reordering the list
+                    for (int i = 0; i < friendsCount - 1; i++)
+                        if (friendWorlds[i] != world && friendWorlds[i + 1] == world
+                                || friendWorlds[i] == 0 && friendWorlds[i + 1] != 0) {
+                            int world = friendWorlds[i];
+                            friendWorlds[i] = friendWorlds[i + 1];
+                            friendWorlds[i + 1] = world;
+                            String name = friendUsernames[i];
+                            friendUsernames[i] = friendUsernames[i + 1];
+                            friendUsernames[i + 1] = name;
+                            long friend = friends[i];
+                            friends[i] = friends[i + 1];
+                            friends[i + 1] = friend;
                             redrawTabArea = true;
                             flag5 = false;
                         }
@@ -2519,7 +2520,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 58) { // enter amount interface
+            if (opcode == 58) { // ??? enter amount interface?
                 messagePromptRaised = false;
                 inputType = 1;
                 inputInputMessage = "";
@@ -2527,21 +2528,21 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 252) {
+            if (opcode == SET_OPEN_SIDEBAR) {
                 currentTabId = buffer.getUnsignedInvertedByte();
                 redrawTabArea = true;
                 drawTabIcons = true;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 40) {
+            if (opcode == CLEAR_GROUND_ITEMS_AND_LANDSCAPE_OBJECTS) {
                 placementY = buffer.getUnsignedPreNegativeOffsetByte();
                 placementX = buffer.getUnsignedInvertedByte();
-                for (int k5 = placementX; k5 < placementX + 8; k5++) {
-                    for (int i14 = placementY; i14 < placementY + 8; i14++)
-                        if (groundItems[plane][k5][i14] != null) {
-                            groundItems[plane][k5][i14] = null;
-                            processGroundItems(k5, i14);
+                for (int x = placementX; x < placementX + 8; x++) {
+                    for (int y = placementY; y < placementY + 8; y++)
+                        if (groundItems[plane][x][y] != null) {
+                            groundItems[plane][x][y] = null;
+                            processGroundItems(x, y);
                         }
 
                 }
@@ -2556,7 +2557,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 255) { // show player in an interface *maybe*?
+            if (opcode == SET_INTERFACE_PLAYER_HEAD) {
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 Widget.forId(interfaceId).modelType = 3;
                 if (localPlayer.npcDefinition == null) // maybe that is the appear as npc thing?
@@ -2568,21 +2569,21 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 135) { // private message (?)
-                long l6 = buffer.getLongBE();
-                int i19 = buffer.getIntBE();
-                int j23 = buffer.getUnsignedByte();
+            if (opcode == PRIVATE_MESSAGE_RECEIVED) {
+                long fromPlayerIndex = buffer.getLongBE();
+                int chatId = buffer.getIntBE();
+                int fromPlayerRights = buffer.getUnsignedByte();
                 boolean flag4 = false;
                 for (int k28 = 0; k28 < 100; k28++) {
-                    if (anIntArray1258[k28] != i19)
+                    if (anIntArray1258[k28] != chatId)
                         continue;
                     flag4 = true;
                     break;
                 }
 
-                if (j23 <= 1) {
+                if (fromPlayerRights <= 1) {
                     for (int k30 = 0; k30 < ignoresCount; k30++) {
-                        if (ignores[k30] != l6)
+                        if (ignores[k30] != fromPlayerIndex)
                             continue;
                         flag4 = true;
                         break;
@@ -2591,26 +2592,26 @@ public class Game extends GameShell {
                 }
                 if (!flag4 && !inTutorialIsland)
                     try {
-                        anIntArray1258[anInt1152] = i19;
+                        anIntArray1258[anInt1152] = chatId;
                         anInt1152 = (anInt1152 + 1) % 100;
                         String s9 = ChatEncoder.get(packetSize - 13, buffer);
-                        if (j23 != 3)
+                        if (fromPlayerRights != 3)
                             s9 = ChatCensor.censorString(s9);
-                        if (j23 == 2 || j23 == 3)
-                            addChatMessage("@cr2@" + TextUtils.formatName(TextUtils.longToName(l6)),
+                        if (fromPlayerRights == 2 || fromPlayerRights == 3)
+                            addChatMessage("@cr2@" + TextUtils.formatName(TextUtils.longToName(fromPlayerIndex)),
                                     s9, 7);
-                        else if (j23 == 1)
-                            addChatMessage("@cr1@" + TextUtils.formatName(TextUtils.longToName(l6)),
+                        else if (fromPlayerRights == 1)
+                            addChatMessage("@cr1@" + TextUtils.formatName(TextUtils.longToName(fromPlayerIndex)),
                                     s9, 7);
                         else
-                            addChatMessage(TextUtils.formatName(TextUtils.longToName(l6)), s9, 3);
+                            addChatMessage(TextUtils.formatName(TextUtils.longToName(fromPlayerIndex)), s9, 3);
                     } catch (Exception exception1) {
                         SignLink.reportError("cde1");
                     }
                 opcode = -1;
                 return true;
             }
-            if (opcode == 183) {
+            if (opcode == UPDATE_GROUND_ITEMS_AND_LANDSCAPE_OBJECTS) {
                 placementX = buffer.getUnsignedByte();
                 placementY = buffer.getUnsignedPostNegativeOffsetByte();
                 while (buffer.currentPosition < packetSize) {
@@ -2620,7 +2621,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 159) { // open interface
+            if (opcode == SHOW_GAME_INTERFACE) {
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 method112((byte) 36, interfaceId);
                 if (openInvOverLayId != -1) {
@@ -2655,9 +2656,9 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 246) {
-                int i7 = buffer.getUnsignedNegativeOffsetShortLE();
-                method112((byte) 36, i7);
+            if (opcode == SHOW_SIDEBAR_OVERLAY_INTERFACE) {
+                int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
+                method112((byte) 36, interfaceId);
                 if (backDialogueId != -1) {
                     method44(backDialogueId);
                     backDialogueId = -1;
@@ -2676,9 +2677,9 @@ public class Game extends GameShell {
                     method44(openInterfaceId);
                     openInterfaceId = -1;
                 }
-                if (openInvOverLayId != i7) {
+                if (openInvOverLayId != interfaceId) {
                     method44(openInvOverLayId);
-                    openInvOverLayId = i7;
+                    openInvOverLayId = interfaceId;
                 }
                 if (inputType != 0) {
                     inputType = 0;
@@ -2690,51 +2691,51 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 49) {
+            if (opcode == UPDATE_SKILL) {
                 redrawTabArea = true;
-                int _skillId = buffer.getUnsignedInvertedByte();
-                int _skillLevel = buffer.getUnsignedByte();
-                int _skillExp = buffer.getIntBE();
-                skillExperience[_skillId] = _skillExp;
-                skillLevel[_skillId] = _skillLevel;
-                skillMaxLevel[_skillId] = 1;
-                for (int level = 0; level < 98; level++)
-                    if (_skillExp >= SKILL_EXPERIENCE[level])
-                        skillMaxLevel[_skillId] = level + 2;
+                int skillIndex = buffer.getUnsignedInvertedByte();
+                int level = buffer.getUnsignedByte();
+                int xp = buffer.getIntBE();
+                skillExperience[skillIndex] = xp;
+                skillLevel[skillIndex] = level;
+                skillMaxLevel[skillIndex] = 1;
+                for (int l = 0; l < 98; l++)
+                    if (xp >= SKILL_EXPERIENCE[l])
+                        skillMaxLevel[skillIndex] = l + 2;
 
                 opcode = -1;
                 return true;
             }
-            if (opcode == 206) { // update all items in interface
+            if (opcode == UPDATE_ALL_INTERFACE_ITEMS) { // update all items in interface
                 redrawTabArea = true;
                 int interfaceId = buffer.getUnsignedShortBE();
-                Widget inter = Widget.forId(interfaceId);
+                Widget widget = Widget.forId(interfaceId);
                 int items = buffer.getUnsignedShortBE();
                 for (int item = 0; item < items; item++) {
-                    inter.items[item] = buffer.getUnsignedNegativeOffsetShortLE();
+                    widget.items[item] = buffer.getUnsignedNegativeOffsetShortLE();
                     int amount = buffer.getUnsignedInvertedByte();
                     if (amount == 255)
                         amount = buffer.getIntLE();
-                    inter.itemAmounts[item] = amount;
+                    widget.itemAmounts[item] = amount;
                 }
 
-                for (int i26 = items; i26 < inter.items.length; i26++) {
-                    inter.items[i26] = 0;
-                    inter.itemAmounts[i26] = 0;
+                for (int i26 = items; i26 < widget.items.length; i26++) {
+                    widget.items[i26] = 0;
+                    widget.itemAmounts[i26] = 0;
                 }
 
                 opcode = -1;
                 return true;
             }
-            if (opcode == 222 || opcode == 53) { // new map region
+            if (opcode == UPDATE_ACTIVE_MAP_REGION || opcode == CONSTRUCT_MAP_REGION) {
                 int tmpChunkX = chunkX;
                 int tmpChunkY = chunkY;
-                if (opcode == 222) {
+                if (opcode == UPDATE_ACTIVE_MAP_REGION) {
                     tmpChunkY = buffer.getUnsignedShortBE();
                     tmpChunkX = buffer.getUnsignedNegativeOffsetShortLE();
                     aBoolean1163 = false;
                 }
-                if (opcode == 53) {
+                if (opcode == CONSTRUCT_MAP_REGION) {
                     tmpChunkX = buffer.getUnsignedNegativeOffsetShortBE();
                     buffer.initBitAccess();
                     for (int z = 0; z < 4; z++) {
@@ -2771,7 +2772,7 @@ public class Game extends GameShell {
                 loadingStage = 1;
                 aLong1229 = System.currentTimeMillis();
                 method125(null, "Loading - please wait.");
-                if (opcode == 222) {
+                if (opcode == UPDATE_ACTIVE_MAP_REGION) {
                     int count = 0;
                     for (int fileX = (chunkX - 6) / 8; fileX <= (chunkX + 6) / 8; fileX++) {
                         for (int fileY = (chunkY - 6) / 8; fileY <= (chunkY + 6) / 8; fileY++)
@@ -2807,7 +2808,7 @@ public class Game extends GameShell {
                     }
 
                 }
-                if (opcode == 53) {
+                if (opcode == CONSTRUCT_MAP_REGION) {
                     int uniqueCount = 0;
                     int fileIndices[] = new int[676];
                     for (int tileZ = 0; tileZ < 4; tileZ++) {
@@ -2930,25 +2931,26 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 190) {
+            if (opcode == SYSTEM_UPDATE) {
                 systemUpdateTime = buffer.getUnsignedShortLE() * 30;
                 opcode = -1;
                 return true;
             }
-            if (opcode == 41 || opcode == 121 || opcode == 203 || opcode == 106 || opcode == 59 || opcode == 181
-                    || opcode == 208 || opcode == 107 || opcode == 142 || opcode == 88 || opcode == 152) {
-                parsePlacementPacket(buffer, opcode); // these are to do with objects iirc
+            if (opcode == PLAY_POSITION_SOUND || opcode == UPDATE_GROUND_ITEM_AMOUNT || opcode == 203 || opcode == SET_PLAYER_GROUND_ITEM
+                    || opcode == SHOW_STILL_GRAPHICS || opcode == SHOW_PROJECTILE || opcode == REMOVE_GROUND_ITEM
+                    || opcode == SET_GROUND_ITEM || opcode == 142 || opcode == REMOVE_LANDSCAPE_OBJECT || opcode == SET_LANDSCAPE_OBJECT) {
+                parsePlacementPacket(buffer, opcode);
                 opcode = -1;
                 return true;
             }
-            if (opcode == 125) {
+            if (opcode == UPDATE_RUN_ENERGY) {
                 if (currentTabId == 12)
                     redrawTabArea = true;
                 runEnergy = buffer.getUnsignedByte();
                 opcode = -1;
                 return true;
             }
-            if (opcode == 21) { // show a model on an interface??
+            if (opcode == SET_INTERFACE_ITEM_MODEL) {
                 int scale = buffer.getUnsignedShortBE();
                 int itemId = buffer.getUnsignedShortLE();
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
@@ -2967,7 +2969,7 @@ public class Game extends GameShell {
                     return true;
                 }
             }
-            if (opcode == 3) {
+            if (opcode == 3) { // camera? something with cutscenes? Set cutscene camera position?...
                 cutsceneActive = true;
                 anInt874 = buffer.getUnsignedByte();
                 anInt875 = buffer.getUnsignedByte();
@@ -2982,7 +2984,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == 2) {
+            if (opcode == SET_INTERFACE_ANIMATION) {
                 int interfaceId = buffer.getUnsignedNegativeOffsetShortLE();
                 int animationId = buffer.getNegativeOffsetShortBE();
                 Widget widget = Widget.forId(interfaceId);
@@ -3135,7 +3137,7 @@ public class Game extends GameShell {
                 opcode = -1;
                 return true;
             }
-            if (opcode == SET_INTERFACE_SCROLL_POSITION) {
+            if (opcode == UPDATE_INTERFACE_SCROLL_POSITION) {
                 int interfaceId = buffer.getUnsignedShortBE();
                 int scrollPosition = buffer.getUnsignedNegativeOffsetShortLE();
                 Widget widget = Widget.forId(interfaceId);
@@ -10691,7 +10693,7 @@ public class Game extends GameShell {
             }
             return;
         }
-        if (opcode == PLAY_SOUND) {
+        if (opcode == PLAY_POSITION_SOUND) {
             int offset = buf.getUnsignedByte();
             int x = placementX + (offset >> 4 & 7);
             int y = placementY + (offset & 7);
