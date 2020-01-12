@@ -522,56 +522,48 @@ public class Scene {
     }
 
     public void method261(int x, int y, int z) {
-        SceneTile tile = groundArray[z][x][y];
-        if (tile == null) {
+        SceneTile sceneTile = groundArray[z][x][y];
+        if (sceneTile == null) {
             return;
         }
-        tile.floorDecoration = null;
+        sceneTile.floorDecoration = null;
     }
 
     public void clearGroundItem(int i, int j, int k) {
-        SceneTile class50_sub3 = groundArray[i][j][k];
-        if (class50_sub3 != null) {
-            class50_sub3.groundItemTile = null;
+        SceneTile sceneTile = groundArray[i][j][k];
+        if (sceneTile != null) {
+            sceneTile.groundItemTile = null;
         }
     }
 
-    public Wall method263(int i, int j, int k, int l) {
-        SceneTile class50_sub3 = groundArray[i][k][l];
-        if (j != 17734) {
-            throw new NullPointerException();
-        }
-        if (class50_sub3 == null) {
+    public Wall getWallObject(int level, int x, int y) {
+        SceneTile sceneTile = groundArray[level][x][y];
+
+        if (sceneTile == null) {
             return null;
         } else {
-            return class50_sub3.wall;
+            return sceneTile.wall;
         }
     }
 
-    public WallDecoration method264(int i, int j, int k, boolean flag) {
-        SceneTile class50_sub3 = groundArray[i][k][j];
-        if (flag) {
-            throw new NullPointerException();
-        }
-        if (class50_sub3 == null) {
+    public WallDecoration getWallDecoration(int level, int y, int x) {
+        SceneTile sceneTile = groundArray[level][x][y];
+
+        if (sceneTile == null) {
             return null;
         } else {
-            return class50_sub3.wallDecoration;
+            return sceneTile.wallDecoration;
         }
     }
 
-    public InteractiveObject method265(int i, byte byte0, int j, int k) {
-        if (byte0 != 32) {
-            for (int l = 1; l > 0; l++) {
-            }
-        }
-        SceneTile class50_sub3 = groundArray[k][i][j];
-        if (class50_sub3 == null) {
+    public InteractiveObject method265(int x, int y, int level) {
+        SceneTile sceneTile = groundArray[level][x][y];
+        if (sceneTile == null) {
             return null;
         }
-        for (int i1 = 0; i1 < class50_sub3.entityCount; i1++) {
-            InteractiveObject interactiveObject = class50_sub3.interactiveObjects[i1];
-            if ((interactiveObject.uid >> 29 & 3) == 2 && interactiveObject.tileLeft == i && interactiveObject.tileTop == j) {
+        for (int i = 0; i < sceneTile.entityCount; i++) {
+            InteractiveObject interactiveObject = sceneTile.interactiveObjects[i];
+            if ((interactiveObject.uid >> 29 & 3) == 2 && interactiveObject.tileLeft == x && interactiveObject.tileTop == y) {
                 return interactiveObject;
             }
         }
@@ -579,43 +571,40 @@ public class Scene {
         return null;
     }
 
-    public FloorDecoration method266(int i, int j, int k, int l) {
-        if (k != 0) {
-            throw new NullPointerException();
-        }
-        SceneTile class50_sub3 = groundArray[i][l][j];
-        if (class50_sub3 == null || class50_sub3.floorDecoration == null) {
+    public FloorDecoration getFloorDecoration(int level, int x, int y) {
+        SceneTile sceneTile = groundArray[level][y][x];
+        if (sceneTile == null || sceneTile.floorDecoration == null) {
             return null;
         } else {
-            return class50_sub3.floorDecoration;
+            return sceneTile.floorDecoration;
         }
     }
 
     public int method267(int i, int j, int k) {
-        SceneTile class50_sub3 = groundArray[i][j][k];
-        if (class50_sub3 == null || class50_sub3.wall == null) {
+        SceneTile sceneTile = groundArray[i][j][k];
+        if (sceneTile == null || sceneTile.wall == null) {
             return 0;
         } else {
-            return class50_sub3.wall.uid;
+            return sceneTile.wall.uid;
         }
     }
 
     public int method268(int i, byte byte0, int j, int k) {
-        SceneTile class50_sub3 = groundArray[j][i][k];
-        if (class50_sub3 == null || class50_sub3.wallDecoration == null) {
+        SceneTile sceneTile = groundArray[j][i][k];
+        if (sceneTile == null || sceneTile.wallDecoration == null) {
             return 0;
         } else {
-            return class50_sub3.wallDecoration.uid;
+            return sceneTile.wallDecoration.uid;
         }
     }
 
     public int method269(int i, int j, int k) {
-        SceneTile class50_sub3 = groundArray[i][j][k];
-        if (class50_sub3 == null) {
+        SceneTile sceneTile = groundArray[i][j][k];
+        if (sceneTile == null) {
             return 0;
         }
-        for (int l = 0; l < class50_sub3.entityCount; l++) {
-            InteractiveObject interactiveObject = class50_sub3.interactiveObjects[l];
+        for (int l = 0; l < sceneTile.entityCount; l++) {
+            InteractiveObject interactiveObject = sceneTile.interactiveObjects[l];
             if ((interactiveObject.uid >> 29 & 3) == 2 && interactiveObject.tileLeft == j && interactiveObject.tileTop == k) {
                 return interactiveObject.uid;
             }
@@ -625,31 +614,31 @@ public class Scene {
     }
 
     public int getFloorDecorationHash(int i, int j, int k) {
-        SceneTile class50_sub3 = groundArray[i][j][k];
-        if (class50_sub3 == null || class50_sub3.floorDecoration == null) {
+        SceneTile sceneTile = groundArray[i][j][k];
+        if (sceneTile == null || sceneTile.floorDecoration == null) {
             return 0;
         } else {
-            return class50_sub3.floorDecoration.uid;
+            return sceneTile.floorDecoration.uid;
         }
     }
 
     public int method271(int i, int j, int k, int l) {
-        SceneTile class50_sub3 = groundArray[i][j][k];
-        if (class50_sub3 == null) {
+        SceneTile sceneTile = groundArray[i][j][k];
+        if (sceneTile == null) {
             return -1;
         }
-        if (class50_sub3.wall != null && class50_sub3.wall.uid == l) {
-            return class50_sub3.wall.config & 0xff;
+        if (sceneTile.wall != null && sceneTile.wall.uid == l) {
+            return sceneTile.wall.config & 0xff;
         }
-        if (class50_sub3.wallDecoration != null && class50_sub3.wallDecoration.uid == l) {
-            return class50_sub3.wallDecoration.config & 0xff;
+        if (sceneTile.wallDecoration != null && sceneTile.wallDecoration.uid == l) {
+            return sceneTile.wallDecoration.config & 0xff;
         }
-        if (class50_sub3.floorDecoration != null && class50_sub3.floorDecoration.uid == l) {
-            return class50_sub3.floorDecoration.config & 0xff;
+        if (sceneTile.floorDecoration != null && sceneTile.floorDecoration.uid == l) {
+            return sceneTile.floorDecoration.config & 0xff;
         }
-        for (int i1 = 0; i1 < class50_sub3.entityCount; i1++) {
-            if (class50_sub3.interactiveObjects[i1].uid == l) {
-                return class50_sub3.interactiveObjects[i1].config & 0xff;
+        for (int i1 = 0; i1 < sceneTile.entityCount; i1++) {
+            if (sceneTile.interactiveObjects[i1].uid == l) {
+                return sceneTile.interactiveObjects[i1].config & 0xff;
             }
         }
 
@@ -700,40 +689,40 @@ public class Scene {
 
     }
 
-    private void method273(int i, Model class50_sub1_sub4_sub4, int j, int k, int l) {
+    private void method273(int i, Model model, int j, int k, int l) {
         if (l != 0) {
             return;
         }
         if (i < mapSizeX) {
-            SceneTile class50_sub3 = groundArray[k][i + 1][j];
-            if (class50_sub3 != null && class50_sub3.floorDecoration != null
-                    && class50_sub3.floorDecoration.renderable.verticesNormal != null) {
-                mergeNormals(class50_sub1_sub4_sub4,
-                        (Model) class50_sub3.floorDecoration.renderable, 128, 0, 0, true);
+            SceneTile sceneTile = groundArray[k][i + 1][j];
+            if (sceneTile != null && sceneTile.floorDecoration != null
+                    && sceneTile.floorDecoration.renderable.verticesNormal != null) {
+                mergeNormals(model,
+                        (Model) sceneTile.floorDecoration.renderable, 128, 0, 0, true);
             }
         }
         if (j < mapSizeX) {
-            SceneTile class50_sub3_1 = groundArray[k][i][j + 1];
-            if (class50_sub3_1 != null && class50_sub3_1.floorDecoration != null
-                    && class50_sub3_1.floorDecoration.renderable.verticesNormal != null) {
-                mergeNormals(class50_sub1_sub4_sub4,
-                        (Model) class50_sub3_1.floorDecoration.renderable, 0, 0, 128, true);
+            SceneTile sceneTile = groundArray[k][i][j + 1];
+            if (sceneTile != null && sceneTile.floorDecoration != null
+                    && sceneTile.floorDecoration.renderable.verticesNormal != null) {
+                mergeNormals(model,
+                        (Model) sceneTile.floorDecoration.renderable, 0, 0, 128, true);
             }
         }
         if (i < mapSizeX && j < mapSizeY) {
-            SceneTile class50_sub3_2 = groundArray[k][i + 1][j + 1];
-            if (class50_sub3_2 != null && class50_sub3_2.floorDecoration != null
-                    && class50_sub3_2.floorDecoration.renderable.verticesNormal != null) {
-                mergeNormals(class50_sub1_sub4_sub4,
-                        (Model) class50_sub3_2.floorDecoration.renderable, 128, 0, 128, true);
+            SceneTile sceneTile = groundArray[k][i + 1][j + 1];
+            if (sceneTile != null && sceneTile.floorDecoration != null
+                    && sceneTile.floorDecoration.renderable.verticesNormal != null) {
+                mergeNormals(model,
+                        (Model) sceneTile.floorDecoration.renderable, 128, 0, 128, true);
             }
         }
         if (i < mapSizeX && j > 0) {
-            SceneTile class50_sub3_3 = groundArray[k][i + 1][j - 1];
-            if (class50_sub3_3 != null && class50_sub3_3.floorDecoration != null
-                    && class50_sub3_3.floorDecoration.renderable.verticesNormal != null) {
-                mergeNormals(class50_sub1_sub4_sub4,
-                        (Model) class50_sub3_3.floorDecoration.renderable, 128, 0, -128,
+            SceneTile sceneTile = groundArray[k][i + 1][j - 1];
+            if (sceneTile != null && sceneTile.floorDecoration != null
+                    && sceneTile.floorDecoration.renderable.verticesNormal != null) {
+                mergeNormals(model,
+                        (Model) sceneTile.floorDecoration.renderable, 128, 0, -128,
                         true);
             }
         }
@@ -870,11 +859,11 @@ public class Scene {
     }
 
     public void renderMinimapDot(int[] ai, int i, int j, int k, int l, int i1) {
-        SceneTile class50_sub3 = groundArray[k][l][i1];
-        if (class50_sub3 == null) {
+        SceneTile sceneTile = groundArray[k][l][i1];
+        if (sceneTile == null) {
             return;
         }
-        GenericTile genericTile = class50_sub3.plainTile;
+        GenericTile genericTile = sceneTile.plainTile;
         if (genericTile != null) {
             int j1 = genericTile.rgbColor;
             if (j1 == 0) {
@@ -890,7 +879,7 @@ public class Scene {
 
             return;
         }
-        ComplexTile complexTile = class50_sub3.shapedTile;
+        ComplexTile complexTile = sceneTile.shapedTile;
         if (complexTile == null) {
             return;
         }
@@ -1097,7 +1086,7 @@ public class Scene {
         }
 
         for (int z = currentPositionZ; z < mapSizeZ; z++) {
-            SceneTile[][] tiles = groundArray[z];
+            SceneTile[][] sceneTiles = groundArray[z];
             for (int offsetX = -25; offsetX <= 0; offsetX++) {
                 int x = cameraPositionTileX + offsetX;
                 int x2 = cameraPositionTileX - offsetX;
@@ -1107,29 +1096,29 @@ public class Scene {
                         int y2 = cameraPositionTileY - offsetY;
                         if (x >= currentPositionX) {
                             if (y >= currentPositionY) {
-                                SceneTile tile = tiles[x][y];
-                                if (tile != null && tile.draw) {
-                                    renderTile(tile, true);
+                                SceneTile sceneTile = sceneTiles[x][y];
+                                if (sceneTile != null && sceneTile.draw) {
+                                    renderTile(sceneTile, true);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile tile = tiles[x][y2];
-                                if (tile != null && tile.draw) {
-                                    renderTile(tile, true);
+                                SceneTile sceneTile = sceneTiles[x][y2];
+                                if (sceneTile != null && sceneTile.draw) {
+                                    renderTile(sceneTile, true);
                                 }
                             }
                         }
                         if (x2 < mapBoundsX) {
                             if (y >= currentPositionY) {
-                                SceneTile class50_sub3_3 = tiles[x2][y];
-                                if (class50_sub3_3 != null && class50_sub3_3.draw) {
-                                    renderTile(class50_sub3_3, true);
+                                SceneTile sceneTile = sceneTiles[x2][y];
+                                if (sceneTile != null && sceneTile.draw) {
+                                    renderTile(sceneTile, true);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile class50_sub3_4 = tiles[x2][y2];
-                                if (class50_sub3_4 != null && class50_sub3_4.draw) {
-                                    renderTile(class50_sub3_4, true);
+                                SceneTile sceneTile = sceneTiles[x2][y2];
+                                if (sceneTile != null && sceneTile.draw) {
+                                    renderTile(sceneTile, true);
                                 }
                             }
                         }
@@ -1145,7 +1134,7 @@ public class Scene {
         }
 
         for (int z = currentPositionZ; z < mapSizeZ; z++) {
-            SceneTile[][] tiles = groundArray[z];
+            SceneTile[][] sceneTiles = groundArray[z];
             for (int offsetX = -25; offsetX <= 0; offsetX++) {
                 int x = cameraPositionTileX + offsetX;
                 int x2 = cameraPositionTileX - offsetX;
@@ -1155,13 +1144,13 @@ public class Scene {
                         int y2 = cameraPositionTileY - offsetY;
                         if (x >= currentPositionX) {
                             if (y >= currentPositionY) {
-                                SceneTile tile = tiles[x][y];
+                                SceneTile tile = sceneTiles[x][y];
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile tile = tiles[x][y2];
+                                SceneTile tile = sceneTiles[x][y2];
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
@@ -1169,13 +1158,13 @@ public class Scene {
                         }
                         if (x2 < mapBoundsX) {
                             if (y >= currentPositionY) {
-                                SceneTile tile = tiles[x2][y];
+                                SceneTile tile = sceneTiles[x2][y];
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile tile = tiles[x2][y2];
+                                SceneTile tile = sceneTiles[x2][y2];
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
