@@ -12,9 +12,9 @@ public class GameFrame extends JFrame {
         pack();
         setTitle("Jagex");
         setResizable(false);
-        gameStub.extraWidth = getInsets().left + getInsets().right;
-        gameStub.extraHeight = getInsets().top + getInsets().bottom;
-        setSize(width + gameStub.extraWidth, height + gameStub.extraHeight);
+        gameStub.extraWidth = getInsets().left;
+        gameStub.extraHeight = getInsets().top;
+        setSize(width + gameStub.extraWidth + getInsets().right, height + gameStub.extraHeight + getInsets().bottom);
         setVisible(true);
         toFront();
 
