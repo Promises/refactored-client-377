@@ -72,7 +72,7 @@ public class Game extends GameShell {
     private String friendUsernames[] = new String[200];
     private int anInt850;
     public int chatboxScroll;
-    public static int cameraZoom = 1200;
+    public static int cameraZoom = 600;
     private int cameraAmplitude[] = new int[5];
     private int anInt853;
     private int anInt854 = 2;
