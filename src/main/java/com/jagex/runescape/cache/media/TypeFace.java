@@ -276,6 +276,10 @@ public class TypeFace extends Rasterizer {
     }
 
     public void drawShadowedString(String string, int x, int y, boolean shadow, int colour) {
+        if (!shadow) {
+            drawString(string, x, y, colour);
+            return;
+        }
         if (this.moderatorIcon != null) {
             this.drawString(string, x, y, colour, 0);
         } else {

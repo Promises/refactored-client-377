@@ -4593,84 +4593,84 @@ public class Game extends GameShell {
         j = 24 / j;
         for (int k = 0; k < updatedPlayerCount; k++) {
             int l = updatedPlayers[k];
-            Npc class50_sub1_sub4_sub3_sub1 = npcs[l];
+            Npc npc = npcs[l];
             int i1 = class50_sub1_sub2.getUnsignedByte();
             if ((i1 & 1) != 0) {
-                class50_sub1_sub4_sub3_sub1.npcDefinition = ActorDefinition.getDefinition(class50_sub1_sub2.getUnsignedNegativeOffsetShortBE());
-                class50_sub1_sub4_sub3_sub1.boundaryDimension = class50_sub1_sub4_sub3_sub1.npcDefinition.boundaryDimension;
-                class50_sub1_sub4_sub3_sub1.anInt1600 = class50_sub1_sub4_sub3_sub1.npcDefinition.degreesToTurn;
-                class50_sub1_sub4_sub3_sub1.walkAnimationId = class50_sub1_sub4_sub3_sub1.npcDefinition.walkAnimationId;
-                class50_sub1_sub4_sub3_sub1.turnAroundAnimationId = class50_sub1_sub4_sub3_sub1.npcDefinition.turnAroundAnimationId;
-                class50_sub1_sub4_sub3_sub1.turnRightAnimationId = class50_sub1_sub4_sub3_sub1.npcDefinition.turnRightAnimationId;
-                class50_sub1_sub4_sub3_sub1.turnLeftAnimationId = class50_sub1_sub4_sub3_sub1.npcDefinition.turnLeftAnimationId;
-                class50_sub1_sub4_sub3_sub1.idleAnimation = class50_sub1_sub4_sub3_sub1.npcDefinition.standAnimationId;
+                npc.npcDefinition = ActorDefinition.getDefinition(class50_sub1_sub2.getUnsignedNegativeOffsetShortBE());
+                npc.boundaryDimension = npc.npcDefinition.boundaryDimension;
+                npc.anInt1600 = npc.npcDefinition.degreesToTurn;
+                npc.walkAnimationId = npc.npcDefinition.walkAnimationId;
+                npc.turnAroundAnimationId = npc.npcDefinition.turnAroundAnimationId;
+                npc.turnRightAnimationId = npc.npcDefinition.turnRightAnimationId;
+                npc.turnLeftAnimationId = npc.npcDefinition.turnLeftAnimationId;
+                npc.idleAnimation = npc.npcDefinition.standAnimationId;
             }
             if ((i1 & 0x40) != 0) {
-                class50_sub1_sub4_sub3_sub1.anInt1609 = class50_sub1_sub2.getUnsignedShortLE();
-                if (class50_sub1_sub4_sub3_sub1.anInt1609 == 65535)
-                    class50_sub1_sub4_sub3_sub1.anInt1609 = -1;
+                npc.anInt1609 = class50_sub1_sub2.getUnsignedShortLE();
+                if (npc.anInt1609 == 65535)
+                    npc.anInt1609 = -1;
             }
             if ((i1 & 0x80) != 0) {
                 int j1 = class50_sub1_sub2.getUnsignedPostNegativeOffsetByte();
                 int j2 = class50_sub1_sub2.getUnsignedPostNegativeOffsetByte();
-                class50_sub1_sub4_sub3_sub1.updateHits(j2, j1, pulseCycle);
-                class50_sub1_sub4_sub3_sub1.endCycle = pulseCycle + 300;
-                class50_sub1_sub4_sub3_sub1.anInt1596 = class50_sub1_sub2.getUnsignedByte();
-                class50_sub1_sub4_sub3_sub1.anInt1597 = class50_sub1_sub2.getUnsignedPreNegativeOffsetByte();
+                npc.updateHits(j2, j1, pulseCycle);
+                npc.endCycle = pulseCycle + 300;
+                npc.anInt1596 = class50_sub1_sub2.getUnsignedByte();
+                npc.anInt1597 = class50_sub1_sub2.getUnsignedPreNegativeOffsetByte();
             }
             if ((i1 & 4) != 0) {
-                class50_sub1_sub4_sub3_sub1.graphic = class50_sub1_sub2.getUnsignedShortBE();
+                npc.graphic = class50_sub1_sub2.getUnsignedShortBE();
                 int k1 = class50_sub1_sub2.getIntME1();
-                class50_sub1_sub4_sub3_sub1.spotAnimationDelay = k1 >> 16;
-                class50_sub1_sub4_sub3_sub1.anInt1617 = pulseCycle + (k1 & 0xffff);
-                class50_sub1_sub4_sub3_sub1.currentAnimation = 0;
-                class50_sub1_sub4_sub3_sub1.anInt1616 = 0;
-                if (class50_sub1_sub4_sub3_sub1.anInt1617 > pulseCycle)
-                    class50_sub1_sub4_sub3_sub1.currentAnimation = -1;
-                if (class50_sub1_sub4_sub3_sub1.graphic == 65535)
-                    class50_sub1_sub4_sub3_sub1.graphic = -1;
+                npc.spotAnimationDelay = k1 >> 16;
+                npc.anInt1617 = pulseCycle + (k1 & 0xffff);
+                npc.currentAnimation = 0;
+                npc.anInt1616 = 0;
+                if (npc.anInt1617 > pulseCycle)
+                    npc.currentAnimation = -1;
+                if (npc.graphic == 65535)
+                    npc.graphic = -1;
             }
             if ((i1 & 0x20) != 0) {
-                class50_sub1_sub4_sub3_sub1.forcedChat = class50_sub1_sub2.getString();
-                class50_sub1_sub4_sub3_sub1.textCycle = 100;
+                npc.forcedChat = class50_sub1_sub2.getString();
+                npc.textCycle = 100;
             }
             if ((i1 & 8) != 0) {
-                class50_sub1_sub4_sub3_sub1.anInt1598 = class50_sub1_sub2.getUnsignedNegativeOffsetShortLE();
-                class50_sub1_sub4_sub3_sub1.anInt1599 = class50_sub1_sub2.getUnsignedShortLE();
+                npc.anInt1598 = class50_sub1_sub2.getUnsignedNegativeOffsetShortLE();
+                npc.anInt1599 = class50_sub1_sub2.getUnsignedShortLE();
             }
             if ((i1 & 2) != 0) {
                 int l1 = class50_sub1_sub2.getUnsignedShortBE();
                 if (l1 == 65535)
                     l1 = -1;
                 int k2 = class50_sub1_sub2.getUnsignedPreNegativeOffsetByte();
-                if (l1 == class50_sub1_sub4_sub3_sub1.emoteAnimation && l1 != -1) {
+                if (l1 == npc.emoteAnimation && l1 != -1) {
                     int i3 = AnimationSequence.animations[l1].anInt307;
                     if (i3 == 1) {
-                        class50_sub1_sub4_sub3_sub1.displayedEmoteFrames = 0;
-                        class50_sub1_sub4_sub3_sub1.anInt1626 = 0;
-                        class50_sub1_sub4_sub3_sub1.animationDelay = k2;
-                        class50_sub1_sub4_sub3_sub1.anInt1628 = 0;
+                        npc.displayedEmoteFrames = 0;
+                        npc.anInt1626 = 0;
+                        npc.animationDelay = k2;
+                        npc.anInt1628 = 0;
                     }
                     if (i3 == 2)
-                        class50_sub1_sub4_sub3_sub1.anInt1628 = 0;
+                        npc.anInt1628 = 0;
                 } else if (l1 == -1
-                        || class50_sub1_sub4_sub3_sub1.emoteAnimation == -1
-                        || AnimationSequence.animations[l1].anInt301 >= AnimationSequence.animations[class50_sub1_sub4_sub3_sub1.emoteAnimation].anInt301) {
-                    class50_sub1_sub4_sub3_sub1.emoteAnimation = l1;
-                    class50_sub1_sub4_sub3_sub1.displayedEmoteFrames = 0;
-                    class50_sub1_sub4_sub3_sub1.anInt1626 = 0;
-                    class50_sub1_sub4_sub3_sub1.animationDelay = k2;
-                    class50_sub1_sub4_sub3_sub1.anInt1628 = 0;
-                    class50_sub1_sub4_sub3_sub1.anInt1613 = class50_sub1_sub4_sub3_sub1.pathLength;
+                        || npc.emoteAnimation == -1
+                        || AnimationSequence.animations[l1].anInt301 >= AnimationSequence.animations[npc.emoteAnimation].anInt301) {
+                    npc.emoteAnimation = l1;
+                    npc.displayedEmoteFrames = 0;
+                    npc.anInt1626 = 0;
+                    npc.animationDelay = k2;
+                    npc.anInt1628 = 0;
+                    npc.anInt1613 = npc.pathLength;
                 }
             }
             if ((i1 & 0x10) != 0) {
                 int i2 = class50_sub1_sub2.getUnsignedPreNegativeOffsetByte();
                 int l2 = class50_sub1_sub2.getUnsignedPreNegativeOffsetByte();
-                class50_sub1_sub4_sub3_sub1.updateHits(l2, i2, pulseCycle);
-                class50_sub1_sub4_sub3_sub1.endCycle = pulseCycle + 300;
-                class50_sub1_sub4_sub3_sub1.anInt1596 = class50_sub1_sub2.getUnsignedByte();
-                class50_sub1_sub4_sub3_sub1.anInt1597 = class50_sub1_sub2.getUnsignedInvertedByte();
+                npc.updateHits(l2, i2, pulseCycle);
+                npc.endCycle = pulseCycle + 300;
+                npc.anInt1596 = class50_sub1_sub2.getUnsignedByte();
+                npc.anInt1597 = class50_sub1_sub2.getUnsignedInvertedByte();
             }
         }
 
