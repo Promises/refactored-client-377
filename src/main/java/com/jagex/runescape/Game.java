@@ -10243,12 +10243,16 @@ public class Game extends GameShell {
                 if (opcode == 4) {
                     Widget widget1 = Widget.forId(opcodes[counter++]);
                     int itemId = opcodes[counter++];
+
                     if (itemId >= 0 && itemId < ItemDefinition.count && (!ItemDefinition.lookup(itemId).members || memberServer)) {
                         for (int item = 0; item < widget1.items.length; item++)
-                            if (widget1.items[item] == itemId + 1)
+                            if (widget1.items[item] == itemId + 1) {
                                 value += widget1.itemAmounts[item];
 
+                            }
+
                     }
+
                 }
                 if (opcode == 5)
                     value = widgetSettings[opcodes[counter++]];
@@ -10272,7 +10276,7 @@ public class Game extends GameShell {
                             if (widget1.items[item] == itemId) {
                                 continue;
                             }
-                            value = 999999999;
+                            value = 0;
                             break;
                         }
 
