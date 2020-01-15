@@ -25,8 +25,8 @@ public class Rasterizer3D extends Rasterizer {
 	public static boolean aBooleanArray1541[] = new boolean[50];
 	public static int anIntArray1542[] = new int[50];
 	public static int anInt1543;
-	public static int anIntArrayArray1544[][];
-	public static int anIntArrayArray1545[][] = new int[50][];
+	public static int texelArrayPool[][];
+	public static int texelCache[][] = new int[50][];
 	public static int anIntArray1546[] = new int[50];
 	public static int textureGetCount;
 	public static int getRgbLookupTableId[] = new int[0x10000];
@@ -42,8 +42,8 @@ public class Rasterizer3D extends Rasterizer {
 		aClass50_Sub1_Sub1_Sub3Array1540 = null;
 		aBooleanArray1541 = null;
 		anIntArray1542 = null;
-		anIntArrayArray1544 = null;
-		anIntArrayArray1545 = null;
+		texelArrayPool = null;
+		texelCache = null;
 		anIntArray1546 = null;
 		getRgbLookupTableId = null;
 		anIntArrayArray1549 = null;
@@ -67,24 +67,22 @@ public class Rasterizer3D extends Rasterizer {
 		Rasterizer3D.centerY = height / 2;
 	}
 
-	public static void method495(byte byte0) {
-		if (byte0 != 71)
-			return;
-		anIntArrayArray1544 = null;
+	public static void clearTextureCache() {
+		texelArrayPool = null;
 		for (int i = 0; i < 50; i++)
-			anIntArrayArray1545[i] = null;
+			texelCache[i] = null;
 
 	}
 
 	public static void method496(int i) {
-		if (anIntArrayArray1544 == null) {
+		if (texelArrayPool == null) {
 			anInt1543 = i;
 			if (lowMemory)
-				anIntArrayArray1544 = new int[anInt1543][16384];
+				texelArrayPool = new int[anInt1543][16384];
 			else
-				anIntArrayArray1544 = new int[anInt1543][0x10000];
+				texelArrayPool = new int[anInt1543][0x10000];
 			for (int k = 0; k < 50; k++)
-				anIntArrayArray1545[k] = null;
+				texelCache[k] = null;
 
 		}
 	}
@@ -130,36 +128,36 @@ public class Rasterizer3D extends Rasterizer {
 	public static void method499(int i, int j) {
 		if (j != 9)
 			anInt1524 = -48;
-		if (anIntArrayArray1545[i] == null) {
+		if (texelCache[i] == null) {
 			return;
 		} else {
-			anIntArrayArray1544[anInt1543++] = anIntArrayArray1545[i];
-			anIntArrayArray1545[i] = null;
+			texelArrayPool[anInt1543++] = texelCache[i];
+			texelCache[i] = null;
 			return;
 		}
 	}
 
 	public static int[] method500(int i) {
 		anIntArray1546[i] = textureGetCount++;
-		if (anIntArrayArray1545[i] != null)
-			return anIntArrayArray1545[i];
+		if (texelCache[i] != null)
+			return texelCache[i];
 		int ai[];
 		if (anInt1543 > 0) {
-			ai = anIntArrayArray1544[--anInt1543];
-			anIntArrayArray1544[anInt1543] = null;
+			ai = texelArrayPool[--anInt1543];
+			texelArrayPool[anInt1543] = null;
 		} else {
 			int j = 0;
 			int k = -1;
 			for (int l = 0; l < anInt1539; l++)
-				if (anIntArrayArray1545[l] != null && (anIntArray1546[l] < j || k == -1)) {
+				if (texelCache[l] != null && (anIntArray1546[l] < j || k == -1)) {
 					j = anIntArray1546[l];
 					k = l;
 				}
 
-			ai = anIntArrayArray1545[k];
-			anIntArrayArray1545[k] = null;
+			ai = texelCache[k];
+			texelCache[k] = null;
 		}
-		anIntArrayArray1545[i] = ai;
+		texelCache[i] = ai;
 		IndexedImage class50_sub1_sub1_sub3 = aClass50_Sub1_Sub1_Sub3Array1540[i];
 		int ai1[] = anIntArrayArray1549[i];
 		if (lowMemory) {

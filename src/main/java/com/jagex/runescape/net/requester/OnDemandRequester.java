@@ -498,7 +498,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 
 	public void immediateRequestCount() {
 		synchronized (immediateRequests) {
-			immediateRequests.getNodeCount();
+			immediateRequests.clear();
 		}
 	}
 

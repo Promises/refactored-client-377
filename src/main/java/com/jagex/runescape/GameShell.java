@@ -144,7 +144,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
                 clickY = eventClickY;
                 clickTime = lastClick;
                 eventMouseButtonPressed = 0;
-                doLogic();
+                processGameLoop();
                 readIndex = writeIndex;
             }
 
@@ -416,7 +416,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public void startup() {
     }
 
-    public void doLogic() {
+    public void processGameLoop() {
     }
 
     public void shutdown() {

@@ -651,7 +651,7 @@ public class Region {
 		for (int i_154_ = 0; i_154_ < 8; i_154_++) {
 			for (int i_155_ = 0; i_155_ < 8; i_155_++) {
 				if (i_151_ + i_154_ > 0 && i_151_ + i_154_ < 103 && i_152_ + i_155_ > 0 && i_152_ + i_155_ < 103)
-					class46s[i_149_].adjacency[i_151_ + i_154_][(i_152_ + i_155_)] &= ~0x1000000;
+					class46s[i_149_].clippingData[i_151_ + i_154_][(i_152_ + i_155_)] &= ~0x1000000;
 			}
 		}
 		Buffer class50_sub1_sub2 = new Buffer(is);
@@ -660,11 +660,11 @@ public class Region {
 				for (int i_158_ = 0; i_158_ < 64; i_158_++) {
 					if (i_156_ == i_150_ && i_157_ >= i_153_ && i_157_ < i_153_ + 8 && i_158_ >= i_148_
 							&& i_158_ < i_148_ + 8)
-						method183(0, (byte) -61, 0, class50_sub1_sub2, i, i_151_
-								+ TiledUtils.getRotatedMapChunkX(i_157_ & 0x7, i_158_ & 0x7, i), i_149_, i_152_
-								+ TiledUtils.getRotatedMapChunkY(i_157_ & 0x7, i_158_ & 0x7, i));
+						loadTerrainTile(i_151_
+						+ TiledUtils.getRotatedMapChunkX(i_157_ & 0x7, i_158_ & 0x7, i), 0, i_152_
+						+ TiledUtils.getRotatedMapChunkY(i_157_ & 0x7, i_158_ & 0x7, i), 0, i_149_, class50_sub1_sub2, i);
 					else
-						method183(0, (byte) -61, 0, class50_sub1_sub2, 0, -1, 0, -1);
+						loadTerrainTile(-1, 0, -1, 0, 0, class50_sub1_sub2, 0);
 				}
 			}
 		}
@@ -1052,22 +1052,20 @@ public class Region {
 		}
 	}
 
-	public void method174(int i, boolean bool, int i_211_, int i_212_, byte[] is, int i_213_, CollisionMap[] class46s) {
-		if (bool)
-			anInt166 = -379;
-		for (int i_214_ = 0; i_214_ < 4; i_214_++) {
-			for (int i_215_ = 0; i_215_ < 64; i_215_++) {
-				for (int i_216_ = 0; i_216_ < 64; i_216_++) {
-					if (i_212_ + i_215_ > 0 && i_212_ + i_215_ < 103 && i + i_216_ > 0 && i + i_216_ < 103)
-						class46s[i_214_].adjacency[i_212_ + i_215_][i + i_216_] &= ~0x1000000;
+	public void loadTerrainBlock(int blockX, int offsetX, int blockY, int offsetY, byte[] blockData, CollisionMap[] collisionMap) {
+		for (int plane = 0; plane < 4; plane++) {
+			for (int tileX = 0; tileX < 64; tileX++) {
+				for (int tileY = 0; tileY < 64; tileY++) {
+					if (blockX + tileX > 0 && blockX + tileX < 103 && blockY + tileY > 0 && blockY + tileY < 103)
+						collisionMap[plane].clippingData[blockX + tileX][blockY + tileY] &= ~0x1000000;
 				}
 			}
 		}
-		Buffer class50_sub1_sub2 = new Buffer(is);
-		for (int i_217_ = 0; i_217_ < 4; i_217_++) {
-			for (int i_218_ = 0; i_218_ < 64; i_218_++) {
-				for (int i_219_ = 0; i_219_ < 64; i_219_++)
-					method183(i_213_, (byte) -61, i_211_, class50_sub1_sub2, 0, i_218_ + i_212_, i_217_, i_219_ + i);
+		Buffer stream = new Buffer(blockData);
+		for (int plane = 0; plane < 4; plane++) {
+			for (int tileX = 0; tileX < 64; tileX++) {
+				for (int tileY = 0; tileY < 64; tileY++)
+					loadTerrainTile(tileX + blockX, offsetX, tileY + blockY, offsetY, plane, stream, 0);
 			}
 		}
 	}
@@ -1220,56 +1218,53 @@ public class Region {
 		return (i & 0xff80) + i_271_;
 	}
 
-	public void method183(int i, byte i_272_, int i_273_, Buffer class50_sub1_sub2, int i_274_, int i_275_,
-						  int i_276_, int i_277_) {
-		if (i_272_ != -61)
-			aBoolean140 = !aBoolean140;
-		if (i_275_ >= 0 && i_275_ < 104 && i_277_ >= 0 && i_277_ < 104) {
-			renderRuleFlags[i_276_][i_275_][i_277_] = (byte) 0;
+	public void loadTerrainTile(int tileX, int offsetX, int tileY, int offsetY, int tileZ, Buffer stream, int i1) {
+		if (tileX >= 0 && tileX < 104 && tileY >= 0 && tileY < 104) {
+			renderRuleFlags[tileZ][tileX][tileY] = (byte) 0;
 			for (;;) {
-				int i_278_ = class50_sub1_sub2.getUnsignedByte();
-				if (i_278_ == 0) {
-					if (i_276_ == 0)
-						vertexHeights[0][i_275_][i_277_] = -calculateVertexHeight(932731 + i_275_ + i, 556238 + i_277_
-								+ i_273_) * 8;
+				int value = stream.getUnsignedByte();
+				if (value == 0) {
+					if (tileZ == 0)
+						vertexHeights[0][tileX][tileY] = -calculateVertexHeight(932731 + tileX + offsetX, 556238 + tileY
+								+ offsetY) * 8;
 					else {
-						vertexHeights[i_276_][i_275_][i_277_] = (vertexHeights[i_276_ - 1][i_275_][i_277_] - 240);
+						vertexHeights[tileZ][tileX][tileY] = (vertexHeights[tileZ - 1][tileX][tileY] - 240);
 						break;
 					}
 					break;
 				}
-				if (i_278_ == 1) {
-					int i_279_ = class50_sub1_sub2.getUnsignedByte();
-					if (i_279_ == 1)
-						i_279_ = 0;
-					if (i_276_ == 0)
-						vertexHeights[0][i_275_][i_277_] = -i_279_ * 8;
+				if (value == 1) {
+					int height = stream.getUnsignedByte();
+					if (height == 1)
+						height = 0;
+					if (tileZ == 0)
+						vertexHeights[0][tileX][tileY] = -height * 8;
 					else {
-						vertexHeights[i_276_][i_275_][i_277_] = (vertexHeights[i_276_ - 1][i_275_][i_277_] - i_279_ * 8);
+						vertexHeights[tileZ][tileX][tileY] = (vertexHeights[tileZ - 1][tileX][tileY] - height * 8);
 						break;
 					}
 					break;
 				}
-				if (i_278_ <= 49) {
-					overlayFloorIds[i_276_][i_275_][i_277_] = class50_sub1_sub2.getByte();
-					overlayClippingPaths[i_276_][i_275_][i_277_] = (byte) ((i_278_ - 2) / 4);
-					overlayRotations[i_276_][i_275_][i_277_] = (byte) (i_278_ - 2 + i_274_ & 0x3);
-				} else if (i_278_ <= 81)
-					renderRuleFlags[i_276_][i_275_][i_277_] = (byte) (i_278_ - 49);
+				if (value <= 49) {
+					overlayFloorIds[tileZ][tileX][tileY] = stream.getByte();
+					overlayClippingPaths[tileZ][tileX][tileY] = (byte) ((value - 2) / 4);
+					overlayRotations[tileZ][tileX][tileY] = (byte) (value - 2 + i1 & 0x3);
+				} else if (value <= 81)
+					renderRuleFlags[tileZ][tileX][tileY] = (byte) (value - 49);
 				else
-					underlayFloorIds[i_276_][i_275_][i_277_] = (byte) (i_278_ - 81);
+					underlayFloorIds[tileZ][tileX][tileY] = (byte) (value - 81);
 			}
 		} else {
 			for (;;) {
-				int i_280_ = class50_sub1_sub2.getUnsignedByte();
-				if (i_280_ == 0)
+				int value = stream.getUnsignedByte();
+				if (value == 0)
 					break;
-				if (i_280_ == 1) {
-					class50_sub1_sub2.getUnsignedByte();
+				if (value == 1) {
+					stream.getUnsignedByte();
 					break;
 				}
-				if (i_280_ <= 49)
-					class50_sub1_sub2.getUnsignedByte();
+				if (value <= 49)
+					stream.getUnsignedByte();
 			}
 		}
 	}

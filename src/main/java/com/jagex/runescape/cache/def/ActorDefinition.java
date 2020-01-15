@@ -195,7 +195,7 @@ public class ActorDefinition {
         return headModel;
     }
 
-    public boolean method360() {
+    public boolean isVisible() {
         if (childrenIds == null)
             return true;
         int j = -1;

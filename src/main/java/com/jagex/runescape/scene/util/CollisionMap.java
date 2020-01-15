@@ -6,14 +6,14 @@ public class CollisionMap {
 	public int insetY;
 	public int width;
 	public int height;
-	public int[][] adjacency;
+	public int[][] clippingData;
 
 	public CollisionMap(int height, int width) {
 		insetX = 0;
 		insetY = 0;
 		this.width = width;
 		this.height = height;
-		adjacency = new int[width][height];
+		clippingData = new int[width][height];
 		reset();
 
 	}
@@ -22,9 +22,9 @@ public class CollisionMap {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++)
 				if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
-					adjacency[x][y] = 0xffffff;
+					clippingData[x][y] = 0xffffff;
 				else
-					adjacency[x][y] = 0x1000000;
+					clippingData[x][y] = 0x1000000;
 
 		}
 
@@ -177,11 +177,11 @@ public class CollisionMap {
 	public void markBlocked(int x, int y) {
 		x -= insetX;
 		y -= insetY;
-		adjacency[x][y] |= 0x200000;
+		clippingData[x][y] |= 0x200000;
 	}
 
 	public void set(int x, int y, int flag) {
-		adjacency[x][y] |= flag;
+		clippingData[x][y] |= flag;
 	}
 
 	public void unmarkWall(int orientation, int x, int y, int position, boolean impenetrable) {
@@ -327,13 +327,13 @@ public class CollisionMap {
 	}
 
 	public void unset(int x, int y, int flag) {
-		adjacency[x][y] &= 0xffffff - flag;
+		clippingData[x][y] &= 0xffffff - flag;
 	}
 
 	public void unmarkConcealed(int x, int y) {
 			x -= insetX;
 			y -= insetY;
-			adjacency[x][y] &= 0xdfffff;
+			clippingData[x][y] &= 0xdfffff;
 	}
 
 	public boolean reachedWall(int currentX, int currentY, int goalX, int goalY, int goalPosition, int goalOrientation) {
@@ -347,30 +347,30 @@ public class CollisionMap {
 			if (goalOrientation == 0) {
 				if (currentX == goalX - 1 && currentY == goalY)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x1280120) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x1280120) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 0x1280102) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 0x1280102) == 0)
 					return true;
 			} else if (goalOrientation == 1) {
 				if (currentX == goalX && currentY == goalY + 1)
 					return true;
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280108) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280108) == 0)
 					return true;
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280180) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280180) == 0)
 					return true;
 			} else if (goalOrientation == 2) {
 				if (currentX == goalX + 1 && currentY == goalY)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x1280120) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x1280120) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 0x1280102) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 0x1280102) == 0)
 					return true;
 			} else if (goalOrientation == 3) {
 				if (currentX == goalX && currentY == goalY - 1)
 					return true;
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280108) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280108) == 0)
 					return true;
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280180) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280180) == 0)
 					return true;
 			}
 		if (goalPosition == 2)
@@ -379,23 +379,23 @@ public class CollisionMap {
 					return true;
 				if (currentX == goalX && currentY == goalY + 1)
 					return true;
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280180) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280180) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 0x1280102) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 0x1280102) == 0)
 					return true;
 			} else if (goalOrientation == 1) {
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280108) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280108) == 0)
 					return true;
 				if (currentX == goalX && currentY == goalY + 1)
 					return true;
 				if (currentX == goalX + 1 && currentY == goalY)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 0x1280102) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 0x1280102) == 0)
 					return true;
 			} else if (goalOrientation == 2) {
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280108) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280108) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x1280120) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x1280120) == 0)
 					return true;
 				if (currentX == goalX + 1 && currentY == goalY)
 					return true;
@@ -404,21 +404,21 @@ public class CollisionMap {
 			} else if (goalOrientation == 3) {
 				if (currentX == goalX - 1 && currentY == goalY)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x1280120) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x1280120) == 0)
 					return true;
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x1280180) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x1280180) == 0)
 					return true;
 				if (currentX == goalX && currentY == goalY - 1)
 					return true;
 			}
 		if (goalPosition == 9) {
-			if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x20) == 0)
+			if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x20) == 0)
 				return true;
-			if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 2) == 0)
+			if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 2) == 0)
 				return true;
-			if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 8) == 0)
+			if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 8) == 0)
 				return true;
-			if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x80) == 0)
+			if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x80) == 0)
 				return true;
 		}
 		return false;
@@ -433,35 +433,35 @@ public class CollisionMap {
 			if (goalPosition == 7)
 				goalOrientation = goalOrientation + 2 & 3;
 			if (goalOrientation == 0) {
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x80) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x80) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 2) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 2) == 0)
 					return true;
 			} else if (goalOrientation == 1) {
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 8) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 8) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 2) == 0)
+				if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 2) == 0)
 					return true;
 			} else if (goalOrientation == 2) {
-				if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 8) == 0)
+				if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 8) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x20) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x20) == 0)
 					return true;
 			} else if (goalOrientation == 3) {
-				if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x80) == 0)
+				if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x80) == 0)
 					return true;
-				if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x20) == 0)
+				if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x20) == 0)
 					return true;
 			}
 		}
 		if (goalPosition == 8) {
-			if (currentX == goalX && currentY == goalY + 1 && (adjacency[currentX][currentY] & 0x20) == 0)
+			if (currentX == goalX && currentY == goalY + 1 && (clippingData[currentX][currentY] & 0x20) == 0)
 				return true;
-			if (currentX == goalX && currentY == goalY - 1 && (adjacency[currentX][currentY] & 2) == 0)
+			if (currentX == goalX && currentY == goalY - 1 && (clippingData[currentX][currentY] & 2) == 0)
 				return true;
-			if (currentX == goalX - 1 && currentY == goalY && (adjacency[currentX][currentY] & 8) == 0)
+			if (currentX == goalX - 1 && currentY == goalY && (clippingData[currentX][currentY] & 8) == 0)
 				return true;
-			if (currentX == goalX + 1 && currentY == goalY && (adjacency[currentX][currentY] & 0x80) == 0)
+			if (currentX == goalX + 1 && currentY == goalY && (clippingData[currentX][currentY] & 0x80) == 0)
 				return true;
 		}
 		return false;
@@ -472,16 +472,16 @@ public class CollisionMap {
 		int goalY2 = (goalY + goalDY) - 1;
 		if (currentX >= goalX && currentX <= goalX2 && currentY >= goalY && currentY <= goalY2)
 			return true;
-		if (currentX == goalX - 1 && currentY >= goalY && currentY <= goalY2 && (adjacency[currentX - insetX][currentY - insetY] & 8) == 0
+		if (currentX == goalX - 1 && currentY >= goalY && currentY <= goalY2 && (clippingData[currentX - insetX][currentY - insetY] & 8) == 0
 				&& (surroundings & 8) == 0)
 			return true;
-		if (currentX == goalX2 + 1 && currentY >= goalY && currentY <= goalY2 && (adjacency[currentX - insetX][currentY - insetY] & 0x80) == 0
+		if (currentX == goalX2 + 1 && currentY >= goalY && currentY <= goalY2 && (clippingData[currentX - insetX][currentY - insetY] & 0x80) == 0
 				&& (surroundings & 2) == 0)
 			return true;
-		if (currentY == goalY - 1 && currentX >= goalX && currentX <= goalX2 && (adjacency[currentX - insetX][currentY - insetY] & 2) == 0
+		if (currentY == goalY - 1 && currentX >= goalX && currentX <= goalX2 && (clippingData[currentX - insetX][currentY - insetY] & 2) == 0
 				&& (surroundings & 4) == 0)
 			return true;
-		return currentY == goalY2 + 1 && currentX >= goalX && currentX <= goalX2 && (adjacency[currentX - insetX][currentY - insetY] & 0x20) == 0
+		return currentY == goalY2 + 1 && currentX >= goalX && currentX <= goalX2 && (clippingData[currentX - insetX][currentY - insetY] & 0x20) == 0
 				&& (surroundings & 1) == 0;
 	}
 
