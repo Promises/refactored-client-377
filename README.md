@@ -3,6 +3,8 @@ refactored-client-377
 
 Refactoring the 377 deob. And extending it without adding rice.
 
+If you ever need to reach me, contact my discord at : "Henning B#4920"
+
 -----
 
 ### Client Config
