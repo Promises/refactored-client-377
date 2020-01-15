@@ -580,8 +580,8 @@ public class Scene {
         }
     }
 
-    public int method267(int i, int j, int k) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public int getWallObjectHash(int x, int y, int z) {
+        SceneTile sceneTile = groundArray[z][x][y];
         if (sceneTile == null || sceneTile.wall == null) {
             return 0;
         } else {

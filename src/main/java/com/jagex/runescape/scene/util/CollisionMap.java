@@ -153,7 +153,7 @@ public class CollisionMap {
 		}
 	}
 
-	public void method413(int y, int orient, int h, int w, boolean impenetrable, int x, byte byte0) {
+	public void markSolidOccupant(int y, int orient, int h, int w, boolean impenetrable, int x, byte byte0) {
 		int occupied = 256;
 		if (impenetrable)
 			occupied += 0x20000;

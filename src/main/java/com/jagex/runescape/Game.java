@@ -277,7 +277,6 @@ public class Game extends GameShell {
     private String[] aStringArray1069 = new String[5];
     private boolean[] aBooleanArray1070 = new boolean[5];
     private int loadingStage;
-    private int anInt1072 = 20411;
     private long[] ignores = new long[100];
     private int anInt1075;
     private int minimapHintCount;
@@ -3400,7 +3399,7 @@ public class Game extends GameShell {
                     spawnObjectNode.anInt1390--;
                 if (spawnObjectNode.anInt1390 == 0) {
                     if (spawnObjectNode.anInt1387 < 0
-                            || Region.method170(spawnObjectNode.anInt1389, aByte1143, spawnObjectNode.anInt1387)) {
+                            || Region.method170(spawnObjectNode.anInt1389, spawnObjectNode.anInt1387)) {
                         method45(spawnObjectNode.anInt1388, spawnObjectNode.anInt1393, spawnObjectNode.anInt1387,
                                 spawnObjectNode.anInt1394, spawnObjectNode.anInt1391, spawnObjectNode.anInt1389,
                                 spawnObjectNode.anInt1392);
@@ -3414,7 +3413,7 @@ public class Game extends GameShell {
                             && spawnObjectNode.anInt1394 >= 1
                             && spawnObjectNode.anInt1393 <= 102
                             && spawnObjectNode.anInt1394 <= 102
-                            && (spawnObjectNode.anInt1384 < 0 || Region.method170(spawnObjectNode.anInt1386, aByte1143,
+                            && (spawnObjectNode.anInt1384 < 0 || Region.method170(spawnObjectNode.anInt1386,
                             spawnObjectNode.anInt1384))) {
                         method45(spawnObjectNode.anInt1385, spawnObjectNode.anInt1393, spawnObjectNode.anInt1384,
                                 spawnObjectNode.anInt1394, spawnObjectNode.anInt1391, spawnObjectNode.anInt1386,
@@ -3868,7 +3867,7 @@ public class Game extends GameShell {
                 return;
             int l1 = 0;
             if (k1 == 0)
-                l1 = currentScene.method267(i1, j, l);
+                l1 = currentScene.getWallObjectHash(j, l, i1);
             if (k1 == 1)
                 l1 = currentScene.method268(j, (byte) 4, i1, l);
             if (k1 == 2)
@@ -3901,7 +3900,7 @@ public class Game extends GameShell {
                 if (k1 == 3) {
                     currentScene.method261(j, l, i1);
                     GameObjectDefinition class47_2 = GameObjectDefinition.getDefinition(i2);
-                    if (class47_2.solid && class47_2.actionsBoolean)
+                    if (class47_2.solid && class47_2.hasActions)
                         currentCollisionMap[i1].unmarkConcealed(j, l);
                 }
             }
@@ -3909,7 +3908,7 @@ public class Game extends GameShell {
                 int i3 = i1;
                 if (i3 < 3 && (currentSceneTileFlags[1][j][l] & 2) == 2)
                     i3++;
-                Region.method165(k, i3, j1, l, currentCollisionMap[i1], i, j, 0, i1, currentScene,
+                Region.forceRenderObject(j, l, i1, k, j1, i3, i, currentScene, currentCollisionMap[i1],
                         intGroundArray);
             }
         }
@@ -7555,21 +7554,21 @@ public class Game extends GameShell {
                                 currentCollisionMap);
                 }
 
-                for (int k4 = 0; k4 < dataLength; k4++) {
-                    int i6 = (mapCoordinates[k4] >> 8) * 64 - nextTopLeftTileX;
-                    int l7 = (mapCoordinates[k4] & 0xff) * 64 - nextTopRightTileY;
-                    byte[] abyte2 = terrainData[k4];
-                    if (abyte2 == null && chunkY < 800)
-                        region.initiateVertexHeights(i6, 64, l7, 64);
+                for (int pointer = 0; pointer < dataLength; pointer++) {
+                    int offsetX = (mapCoordinates[pointer] >> 8) * 64 - nextTopLeftTileX;
+                    int offsetY = (mapCoordinates[pointer] & 0xff) * 64 - nextTopRightTileY;
+                    byte[] data = terrainData[pointer];
+                    if (data == null && chunkY < 800)
+                        region.initiateVertexHeights(offsetX, 64, offsetY, 64);
                 }
 
                 outBuffer.putOpcode(40);
-                for (int j6 = 0; j6 < dataLength; j6++) {
-                    byte[] abyte1 = objectData[j6];
-                    if (abyte1 != null) {
-                        int l8 = (mapCoordinates[j6] >> 8) * 64 - nextTopLeftTileX;
-                        int k9 = (mapCoordinates[j6] & 0xff) * 64 - nextTopRightTileY;
-                        region.method179(k9, currentCollisionMap, l8, -571, currentScene, abyte1);
+                for (int _region = 0; _region < dataLength; _region++) {
+                    byte[] data = objectData[_region];
+                    if (data != null) {
+                        int offsetX = (mapCoordinates[_region] >> 8) * 64 - nextTopLeftTileX;
+                        int offsetY = (mapCoordinates[_region] & 0xff) * 64 - nextTopRightTileY;
+                        region.loadObjectBlock(offsetX, offsetY, currentCollisionMap, currentScene, data);
                     }
                 }
 
@@ -7597,7 +7596,7 @@ public class Game extends GameShell {
 
                             }
                             if (!flag)
-                                region.method166(anInt1072, k3, k6 * 8, l4 * 8);
+                                region.method166(k3, k6 * 8, l4 * 8);
                         }
 
                     }
@@ -10947,7 +10946,7 @@ public class Game extends GameShell {
         if (byte0 != -61)
             outBuffer.putByte(175);
         if (spawnObjectNode.anInt1392 == 0)
-            i = currentScene.method267(spawnObjectNode.anInt1391, spawnObjectNode.anInt1393, spawnObjectNode.anInt1394);
+            i = currentScene.getWallObjectHash(spawnObjectNode.anInt1393, spawnObjectNode.anInt1394, spawnObjectNode.anInt1391);
         if (spawnObjectNode.anInt1392 == 1)
             i = currentScene.method268(spawnObjectNode.anInt1393, (byte) 4, spawnObjectNode.anInt1391,
                     spawnObjectNode.anInt1394);
@@ -11369,7 +11368,7 @@ public class Game extends GameShell {
                     blockX = 10;
                     blockY = 10;
                 }
-                regionsCached &= Region.method181(blockX, blockY, objects, 24515);
+                regionsCached &= Region.regionCached(blockX, blockY, objects);
             }
         }
 
@@ -11585,7 +11584,7 @@ public class Game extends GameShell {
     }
 
     private void method150(int i, int j, int k, int l, int i1, int j1) {
-        int k1 = currentScene.method267(j, k, i);
+        int k1 = currentScene.getWallObjectHash(k, i, j);
         i1 = 62 / i1;
         if (k1 != 0) {
             int l1 = currentScene.method271(j, k, i, k1);
