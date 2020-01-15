@@ -3,6 +3,8 @@ refactored-client-377
 
 Refactoring the 377 deob. And extending it without adding rice.
 
+If you ever need to reach me, contact my discord at : "Henning B#4920"
+
 -----
 
 ### Client Config
@@ -16,7 +18,7 @@ Copy `EXAMPLE-client-config.yaml` file and paste it into the same `/config` dire
 
 * Mouse wheel zoom, scroll, and move view
 * Sound engine thanks to galkon (will be replaced with proper 400+)
-* 508+ and legacy text rendering engine: supports
+* 400+ and the original legacy text rendering engine: supports
     * all the old @red@ @str@ etc
     * all the new : (credits to a 508 deob and stewie for his half assed work)
         *     <col=######></col> Custom colors
