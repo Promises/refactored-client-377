@@ -567,7 +567,7 @@ public class OnDemandRequester extends Requester implements Runnable {
 				if (currentTime - lastSocketOpen < 4000L)
 					return;
 				lastSocketOpen = currentTime;
-				socket = client.openSocket(Configuration.ONDEMAND_PORT + Game.portOffset);
+				socket = client.openSocket(Configuration.ONDEMAND_PORT + client.portOffset);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 				outputStream.write(15);

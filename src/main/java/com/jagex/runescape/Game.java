@@ -72,7 +72,6 @@ public class Game extends GameShell {
     private String[] friendUsernames = new String[200];
     private int anInt850;
     public int chatboxScroll;
-    public static int cameraZoom = 600;
     private int[] cameraAmplitude = new int[5];
     private int anInt853;
     private int anInt854 = 2;
@@ -135,13 +134,11 @@ public class Game extends GameShell {
     private int anInt916;
     private int anInt917 = 2;
     private int[] anIntArray920 = new int[151];
-    private int anInt921 = 8;
-    private static int world = 1;
-    public static int portOffset;
-    private static boolean memberServer = true;
-    public static boolean lowMemory;
+    private int world = 1;
+    public int portOffset;
+    private boolean memberServer = true;
+    public boolean lowMemory;
     private boolean[] customCameraActive = new boolean[5];
-    private int anInt928 = -188;
     private Buffer tempBuffer = Buffer.allocate(1);
     private long serverSeed;
     private int anInt931 = 0x23201b;
@@ -163,10 +160,8 @@ public class Game extends GameShell {
     private boolean drawTabIcons = false;
     private int tickDelta;
     private static int[] SKILL_EXPERIENCE;
-    private boolean aBoolean953 = false;
     private ImageRGB[] aClass50_Sub1_Sub1_Sub1Array954 = new ImageRGB[32];
     private int bankInsertMode;
-    private byte aByte956 = 1;
     private String statusLineOne = "";
     private String statusLineTwo = "";
     private boolean aBoolean959 = true;
@@ -224,8 +219,6 @@ public class Game extends GameShell {
     private int anInt1010 = 2;
     private int lastClickX;
     private int lastClickY;
-    private boolean aBoolean1014 = false;
-    public int anInt1015;
     private boolean rsAlreadyLoaded = false;
     private ImageRGB anImageRGB1226;
     private ImageRGB anImageRGB1227;
@@ -570,20 +563,20 @@ public class Game extends GameShell {
     public static void main(String[] args) {
         try {
             System.out.println("RS2 user client - release #" + 377);
+            Game game = new Game();
             Configuration.read();
-            world = 1;
-            portOffset = 0;
-            setHighMemory();
-            memberServer = true;
+            game.world = 1;
+            game.portOffset = 0;
+            game.setHighMemory();
+            game.memberServer = true;
             SignLink.storeId = 32;
             SignLink.initialize(InetAddress.getLocalHost());
-            Game cl = new Game();
-            cl.initializeApplication(765, 503);
+            game.initializeApplication(765, 503);
         } catch (Exception exception) {
         }
     }
 
-    private static void setHighMemory() {
+    private void setHighMemory() {
         Scene.lowMemory = false;
         Rasterizer3D.lowMemory = false;
         lowMemory = false;
@@ -591,7 +584,7 @@ public class Game extends GameShell {
         GameObjectDefinition.lowMemory = false;
     }
 
-    private static void setLowMemory() {
+    private void setLowMemory() {
         Scene.lowMemory = true;
         Rasterizer3D.lowMemory = true;
         lowMemory = true;
@@ -4277,8 +4270,6 @@ public class Game extends GameShell {
         Rasterizer.drawFilledRectangle(j, i1 + 16 + k1, 16, j1, anInt1080);
         Rasterizer.drawVerticalLine(j, i1 + 16 + k1, j1, anInt1135);
         Rasterizer.drawVerticalLine(j + 1, i1 + 16 + k1, j1, anInt1135);
-        if (!flag)
-            anInt921 = -136;
         Rasterizer.drawHorizontalLine(j, i1 + 16 + k1, 16, anInt1135);
         Rasterizer.drawHorizontalLine(j, i1 + 17 + k1, 16, anInt1135);
         Rasterizer.drawVerticalLine(j + 15, i1 + 16 + k1, j1, anInt1287);
@@ -5622,7 +5613,7 @@ public class Game extends GameShell {
             method70(class50_sub1_sub4_sub3, -31135);
         else
             method71(class50_sub1_sub4_sub3, 0);
-        method72((byte) 8, class50_sub1_sub4_sub3);
+        method72(class50_sub1_sub4_sub3);
         method73(class50_sub1_sub4_sub3);
         if (byte0 == -97)
             ;
@@ -5777,57 +5768,55 @@ public class Game extends GameShell {
         }
     }
 
-    private void method72(byte byte0, Actor class50_sub1_sub4_sub3) {
-        if (byte0 != 8)
-            anInt928 = incomingRandom.nextInt();
-        if (class50_sub1_sub4_sub3.anInt1600 == 0)
+    private void method72(Actor actor) {
+        if (actor.anInt1600 == 0)
             return;
-        if (class50_sub1_sub4_sub3.anInt1609 != -1 && class50_sub1_sub4_sub3.anInt1609 < 32768) {
-            Npc class50_sub1_sub4_sub3_sub1 = npcs[class50_sub1_sub4_sub3.anInt1609];
+        if (actor.anInt1609 != -1 && actor.anInt1609 < 32768) {
+            Npc class50_sub1_sub4_sub3_sub1 = npcs[actor.anInt1609];
             if (class50_sub1_sub4_sub3_sub1 != null) {
-                int l = class50_sub1_sub4_sub3.worldX - class50_sub1_sub4_sub3_sub1.worldX;
-                int j1 = class50_sub1_sub4_sub3.worldY - class50_sub1_sub4_sub3_sub1.worldY;
+                int l = actor.worldX - class50_sub1_sub4_sub3_sub1.worldX;
+                int j1 = actor.worldY - class50_sub1_sub4_sub3_sub1.worldY;
                 if (l != 0 || j1 != 0)
-                    class50_sub1_sub4_sub3.nextStepOrientation = (int) (Math.atan2(l, j1) * 325.94900000000001D) & 0x7ff;
+                    actor.nextStepOrientation = (int) (Math.atan2(l, j1) * 325.94900000000001D) & 0x7ff;
             }
         }
-        if (class50_sub1_sub4_sub3.anInt1609 >= 32768) {
-            int i = class50_sub1_sub4_sub3.anInt1609 - 32768;
+        if (actor.anInt1609 >= 32768) {
+            int i = actor.anInt1609 - 32768;
             if (i == thisPlayerServerId)
                 i = thisPlayerId;
             Player class50_sub1_sub4_sub3_sub2 = players[i];
             if (class50_sub1_sub4_sub3_sub2 != null) {
-                int k1 = class50_sub1_sub4_sub3.worldX - class50_sub1_sub4_sub3_sub2.worldX;
-                int l1 = class50_sub1_sub4_sub3.worldY - class50_sub1_sub4_sub3_sub2.worldY;
+                int k1 = actor.worldX - class50_sub1_sub4_sub3_sub2.worldX;
+                int l1 = actor.worldY - class50_sub1_sub4_sub3_sub2.worldY;
                 if (k1 != 0 || l1 != 0)
-                    class50_sub1_sub4_sub3.nextStepOrientation = (int) (Math.atan2(k1, l1) * 325.94900000000001D) & 0x7ff;
+                    actor.nextStepOrientation = (int) (Math.atan2(k1, l1) * 325.94900000000001D) & 0x7ff;
             }
         }
-        if ((class50_sub1_sub4_sub3.anInt1598 != 0 || class50_sub1_sub4_sub3.anInt1599 != 0)
-                && (class50_sub1_sub4_sub3.pathLength == 0 || class50_sub1_sub4_sub3.anInt1623 > 0)) {
-            int j = class50_sub1_sub4_sub3.worldX - (class50_sub1_sub4_sub3.anInt1598 - nextTopLeftTileX - nextTopLeftTileX) * 64;
-            int i1 = class50_sub1_sub4_sub3.worldY - (class50_sub1_sub4_sub3.anInt1599 - nextTopRightTileY - nextTopRightTileY) * 64;
+        if ((actor.anInt1598 != 0 || actor.anInt1599 != 0)
+                && (actor.pathLength == 0 || actor.anInt1623 > 0)) {
+            int j = actor.worldX - (actor.anInt1598 - nextTopLeftTileX - nextTopLeftTileX) * 64;
+            int i1 = actor.worldY - (actor.anInt1599 - nextTopRightTileY - nextTopRightTileY) * 64;
             if (j != 0 || i1 != 0)
-                class50_sub1_sub4_sub3.nextStepOrientation = (int) (Math.atan2(j, i1) * 325.94900000000001D) & 0x7ff;
-            class50_sub1_sub4_sub3.anInt1598 = 0;
-            class50_sub1_sub4_sub3.anInt1599 = 0;
+                actor.nextStepOrientation = (int) (Math.atan2(j, i1) * 325.94900000000001D) & 0x7ff;
+            actor.anInt1598 = 0;
+            actor.anInt1599 = 0;
         }
-        int k = class50_sub1_sub4_sub3.nextStepOrientation - class50_sub1_sub4_sub3.currentRotation & 0x7ff;
+        int k = actor.nextStepOrientation - actor.currentRotation & 0x7ff;
         if (k != 0) {
-            if (k < class50_sub1_sub4_sub3.anInt1600 || k > 2048 - class50_sub1_sub4_sub3.anInt1600)
-                class50_sub1_sub4_sub3.currentRotation = class50_sub1_sub4_sub3.nextStepOrientation;
+            if (k < actor.anInt1600 || k > 2048 - actor.anInt1600)
+                actor.currentRotation = actor.nextStepOrientation;
             else if (k > 1024)
-                class50_sub1_sub4_sub3.currentRotation -= class50_sub1_sub4_sub3.anInt1600;
+                actor.currentRotation -= actor.anInt1600;
             else
-                class50_sub1_sub4_sub3.currentRotation += class50_sub1_sub4_sub3.anInt1600;
-            class50_sub1_sub4_sub3.currentRotation &= 0x7ff;
-            if (class50_sub1_sub4_sub3.movementAnimation == class50_sub1_sub4_sub3.idleAnimation
-                    && class50_sub1_sub4_sub3.currentRotation != class50_sub1_sub4_sub3.nextStepOrientation) {
-                if (class50_sub1_sub4_sub3.standTurnAnimationId != -1) {
-                    class50_sub1_sub4_sub3.movementAnimation = class50_sub1_sub4_sub3.standTurnAnimationId;
+                actor.currentRotation += actor.anInt1600;
+            actor.currentRotation &= 0x7ff;
+            if (actor.movementAnimation == actor.idleAnimation
+                    && actor.currentRotation != actor.nextStepOrientation) {
+                if (actor.standTurnAnimationId != -1) {
+                    actor.movementAnimation = actor.standTurnAnimationId;
                     return;
                 }
-                class50_sub1_sub4_sub3.movementAnimation = class50_sub1_sub4_sub3.walkAnimationId;
+                actor.movementAnimation = actor.walkAnimationId;
             }
         }
     }
@@ -10151,9 +10140,7 @@ public class Game extends GameShell {
         return j == 762;
     }
 
-    private void method127(boolean flag) {
-        if (!flag) //never remove
-            anInt1056 = incomingRandom.nextInt();
+    private void method127() {
         if (headIconDrawType != 2)
             return;
         method137((anInt844 - nextTopLeftTileX << 7) + anInt847, anInt846 * 2, (anInt845 - nextTopRightTileY << 7) + anInt848, -214);
@@ -11769,7 +11756,7 @@ public class Game extends GameShell {
         currentScene.render(cameraX, cameraPlane, 0, cameraZ, cameraY, cameraHorizontalRotation, cameraVerticalRotation);
         currentScene.clearInteractiveObjectCache();
         method121(false);
-        method127(true);
+        method127();
         animateTexture(textureId);
         draw3dScreen();
         gameScreenImageProducer.drawGraphics(4, 4, super.gameGraphics);
