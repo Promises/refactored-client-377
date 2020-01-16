@@ -1,47 +1,22 @@
 package com.jagex.runescape.net;
 
 import com.jagex.runescape.collection.CacheableNode;
-import com.jagex.runescape.util.LinkedList;
 
 import java.math.BigInteger;
 
 public class Buffer extends CacheableNode {
 
 
-	public byte buffer[];
+	public byte[] buffer;
 	public int currentPosition;
 	public int bitPosition;
-	public static int CRC32_TABLE[] = new int[256];
-	public static final int BIT_MASKS[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383,
+	private static final int[] BIT_MASKS = {0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047, 4095, 8191, 16383,
 			32767, 65535, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff, 0x7fffff, 0xffffff, 0x1ffffff,
-			0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, -1 };
+			0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, -1};
 	public ISAACCipher random;
-	public static int smallBufferCount;
-	public static int mediumBufferCount;
-	public static int largeBufferCount;
-	public static LinkedList smallBuffers = new LinkedList();
-	public static LinkedList mediumBuffers = new LinkedList();
-	public static LinkedList largeBuffers = new LinkedList();
 
 
 	public static Buffer allocate(int sizeMode) {
-		synchronized (mediumBuffers) {
-			Buffer buffer = null;
-			if (sizeMode == 0 && smallBufferCount > 0) {
-				smallBufferCount--;
-				buffer = (Buffer) smallBuffers.pop();
-			} else if (sizeMode == 1 && mediumBufferCount > 0) {
-				mediumBufferCount--;
-				buffer = (Buffer) mediumBuffers.pop();
-			} else if (sizeMode == 2 && largeBufferCount > 0) {
-				largeBufferCount--;
-				buffer = (Buffer) largeBuffers.pop();
-			}
-			if (buffer != null) {
-				buffer.currentPosition = 0;
-				return buffer;
-			}
-		}
 		Buffer buffer = new Buffer();
 		buffer.currentPosition = 0;
 		if (sizeMode == 0)
@@ -56,7 +31,7 @@ public class Buffer extends CacheableNode {
 	public Buffer() {
 	}
 
-	public Buffer(byte buffer[]) {
+	public Buffer(byte[] buffer) {
 		this.buffer = buffer;
 		this.currentPosition = 0;
 	}
@@ -120,7 +95,7 @@ public class Buffer extends CacheableNode {
 		buffer[currentPosition++] = 10;
 	}
 
-	public void putBytes(byte bytes[], int start, int length) {
+	public void putBytes(byte[] bytes, int start, int length) {
 		for (int pos = start; pos < start + length; pos++)
 			buffer[currentPosition++] = bytes[pos];
 	}
@@ -170,20 +145,26 @@ public class Buffer extends CacheableNode {
 
 	public String getString() {
 		int start = currentPosition;
-		while (buffer[currentPosition++] != 10);
+		moveBufferToTarget((byte) 10);
 		return new String(buffer, start, currentPosition - start - 1);
+	}
+
+	private void moveBufferToTarget(byte target) {
+		if(buffer[currentPosition++] != target){
+			moveBufferToTarget(target);
+		}
 	}
 
 	public byte[] getStringBytes() {
 		int start = currentPosition;
-		while (buffer[currentPosition++] != 10);
-		byte bytes[] = new byte[currentPosition - start - 1];
-		for (int pos = start; pos < currentPosition - 1; pos++)
-			bytes[pos - start] = buffer[pos];
+		moveBufferToTarget((byte) 10);
+		byte[] bytes = new byte[currentPosition - start - 1];
+		if (currentPosition - 1 - start >= 0)
+			System.arraycopy(buffer, start, bytes, 0, currentPosition - 1 - start);
 		return bytes;
 	}
 
-	public void getBytes(byte bytes[], int start, int len) {
+	public void getBytes(byte[] bytes, int start, int len) {
 		for (int pos = start; pos < start + len; pos++)
 			bytes[pos] = buffer[currentPosition++];
 	}
@@ -232,7 +213,7 @@ public class Buffer extends CacheableNode {
 	public void encrypt(BigInteger modulus, BigInteger key) {
 		int length = currentPosition;
 		currentPosition = 0;
-		byte bytes[] = new byte[length];
+		byte[] bytes = new byte[length];
 
 		getBytes(bytes, 0, length);
 
@@ -351,31 +332,15 @@ public class Buffer extends CacheableNode {
 				+ ((buffer[currentPosition - 1] & 0xff) << 8) + (buffer[currentPosition - 2] & 0xff);
 	}
 
-	public void getBytesReverse(byte bytes[], int start, int len) {
+	public void getBytesReverse(byte[] bytes, int start, int len) {
 		for (int pos = (start + len) - 1; pos >= start; pos--)
 			bytes[pos] = buffer[currentPosition++];
 	}
 
-	public void getBytesAdded(byte bytes[], int start, int len) {
+	public void getBytesAdded(byte[] bytes, int start, int len) {
 		for (int pos = start; pos < start + len; pos++)
 			bytes[pos] = (byte) (buffer[currentPosition++] - 128);
 	}
 
 
-
-
-	static {
-		int pos = 0;
-		while (pos < 256) {
-			int value = pos;
-			for (int pass = 0; pass < 8; pass++)
-				if ((value & 1) == 1)
-					value = value >>> 1 ^ 0xedb88320;
-				else
-					value >>>= 1;
-			CRC32_TABLE[pos] = value;
-			pos++;
-		}
-
-	}
 }

@@ -9,4 +9,12 @@ repositories {
 
 dependencies {
     compile 'org.yaml:snakeyaml:1.25'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
