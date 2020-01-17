@@ -55,6 +55,9 @@ public class BufferTests {
         Assertions.assertNotEquals(0, buffer.currentPosition, "buffer position should not be 0");
         buffer.currentPosition = 0;
         Assertions.assertEquals(input, buffer.getShortBE(), "getShortBE should be the same as putShortBE");
+        buffer.putShortBE(0x2801);
+        buffer.currentPosition--;
+        Assertions.assertEquals(256, buffer.getShortBE(), "expect big endian behavior");
     }
 
 
