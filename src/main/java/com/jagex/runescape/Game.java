@@ -1918,10 +1918,7 @@ public class Game extends GameShell {
 
     private DataInputStream openJaggrabStream(String request) throws IOException {
         if (!useJaggrab) {
-            if (SignLink.applet != null)
-                return SignLink.openURL(request);
-            else
-                return new DataInputStream((new URL(getCodeBase(), request)).openStream());
+            return SignLink.openURL(request);
         }
 
         if (jaggrabSocket != null) {
@@ -1943,9 +1940,6 @@ public class Game extends GameShell {
     }
 
     public Socket openSocket(int port) throws IOException {
-        if (SignLink.applet != null)
-            return SignLink.openSocket(port);
-
         return new Socket(InetAddress.getByName(getCodeBase().getHost()), port);
     }
 
@@ -3426,16 +3420,6 @@ public class Game extends GameShell {
             }
 
         }
-    }
-
-    public String method37(int i) {
-        if (i != -42588)
-            opcode = buffer.getUnsignedByte();
-        if (SignLink.applet != null)
-            return SignLink.applet.getDocumentBase().getHost().toLowerCase();
-        else
-            return "runescape.com";
-
     }
 
     private void method38(int i, int j, int k, Player player) {
@@ -7343,10 +7327,6 @@ public class Game extends GameShell {
     }
 
     public URL getCodeBase() {
-        if (SignLink.applet != null)
-            return SignLink.applet.getCodeBase();
-
-
         try {
             return new URL("http://" + Configuration.SERVER_ADDRESS + ":" + (Configuration.HTTP_PORT + portOffset));
         } catch (MalformedURLException e) {
@@ -8881,11 +8861,7 @@ public class Game extends GameShell {
     public void startRunnable(Runnable runnable, int i) {
         if (i > 10)
             i = 10;
-        if (SignLink.applet != null) {
-            SignLink.startThread(runnable, i);
-        } else {
-            super.startRunnable(runnable, i);
-        }
+        super.startRunnable(runnable, i);
     }
 
     private void processPlayerAdditions(boolean priority) { // renderPlayers
@@ -10823,8 +10799,6 @@ public class Game extends GameShell {
     }
 
     public Component getParentComponent() {
-        if (SignLink.applet != null)
-            return SignLink.applet;
         if (super.gameFrame != null)
             return super.gameFrame;
         else
@@ -11196,19 +11170,23 @@ public class Game extends GameShell {
                         imageRGB = child.enabledImage;
                     else
                         imageRGB = child.disabledImage;
-                    switch (child.id) {
-                        case 1164:
-                        case 1167:
-                        case 1170:
-                        case 1174:
-                        case 1540:
-                        case 1541:
-                        case 7455:
-                            imageRGB = child.enabledImage;
-                            break;
-                        default:
-                            break;
+                    if (Configuration.FREE_TELEPORTS) {
+
+                        switch (child.id) {
+                            case 1164:
+                            case 1167:
+                            case 1170:
+                            case 1174:
+                            case 1540:
+                            case 1541:
+                            case 7455:
+                                imageRGB = child.enabledImage;
+                                break;
+                            default:
+                                break;
+                        }
                     }
+
                     if (imageRGB != null)
                         imageRGB.drawImage(k2, l2);
                 } else if (child.type == 6) {

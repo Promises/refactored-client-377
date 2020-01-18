@@ -1,8 +1,9 @@
 package com.jagex.runescape.util;
 
+import com.jagex.runescape.config.Configuration;
+
 import javax.sound.midi.*;
 import javax.sound.sampled.*;
-import java.applet.Applet;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -18,7 +19,6 @@ public final class SignLink implements Runnable {
 	public static int storeId = 32;
 	public static RandomAccessFile cacheData = null;
 	public static final RandomAccessFile[] cacheIndex = new RandomAccessFile[5];
-	public static Applet applet = null;
 	private static boolean active;
 	private static int threadLiveId;
 	private static InetAddress inetAddress;
@@ -205,7 +205,7 @@ public final class SignLink implements Runnable {
 				try {
 					System.out.println("urlStream");
 
-					urlStream = new DataInputStream((new URL(applet.getCodeBase(), urlRequest)).openStream());
+					urlStream = new DataInputStream((new URL(new URL(Configuration.SERVER_ADDRESS), urlRequest)).openStream());
 				} catch (Exception _ex) {
 					urlStream = null;
 				}

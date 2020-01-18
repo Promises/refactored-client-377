@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class Configuration {
 
+
     public static void read() {
         try {
             final Yaml yaml = new Yaml();
@@ -33,6 +34,7 @@ public class Configuration {
             USERNAME = (String) login.get("username");
             PASSWORD = (String) login.get("password");
             ROOFS_ENABLED = (boolean) game.get("roofsEnabled");
+            FREE_TELEPORTS = (boolean) game.get("freeTeleports");
 
             if(USERNAME == null) {
                 USERNAME = "";
@@ -113,5 +115,11 @@ public class Configuration {
      * Do you want to render roofs
      */
     public static boolean ROOFS_ENABLED = true;
+
+    /**
+     * Always light up teleports
+     */
+    public static boolean FREE_TELEPORTS = true;
+
 
 }
