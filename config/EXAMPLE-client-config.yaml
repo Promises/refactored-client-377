@@ -16,3 +16,4 @@ login:
   password: Testing
 game:
   roofsEnabled: true
+  freeTeleports: true
