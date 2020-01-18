@@ -50,6 +50,7 @@ import com.jagex.runescape.sound.SoundTrack;
 import com.jagex.runescape.util.*;
 import com.jagex.runescape.config.Actions;
 import com.jagex.runescape.config.Configuration;
+import com.jagex.runescape.world.GroundArray;
 
 import static com.jagex.runescape.config.Configuration.*;
 import static com.jagex.runescape.config.IncomingPacketIds.*;
@@ -508,7 +509,7 @@ public class Game extends GameShell {
     private volatile boolean aBoolean1320 = false;
     private int[] soundType = new int[50];
     private int anInt1322;
-    private LinkedList[][][] groundItems = new LinkedList[4][104][104];
+    private GroundArray<LinkedList> groundItems = new GroundArray();
     private int runEnergy;
     public static int pulseCycle;
     private int[] characterEditIdentityKits = new int[7];
@@ -1240,7 +1241,7 @@ public class Game extends GameShell {
     }
 
     private void processGroundItems(int x, int y) {
-        LinkedList linkedList = groundItems[plane][x][y];
+        LinkedList linkedList = groundItems.getTile(plane, x, y);
         if (linkedList == null) {
             currentScene.clearGroundItem(plane, x, y);
             return;
@@ -1503,7 +1504,7 @@ public class Game extends GameShell {
         if (anInt1053 == -1) {
             method146((byte) 4);
             method21(false);
-            method39(true);
+            method39();
         }
         if (super.mouseButtonPressed == 1 || super.clickType == 1)
             anInt1094++;
@@ -2530,8 +2531,8 @@ public class Game extends GameShell {
                 placementX = buffer.getUnsignedInvertedByte();
                 for (int x = placementX; x < placementX + 8; x++) {
                     for (int y = placementY; y < placementY + 8; y++)
-                        if (groundItems[plane][x][y] != null) {
-                            groundItems[plane][x][y] = null;
+                        if (!groundItems.isTileEmpty(plane, x, y)) {
+                            groundItems.clearTile(plane, x, y);
                             processGroundItems(x, y);
                         }
 
@@ -2894,11 +2895,13 @@ public class Game extends GameShell {
                     for (int j35 = byte4; j35 != byte5; j35 += byte6) {
                         int k35 = i35 + deltaX;
                         int l35 = j35 + deltaY;
-                        for (int i36 = 0; i36 < 4; i36++)
-                            if (k35 >= 0 && l35 >= 0 && k35 < 104 && l35 < 104)
-                                groundItems[i36][i35][j35] = groundItems[i36][k35][l35];
-                            else
-                                groundItems[i36][i35][j35] = null;
+                        for (int i36 = 0; i36 < 4; i36++) {
+                            if (k35 >= 0 && l35 >= 0 && k35 < 104 && l35 < 104) {
+                                groundItems.setTile(i36, i35, j35, groundItems.getTile(i36, k35, l35));
+                            } else {
+                                groundItems.clearTile(i36, i35, j35);
+                            }
+                        }
 
                     }
 
@@ -3503,9 +3506,7 @@ public class Game extends GameShell {
 
     }
 
-    private void method39(boolean flag) {
-        if (!flag)
-            groundItems = null;
+    private void method39() {
         if (super.clickType == 1) {
             if (super.clickX >= 6 && super.clickX <= 106 && super.clickY >= 467 && super.clickY <= 499) {
                 publicChatMode = (publicChatMode + 1) % 4;
@@ -3787,7 +3788,7 @@ public class Game extends GameShell {
                 method38(k1, i1, l, player1);
             }
             if (j1 == 3) {
-                LinkedList itemList = groundItems[plane][l][i1];
+                LinkedList itemList = groundItems.getTile(plane, l, i1);
                 if (itemList != null) {
                     for (Item item = (Item) itemList.last(); item != null; item = (Item) itemList
                             .previous()) {
@@ -3862,7 +3863,7 @@ public class Game extends GameShell {
             if (k1 == 0)
                 l1 = currentScene.getWallObjectHash(j, l, i1);
             if (k1 == 1)
-                l1 = currentScene.method268(j, (byte) 4, i1, l);
+                l1 = currentScene.getWallDecorationHash(j, i1, l);
             if (k1 == 2)
                 l1 = currentScene.method269(i1, j, l);
             if (k1 == 3)
@@ -6427,7 +6428,7 @@ public class Game extends GameShell {
                 for (int l2 = 0; l2 < 4; l2++) {
                     for (int i3 = 0; i3 < 104; i3++) {
                         for (int k3 = 0; k3 < 104; k3++)
-                            groundItems[l2][i3][k3] = null;
+                            groundItems.clearTile(l2, i3, k3);
                     }
                 }
 
@@ -7237,7 +7238,7 @@ public class Game extends GameShell {
 
         for (int x = 0; x < 104; x++) {
             for (int y = 0; y < 104; y++) {
-                LinkedList itemList = groundItems[plane][x][y];
+                LinkedList itemList = groundItems.getTile(plane, x, y);
 
                 if (itemList != null) {
                     int itemX = (x * 4 + 2) - localPlayer.worldX / 32;
@@ -10546,9 +10547,9 @@ public class Game extends GameShell {
                 Item item = new Item();
                 item.itemId = itemId;
                 item.itemCount = amount;
-                if (groundItems[plane][x][y] == null)
-                    groundItems[plane][x][y] = new LinkedList();
-                groundItems[plane][x][y].pushBack(item);
+                if (groundItems.isTileEmpty(plane, x, y))
+                    groundItems.setTile(plane, x, y, new LinkedList());
+                groundItems.getTile(plane, x, y).pushBack(item);
                 processGroundItems(x, y);
             }
             return;
@@ -10615,9 +10616,9 @@ public class Game extends GameShell {
                 Item item = new Item();
                 item.itemId = itemId;
                 item.itemCount = amount;
-                if (groundItems[plane][x][y] == null)
-                    groundItems[plane][x][y] = new LinkedList();
-                groundItems[plane][x][y].pushBack(item);
+                if (groundItems.isTileEmpty(plane, x, y))
+                    groundItems.setTile(plane, x, y, new LinkedList());
+                groundItems.getTile(plane, x, y).pushBack(item);
                 processGroundItems(x, y);
             }
             return;
@@ -10630,7 +10631,7 @@ public class Game extends GameShell {
             int oldAmount = buf.getUnsignedShortBE();
             int newAmount = buf.getUnsignedShortBE();
             if (x >= 0 && y >= 0 && x < 104 && y < 104) {
-                LinkedList list = groundItems[plane][x][y];
+                LinkedList list = groundItems.getTile(plane, x, y);
                 if (list != null) {
                     for (Item item = (Item) list.first(); item != null; item = (Item) list.next()) {
                         if (item.itemId != (itemId & 0x7fff) || item.itemCount != oldAmount)
@@ -10725,7 +10726,7 @@ public class Game extends GameShell {
             int x = placementX + (offset >> 4 & 7);
             int y = placementY + (offset & 7);
             if (x >= 0 && y >= 0 && x < 104 && y < 104) {
-                LinkedList list = groundItems[plane][x][y];
+                LinkedList list = groundItems.getTile(plane, x, y);
                 if (list != null) {
                     for (Item item = (Item) list.first(); item != null; item = (Item) list.next()) {
                         if (item.itemId != (itemId & 0x7fff))
@@ -10735,7 +10736,7 @@ public class Game extends GameShell {
                     }
 
                     if (list.first() == null)
-                        groundItems[plane][x][y] = null;
+                        groundItems.clearTile(plane, x, y);
                     processGroundItems(x, y);
                 }
             }
@@ -10935,7 +10936,7 @@ public class Game extends GameShell {
         if (spawnObjectNode.anInt1392 == 0)
             i = currentScene.getWallObjectHash(spawnObjectNode.anInt1393, spawnObjectNode.anInt1394, spawnObjectNode.anInt1391);
         if (spawnObjectNode.anInt1392 == 1)
-            i = currentScene.method268(spawnObjectNode.anInt1393, (byte) 4, spawnObjectNode.anInt1391,
+            i = currentScene.getWallDecorationHash(spawnObjectNode.anInt1393, spawnObjectNode.anInt1391,
                     spawnObjectNode.anInt1394);
         if (spawnObjectNode.anInt1392 == 2)
             i = currentScene.method269(spawnObjectNode.anInt1391, spawnObjectNode.anInt1393, spawnObjectNode.anInt1394);
