@@ -11800,7 +11800,7 @@ public class Game extends GameShell {
             boolean flag1 = false;
             try {
                 Buffer stream = SoundTrack.data(sound[index], soundType[index]);
-                new SoundPlayer(new ByteArrayInputStream(stream.buffer, 0, stream.currentPosition), soundVolume[index], soundDelay[index]);
+                new SoundPlayer(new ByteArrayInputStream(stream.buffer, 0, stream.currentPosition), soundType[index], soundDelay[index]);
                 if (System.currentTimeMillis() + (long) (stream.currentPosition / 22) > aLong1172
                         + (long) (anInt1257 / 22)) {
                     anInt1257 = stream.currentPosition;
