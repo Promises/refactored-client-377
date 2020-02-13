@@ -72,6 +72,10 @@ public class TextUtils {
 	}
 
 	public static String censorPassword(String password) {
+		if(password == null || password.length() < 1) {
+			return "";
+		}
+
 		StringBuffer censoredPassword = new StringBuffer();
 		for (int index = 0; index < password.length(); index++)
 			censoredPassword.append("*");

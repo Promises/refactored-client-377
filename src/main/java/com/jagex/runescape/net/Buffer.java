@@ -86,6 +86,10 @@ public class Buffer extends CacheableNode {
 	}
 
 	public void putString(String str) {
+		if(str == null) {
+			str = "";
+		}
+
 		byte[] bytes = new byte[str.length()];
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) str.charAt(i);
