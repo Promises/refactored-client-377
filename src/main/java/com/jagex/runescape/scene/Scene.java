@@ -7,6 +7,7 @@ import com.jagex.runescape.media.renderable.Model;
 import com.jagex.runescape.media.renderable.Renderable;
 import com.jagex.runescape.scene.tile.*;
 import com.jagex.runescape.util.LinkedList;
+import com.jagex.runescape.world.GroundArray;
 
 public class Scene {
 
@@ -15,7 +16,7 @@ public class Scene {
     private int mapSizeX;
     private int mapSizeY;
     private int[][][] heightMap;
-    private SceneTile[][][] groundArray;
+    private GroundArray<SceneTile> groundArray;
     private int currentPositionZ;
     private int sceneSpawnRequestsCacheCurrentPos;
     private InteractiveObject[] sceneSpawnRequestsCache;
@@ -95,7 +96,7 @@ public class Scene {
         mapSizeZ = height;
         mapSizeX = width;
         mapSizeY = length;
-        groundArray = new SceneTile[height][width][length];
+        groundArray = new GroundArray<>(new SceneTile[height][width][length]);
         anIntArrayArrayArray460 = new int[height][width + 1][length + 1];
         this.heightMap = heightMap;
         initToNull();
@@ -115,7 +116,7 @@ public class Scene {
         for (int z = 0; z < mapSizeZ; z++) {
             for (int x = 0; x < mapSizeX; x++) {
                 for (int y = 0; y < mapSizeY; y++) {
-                    groundArray[z][x][y] = null;
+                    groundArray.clearTile(z, x, y);
                 }
 
             }
@@ -145,8 +146,8 @@ public class Scene {
         currentPositionZ = z;
         for (int x = 0; x < mapSizeX; x++) {
             for (int y = 0; y < mapSizeY; y++) {
-                if (groundArray[z][x][y] == null) {
-                    groundArray[z][x][y] = new SceneTile(x, y, z);
+                if (groundArray.isTileEmpty(z, x, y)) {
+                    groundArray.setTile(z, x, y, new SceneTile(x, y, z));
                 }
             }
 
@@ -155,9 +156,9 @@ public class Scene {
     }
 
     void setBridgeMode(int x, int y) {
-        SceneTile scenetile = groundArray[0][x][y];
+        SceneTile scenetile = groundArray.getTile(0, x, y);
         for (int z = 0; z < 3; z++) {
-            SceneTile _tile = groundArray[z][x][y] = groundArray[z + 1][x][y];
+            SceneTile _tile = groundArray.setTile(z, x, y, groundArray.getTile(z + 1, x, y));
             if (_tile != null) {
                 _tile.z--;
                 for (int e = 0; e < _tile.entityCount; e++) {
@@ -170,11 +171,11 @@ public class Scene {
             }
         }
 
-        if (groundArray[0][x][y] == null) {
-            groundArray[0][x][y] = new SceneTile(x, y, 0);
+        if (groundArray.isTileEmpty(0, x, y)) {
+            groundArray.setTile(0, x, y, new SceneTile(x, y, 0));
         }
-        groundArray[0][x][y].tileBelow = scenetile;
-        groundArray[3][x][y] = null;
+        groundArray.getTile(0, x, y).tileBelow = scenetile;
+        groundArray.clearTile(3, x, y);
     }
 
     static void createCullingCluster(final int z, int highestX, int lowestX, int highestY, int lowestY, int highestZ, int lowestZ, int searchMask) {
@@ -194,7 +195,7 @@ public class Scene {
     }
 
     void setTileLogicHeight(int z, int x, int y, int logicHeight) {
-        SceneTile sceneTile = groundArray[z][x][y];
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile != null) {
             sceneTile.logicHeight = logicHeight;
         }
@@ -205,33 +206,34 @@ public class Scene {
         if (clippingPath == 0) {
             GenericTile tile = new GenericTile(cA, cB, cC, cD, -1, underlayRGB, false);
             for (int _z = plane; _z >= 0; _z--) {
-                if (groundArray[_z][x][y] == null) {
-                    groundArray[_z][x][y] = new SceneTile(x, y, _z);
+                if (groundArray.isTileEmpty(_z, x, y)) {
+                    groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
                 }
             }
 
-            groundArray[plane][x][y].plainTile = tile;
+            groundArray.getTile(plane, x, y).plainTile = tile;
             return;
         }
         if (clippingPath == 1) {
             GenericTile tile = new GenericTile(colourA, colourB, colourC, colourD, textureId, overlayRGB, vertexHeightSW == vertexHeightSE && vertexHeightSW == vertexHeightNE && vertexHeightSW == vertexHeightNW);
             for (int _z = plane; _z >= 0; _z--) {
-                if (groundArray[_z][x][y] == null) {
-                    groundArray[_z][x][y] = new SceneTile(x, y, _z);
+                if (groundArray.isTileEmpty(_z, x, y)) {
+                    groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
                 }
             }
 
-            groundArray[plane][x][y].plainTile = tile;
+            groundArray.getTile(plane, x, y).plainTile = tile;
             return;
         }
         ComplexTile tile = new ComplexTile(x, vertexHeightSW, vertexHeightSE, vertexHeightNW, vertexHeightNE, y, clippingPathRotation, textureId, clippingPath, cA, colourA, cB, colourB, cC, colourC, cD, colourD, overlayRGB, underlayRGB);
         for (int _z = plane; _z >= 0; _z--) {
-            if (groundArray[_z][x][y] == null) {
-                groundArray[_z][x][y] = new SceneTile(x, y, _z);
+            if (groundArray.isTileEmpty(_z, x, y)) {
+                groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
             }
         }
 
-        groundArray[plane][x][y].shapedTile = tile;
+
+        groundArray.getTile(plane, x, y).shapedTile = tile;
     }
 
     void addGroundDecoration(int x, int y, int z, int drawHeight, int uid, Renderable renderable, byte config) {
@@ -245,10 +247,10 @@ public class Scene {
         floorDecoration.z = drawHeight;
         floorDecoration.uid = uid;
         floorDecoration.config = config;
-        if (groundArray[z][x][y] == null) {
-            groundArray[z][x][y] = new SceneTile(x, y, z);
+        if (groundArray.isTileEmpty(z, x, y)) {
+            groundArray.setTile(z, x, y, new SceneTile(x, y, z));
         }
-        groundArray[z][x][y].floorDecoration = floorDecoration;
+        groundArray.getTile(z, x, y).floorDecoration = floorDecoration;
     }
 
     public void addGroundItemTile(int x, int y, int z, int drawHeight, int uid, Renderable firstGroundItem, Renderable secondGroundItem,
@@ -262,7 +264,7 @@ public class Scene {
         groundItemTile.secondGroundItem = secondGroundItem;
         groundItemTile.thirdGroundItem = thirdGroundItem;
         int k1 = 0;
-        SceneTile sceneTile = groundArray[z][x][y];
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile != null) {
             for (int e = 0; e < sceneTile.entityCount; e++) {
                 if (sceneTile.interactiveObjects[e].renderable instanceof Model) {
@@ -275,10 +277,10 @@ public class Scene {
 
         }
         groundItemTile.anInt180 = k1;
-        if (groundArray[z][x][y] == null) {
-            groundArray[z][x][y] = new SceneTile(x, y, z);
+        if (groundArray.isTileEmpty(z, x, y)) {
+            groundArray.setTile(z, x, y, new SceneTile(x, y, z));
         }
-        groundArray[z][x][y].groundItemTile = groundItemTile;
+        groundArray.getTile(z, x, y).groundItemTile = groundItemTile;
     }
 
     void addWall(int x, int y, int z, int drawHeight, int orientation, int orientation2, int uid, Renderable primary, Renderable secondary, byte config) {
@@ -294,12 +296,13 @@ public class Scene {
             wall.orientation = orientation;
             wall.orientation2 = orientation2;
             for (int _z = z; _z >= 0; _z--) {
-                if (groundArray[_z][x][y] == null) {
-                    groundArray[_z][x][y] = new SceneTile(x, y, _z);
+                if (groundArray.isTileEmpty(_z, x, y)) {
+                    groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
+
                 }
             }
 
-            groundArray[z][x][y].wall = wall;
+            groundArray.getTile(z, x, y).wall = wall;
         }
     }
 
@@ -315,12 +318,13 @@ public class Scene {
             wallDecoration.configBits = faceBits;
             wallDecoration.face = face;
             for (int planeCounter = z; planeCounter >= 0; planeCounter--) {
-                if (groundArray[planeCounter][x][y] == null) {
-                    groundArray[planeCounter][x][y] = new SceneTile(x, y, planeCounter);
+                if (groundArray.isTileEmpty(planeCounter, x, y)) {
+                    groundArray.setTile(planeCounter, x, y, new SceneTile(x, y, planeCounter));
+
                 }
             }
 
-            groundArray[z][x][y].wallDecoration = wallDecoration;
+            groundArray.getTile(z, x, y).wallDecoration = wallDecoration;
         }
     }
 
@@ -378,7 +382,7 @@ public class Scene {
                 if (x < 0 || y < 0 || x >= mapSizeX || y >= mapSizeY) {
                     return false;
                 }
-                SceneTile tile = groundArray[z][x][y];
+                SceneTile tile = groundArray.getTile(z, x, y);
                 if (tile != null && tile.entityCount >= 5) {
                     return false;
                 }
@@ -415,12 +419,12 @@ public class Scene {
                     size += 2;
                 }
                 for (int _z = z; _z >= 0; _z--) {
-                    if (groundArray[_z][x][y] == null) {
-                        groundArray[_z][x][y] = new SceneTile(x, y, _z);
+                    if (groundArray.isTileEmpty(_z, x, y)) {
+                        groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
                     }
                 }
 
-                SceneTile sceneTile = groundArray[z][x][y];
+                SceneTile sceneTile = groundArray.getTile(z, x, y);
                 sceneTile.interactiveObjects[sceneTile.entityCount] = interactiveObject;
                 sceneTile.sceneSpawnRequestsSize[sceneTile.entityCount] = size;
                 sceneTile.interactiveObjectsSizeOR |= size;
@@ -448,7 +452,7 @@ public class Scene {
     private void remove(InteractiveObject entity) {
         for (int x = entity.tileLeft; x <= entity.tileRight; x++) {
             for (int y = entity.tileTop; y <= entity.tileBottom; y++) {
-                SceneTile tile = groundArray[entity.z][x][y];
+                SceneTile tile = groundArray.getTile(entity.z, x, y);
                 if (tile != null) {
                     for (int e = 0; e < tile.entityCount; e++) {
                         if (tile.interactiveObjects[e] != entity) {
@@ -477,7 +481,7 @@ public class Scene {
     }
 
     void displaceWallDecoration(int x, int y, int z, int displacement) {
-        SceneTile sceneTile = groundArray[z][x][y];
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return;
         }
@@ -493,21 +497,21 @@ public class Scene {
     }
 
     public void removeWallObject(int x, int y, int z) {
-        SceneTile tile = groundArray[z][x][y];
+        SceneTile tile = groundArray.getTile(z, x, y);
         if (tile != null) {
             tile.wall = null;
         }
     }
 
     public void removeWallDecoration(int x, int y, int z) {
-        SceneTile tile = groundArray[z][x][y];
+        SceneTile tile = groundArray.getTile(z, x, y);
         if (tile != null) {
             tile.wallDecoration = null;
         }
     }
 
     public void removeInteractiveObject(int x, int y, int z) {
-        SceneTile tile = groundArray[z][x][y];
+        SceneTile tile = groundArray.getTile(z, x, y);
         if (tile == null) {
             return;
         }
@@ -522,22 +526,22 @@ public class Scene {
     }
 
     public void method261(int x, int y, int z) {
-        SceneTile sceneTile = groundArray[z][x][y];
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return;
         }
         sceneTile.floorDecoration = null;
     }
 
-    public void clearGroundItem(int i, int j, int k) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public void clearGroundItem(int z, int x, int y) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile != null) {
             sceneTile.groundItemTile = null;
         }
     }
 
     public Wall getWallObject(int level, int x, int y) {
-        SceneTile sceneTile = groundArray[level][x][y];
+        SceneTile sceneTile = groundArray.getTile(level, x, y);
 
         if (sceneTile == null) {
             return null;
@@ -547,7 +551,7 @@ public class Scene {
     }
 
     public WallDecoration getWallDecoration(int level, int y, int x) {
-        SceneTile sceneTile = groundArray[level][x][y];
+        SceneTile sceneTile = groundArray.getTile(level, x, y);
 
         if (sceneTile == null) {
             return null;
@@ -557,7 +561,7 @@ public class Scene {
     }
 
     public InteractiveObject method265(int x, int y, int level) {
-        SceneTile sceneTile = groundArray[level][x][y];
+        SceneTile sceneTile = groundArray.getTile(level, x, y);
         if (sceneTile == null) {
             return null;
         }
@@ -572,7 +576,7 @@ public class Scene {
     }
 
     public FloorDecoration getFloorDecoration(int level, int x, int y) {
-        SceneTile sceneTile = groundArray[level][y][x];
+        SceneTile sceneTile = groundArray.getTile(level, x, y);
         if (sceneTile == null || sceneTile.floorDecoration == null) {
             return null;
         } else {
@@ -580,8 +584,8 @@ public class Scene {
         }
     }
 
-    public int method267(int i, int j, int k) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public int getWallObjectHash(int x, int y, int z) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null || sceneTile.wall == null) {
             return 0;
         } else {
@@ -589,8 +593,8 @@ public class Scene {
         }
     }
 
-    public int method268(int i, byte byte0, int j, int k) {
-        SceneTile sceneTile = groundArray[j][i][k];
+    public int getWallDecorationHash(int x, int z, int y) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null || sceneTile.wallDecoration == null) {
             return 0;
         } else {
@@ -598,14 +602,14 @@ public class Scene {
         }
     }
 
-    public int method269(int i, int j, int k) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public int method269(int z, int x, int y) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return 0;
         }
         for (int l = 0; l < sceneTile.entityCount; l++) {
             InteractiveObject interactiveObject = sceneTile.interactiveObjects[l];
-            if ((interactiveObject.uid >> 29 & 3) == 2 && interactiveObject.tileLeft == j && interactiveObject.tileTop == k) {
+            if ((interactiveObject.uid >> 29 & 3) == 2 && interactiveObject.tileLeft == x && interactiveObject.tileTop == y) {
                 return interactiveObject.uid;
             }
         }
@@ -613,8 +617,8 @@ public class Scene {
         return 0;
     }
 
-    public int getFloorDecorationHash(int i, int j, int k) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public int getFloorDecorationHash(int z, int x, int y) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null || sceneTile.floorDecoration == null) {
             return 0;
         } else {
@@ -622,8 +626,8 @@ public class Scene {
         }
     }
 
-    public int method271(int i, int j, int k, int l) {
-        SceneTile sceneTile = groundArray[i][j][k];
+    public int method271(int z, int x, int y, int l) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return -1;
         }
@@ -649,7 +653,7 @@ public class Scene {
         for (int _z = 0; _z < mapSizeZ; _z++) {
             for (int _x = 0; _x < mapSizeX; _x++) {
                 for (int _y = 0; _y < mapSizeY; _y++) {
-                    SceneTile tile = groundArray[_z][_x][_y];
+                    SceneTile tile = groundArray.getTile(_z, _x, _y);
                     if (tile != null) {
                         Wall wall = tile.wall;
                         if (wall != null && wall.primary != null
@@ -689,36 +693,36 @@ public class Scene {
 
     }
 
-    private void method273(int i, Model model, int j, int k, int l) {
+    private void method273(int x, Model model, int y, int z, int l) {
         if (l != 0) {
             return;
         }
-        if (i < mapSizeX) {
-            SceneTile sceneTile = groundArray[k][i + 1][j];
+        if (x < mapSizeX) {
+            SceneTile sceneTile = groundArray.getTile(z, x + 1, y);
             if (sceneTile != null && sceneTile.floorDecoration != null
                     && sceneTile.floorDecoration.renderable.verticesNormal != null) {
                 mergeNormals(model,
                         (Model) sceneTile.floorDecoration.renderable, 128, 0, 0, true);
             }
         }
-        if (j < mapSizeX) {
-            SceneTile sceneTile = groundArray[k][i][j + 1];
+        if (y < mapSizeX) {
+            SceneTile sceneTile = groundArray.getTile(z, x, y + 1);
             if (sceneTile != null && sceneTile.floorDecoration != null
                     && sceneTile.floorDecoration.renderable.verticesNormal != null) {
                 mergeNormals(model,
                         (Model) sceneTile.floorDecoration.renderable, 0, 0, 128, true);
             }
         }
-        if (i < mapSizeX && j < mapSizeY) {
-            SceneTile sceneTile = groundArray[k][i + 1][j + 1];
+        if (x < mapSizeX && y < mapSizeY) {
+            SceneTile sceneTile = groundArray.getTile(z, x + 1, y + 1);
             if (sceneTile != null && sceneTile.floorDecoration != null
                     && sceneTile.floorDecoration.renderable.verticesNormal != null) {
                 mergeNormals(model,
                         (Model) sceneTile.floorDecoration.renderable, 128, 0, 128, true);
             }
         }
-        if (i < mapSizeX && j > 0) {
-            SceneTile sceneTile = groundArray[k][i + 1][j - 1];
+        if (x < mapSizeX && y > 0) {
+            SceneTile sceneTile = groundArray.getTile(z, x + 1, y - 1);
             if (sceneTile != null && sceneTile.floorDecoration != null
                     && sceneTile.floorDecoration.renderable.verticesNormal != null) {
                 mergeNormals(model,
@@ -734,17 +738,17 @@ public class Scene {
         int l1 = i1 + l;
         int i2 = i - 1;
         int j2 = i + j1;
-        for (int k2 = j; k2 <= j + 1; k2++) {
-            if (k2 != mapSizeZ) {
-                for (int l2 = k1; l2 <= l1; l2++) {
-                    if (l2 >= 0 && l2 < mapSizeX) {
-                        for (int i3 = i2; i3 <= j2; i3++) {
-                            if (i3 >= 0 && i3 < mapSizeY && (!flag || l2 >= l1 || i3 >= j2 || i3 < i && l2 != i1)) {
-                                SceneTile class50_sub3 = groundArray[k2][l2][i3];
+        for (int z = j; z <= j + 1; z++) {
+            if (z != mapSizeZ) {
+                for (int x = k1; x <= l1; x++) {
+                    if (x >= 0 && x < mapSizeX) {
+                        for (int y = i2; y <= j2; y++) {
+                            if (y >= 0 && y < mapSizeY && (!flag || x >= l1 || y >= j2 || y < i && x != i1)) {
+                                SceneTile class50_sub3 = groundArray.getTile(z, x, y);
                                 if (class50_sub3 != null) {
-                                    int j3 = (heightMap[k2][l2][i3]
-                                            + heightMap[k2][l2 + 1][i3]
-                                            + heightMap[k2][l2][i3 + 1] + heightMap[k2][l2 + 1][i3 + 1])
+                                    int j3 = (heightMap[z][x][y]
+                                            + heightMap[z][x + 1][y]
+                                            + heightMap[z][x][y + 1] + heightMap[z][x + 1][y + 1])
                                             / 4
                                             - (heightMap[j][i1][i]
                                             + heightMap[j][i1 + 1][i]
@@ -754,14 +758,14 @@ public class Scene {
                                     if (wall != null && wall.primary != null
                                             && wall.primary.verticesNormal != null) {
                                         mergeNormals(class50_sub1_sub4_sub4,
-                                                (Model) wall.primary, (l2 - i1)
-                                                        * 128 + (1 - l) * 64, j3, (i3 - i) * 128 + (1 - j1) * 64, flag);
+                                                (Model) wall.primary, (x - i1)
+                                                        * 128 + (1 - l) * 64, j3, (y - i) * 128 + (1 - j1) * 64, flag);
                                     }
                                     if (wall != null && wall.secondary != null
                                             && wall.secondary.verticesNormal != null) {
                                         mergeNormals(class50_sub1_sub4_sub4,
-                                                (Model) wall.secondary, (l2 - i1)
-                                                        * 128 + (1 - l) * 64, j3, (i3 - i) * 128 + (1 - j1) * 64, flag);
+                                                (Model) wall.secondary, (x - i1)
+                                                        * 128 + (1 - l) * 64, j3, (y - i) * 128 + (1 - j1) * 64, flag);
                                     }
                                     for (int k3 = 0; k3 < class50_sub3.entityCount; k3++) {
                                         InteractiveObject interactiveObject = class50_sub3.interactiveObjects[k3];
@@ -858,8 +862,8 @@ public class Scene {
 
     }
 
-    public void renderMinimapDot(int[] ai, int i, int j, int k, int l, int i1) {
-        SceneTile sceneTile = groundArray[k][l][i1];
+    public void renderMinimapDot(int[] ai, int i, int j, int z, int x, int y) {
+        SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return;
         }
@@ -1061,10 +1065,9 @@ public class Scene {
         processCulling();
         anInt461 = 0;
         for (int z = currentPositionZ; z < mapSizeZ; z++) {
-            SceneTile[][] tiles = groundArray[z];
             for (int x = currentPositionX; x < mapBoundsX; x++) {
                 for (int y = currentPositionY; y < mapBoundsY; y++) {
-                    SceneTile tile = tiles[x][y];
+                    SceneTile tile = groundArray.getTile(z, x, y);
                     if (tile != null) {
                         if (tile.logicHeight > j
                                 || !TILE_VISIBILITY_MAP[(x - cameraPositionTileX) + 25][(y - cameraPositionTileY) + 25]
@@ -1086,7 +1089,6 @@ public class Scene {
         }
 
         for (int z = currentPositionZ; z < mapSizeZ; z++) {
-            SceneTile[][] sceneTiles = groundArray[z];
             for (int offsetX = -25; offsetX <= 0; offsetX++) {
                 int x = cameraPositionTileX + offsetX;
                 int x2 = cameraPositionTileX - offsetX;
@@ -1096,13 +1098,13 @@ public class Scene {
                         int y2 = cameraPositionTileY - offsetY;
                         if (x >= currentPositionX) {
                             if (y >= currentPositionY) {
-                                SceneTile sceneTile = sceneTiles[x][y];
+                                SceneTile sceneTile = groundArray.getTile(z, x, y);
                                 if (sceneTile != null && sceneTile.draw) {
                                     renderTile(sceneTile, true);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile sceneTile = sceneTiles[x][y2];
+                                SceneTile sceneTile = groundArray.getTile(z, x, y2);
                                 if (sceneTile != null && sceneTile.draw) {
                                     renderTile(sceneTile, true);
                                 }
@@ -1110,13 +1112,13 @@ public class Scene {
                         }
                         if (x2 < mapBoundsX) {
                             if (y >= currentPositionY) {
-                                SceneTile sceneTile = sceneTiles[x2][y];
+                                SceneTile sceneTile = groundArray.getTile(z, x2, y);
                                 if (sceneTile != null && sceneTile.draw) {
                                     renderTile(sceneTile, true);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile sceneTile = sceneTiles[x2][y2];
+                                SceneTile sceneTile = groundArray.getTile(z, x2, y2);
                                 if (sceneTile != null && sceneTile.draw) {
                                     renderTile(sceneTile, true);
                                 }
@@ -1134,7 +1136,6 @@ public class Scene {
         }
 
         for (int z = currentPositionZ; z < mapSizeZ; z++) {
-            SceneTile[][] sceneTiles = groundArray[z];
             for (int offsetX = -25; offsetX <= 0; offsetX++) {
                 int x = cameraPositionTileX + offsetX;
                 int x2 = cameraPositionTileX - offsetX;
@@ -1144,13 +1145,13 @@ public class Scene {
                         int y2 = cameraPositionTileY - offsetY;
                         if (x >= currentPositionX) {
                             if (y >= currentPositionY) {
-                                SceneTile tile = sceneTiles[x][y];
+                                SceneTile tile = groundArray.getTile(z, x, y);
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile tile = sceneTiles[x][y2];
+                                SceneTile tile = groundArray.getTile(z, x, y2);
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
@@ -1158,13 +1159,13 @@ public class Scene {
                         }
                         if (x2 < mapBoundsX) {
                             if (y >= currentPositionY) {
-                                SceneTile tile = sceneTiles[x2][y];
+                                SceneTile tile = groundArray.getTile(z, x2, y);
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
                             }
                             if (y2 < mapBoundsY) {
-                                SceneTile tile = sceneTiles[x2][y2];
+                                SceneTile tile = groundArray.getTile(z, x2, y2);
                                 if (tile != null && tile.draw) {
                                     renderTile(tile, false);
                                 }
@@ -1198,38 +1199,37 @@ public class Scene {
             int y = groundTile.y;
             int z = groundTile.z;
             int level = groundTile.renderLevel;
-            SceneTile[][] tiles = groundArray[z];
             if (groundTile.draw) {
                 if (flag) {
                     if (z > 0) {
-                        SceneTile tile = groundArray[z - 1][x][y];
+                        SceneTile tile = groundArray.getTile(z - 1, x, y);
                         if (tile != null && tile.visible) {
                             continue;
                         }
                     }
                     if (x <= cameraPositionTileX && x > currentPositionX) {
-                        SceneTile tile = tiles[x - 1][y];
+                        SceneTile tile = groundArray.getTile(z, x - 1, y);
                         if (tile != null && tile.visible
                                 && (tile.draw || (groundTile.interactiveObjectsSizeOR & 1) == 0)) {
                             continue;
                         }
                     }
                     if (x >= cameraPositionTileX && x < mapBoundsX - 1) {
-                        SceneTile tile = tiles[x + 1][y];
+                        SceneTile tile = groundArray.getTile(z, x + 1, y);
                         if (tile != null && tile.visible
                                 && (tile.draw || (groundTile.interactiveObjectsSizeOR & 4) == 0)) {
                             continue;
                         }
                     }
                     if (y <= cameraPositionTileY && y > currentPositionY) {
-                        SceneTile tile = tiles[x][y - 1];
+                        SceneTile tile = groundArray.getTile(z, x, y - 1);
                         if (tile != null && tile.visible
                                 && (tile.draw || (groundTile.interactiveObjectsSizeOR & 8) == 0)) {
                             continue;
                         }
                     }
                     if (y >= cameraPositionTileY && y < mapBoundsY - 1) {
-                        SceneTile tile = tiles[x][y + 1];
+                        SceneTile tile = groundArray.getTile(z, x, y + 1);
                         if (tile != null && tile.visible
                                 && (tile.draw || (groundTile.interactiveObjectsSizeOR & 2) == 0)) {
                             continue;
@@ -1390,25 +1390,25 @@ public class Scene {
                 int k4 = groundTile.interactiveObjectsSizeOR;
                 if (k4 != 0) {
                     if (x < cameraPositionTileX && (k4 & 4) != 0) {
-                        SceneTile tile = tiles[x + 1][y];
+                        SceneTile tile = groundArray.getTile(z, x + 1, y);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
                     }
                     if (y < cameraPositionTileY && (k4 & 2) != 0) {
-                        SceneTile tile = tiles[x][y + 1];
+                        SceneTile tile = groundArray.getTile(z, x, y + 1);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
                     }
                     if (x > cameraPositionTileX && (k4 & 1) != 0) {
-                        SceneTile tile = tiles[x - 1][y];
+                        SceneTile tile = groundArray.getTile(z, x-1, y);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
                     }
                     if (y > cameraPositionTileY && (k4 & 8) != 0) {
-                        SceneTile tile = tiles[x][y - 1];
+                        SceneTile tile = groundArray.getTile(z, x, y-1);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
@@ -1449,7 +1449,7 @@ public class Scene {
                         }
                         for (int _x = entity.tileLeft; _x <= entity.tileRight; _x++) {
                             for (int _y = entity.tileTop; _y <= entity.tileBottom; _y++) {
-                                SceneTile tile = tiles[_x][_y];
+                                SceneTile tile = groundArray.getTile(z, _x, _y);
                                 if (tile.draw) {
                                     groundTile.drawEntities = true;
                                 } else {
@@ -1528,7 +1528,7 @@ public class Scene {
                         }
                         for (int _x = entity.tileLeft; _x <= entity.tileRight; _x++) {
                             for (int _y = entity.tileTop; _y <= entity.tileBottom; _y++) {
-                                SceneTile tile = tiles[_x][_y];
+                                SceneTile tile = groundArray.getTile(z, _x, _y);
                                 if (tile.wallCullDirection != 0) {
                                     tileList.pushBack(tile);
                                 } else if ((_x != x || _y != y) && tile.visible) {
@@ -1550,25 +1550,25 @@ public class Scene {
                 continue;
             }
             if (x <= cameraPositionTileX && x > currentPositionX) {
-                SceneTile tile = tiles[x - 1][y];
+                SceneTile tile = groundArray.getTile(z, x-1, y);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (x >= cameraPositionTileX && x < mapBoundsX - 1) {
-                SceneTile tile = tiles[x + 1][y];
+                SceneTile tile = groundArray.getTile(z, x+1, y);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (y <= cameraPositionTileY && y > currentPositionY) {
-                SceneTile tile = tiles[x][y - 1];
+                SceneTile tile = groundArray.getTile(z, x, y-1);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (y >= cameraPositionTileY && y < mapBoundsY - 1) {
-                SceneTile tile = tiles[x][y + 1];
+                SceneTile tile = groundArray.getTile(z, x, y+1);
                 if (tile != null && tile.visible) {
                     continue;
                 }
@@ -1646,31 +1646,31 @@ public class Scene {
                 }
             }
             if (z < mapSizeZ - 1) {
-                SceneTile tile = groundArray[z + 1][x][y];
+                SceneTile tile = groundArray.getTile(z+1, x, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (x < cameraPositionTileX) {
-                SceneTile tile = tiles[x + 1][y];
+                SceneTile tile = groundArray.getTile(z, x+1, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (y < cameraPositionTileY) {
-                SceneTile tile = tiles[x][y + 1];
+                SceneTile tile = groundArray.getTile(z, x, y+1);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (x > cameraPositionTileX) {
-                SceneTile tile = tiles[x - 1][y];
+                SceneTile tile = groundArray.getTile(z, x-1, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (y > cameraPositionTileY) {
-                SceneTile tile = tiles[x][y - 1];
+                SceneTile tile = groundArray.getTile(z, x, y-1);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }

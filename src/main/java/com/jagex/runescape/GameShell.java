@@ -17,6 +17,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public int mindel = 1;
     private long optims[] = new long[10];
     public int fps;
+    public int cameraZoom = 600;
     public boolean dumpRequested = false;
     public int width;
     public int height;
@@ -144,7 +145,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
                 clickY = eventClickY;
                 clickTime = lastClick;
                 eventMouseButtonPressed = 0;
-                doLogic();
+                processGameLoop();
                 readIndex = writeIndex;
             }
 
@@ -416,7 +417,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public void startup() {
     }
 
-    public void doLogic() {
+    public void processGameLoop() {
     }
 
     public void shutdown() {
@@ -445,12 +446,12 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         int rotation = event.getWheelRotation();
         if (this instanceof Game) {
             if(!handleInterfaceScrolling(event, (Game) this)) {
-                if ((Game.cameraZoom <= 300 && rotation <= 0)
-                        || (Game.cameraZoom >= 1200 && rotation >= 0)) {
+                if ((cameraZoom <= 300 && rotation <= 0)
+                        || (cameraZoom >= 1200 && rotation >= 0)) {
                     return;
                 }
                 int diff = rotation * 8;
-                Game.cameraZoom = Game.cameraZoom + diff;
+                cameraZoom = cameraZoom + diff;
             }
         }
     }

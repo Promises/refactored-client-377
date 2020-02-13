@@ -83,7 +83,7 @@ public class LinkedList {
 		}
 	}
 
-	public void getNodeCount() {
+	public void clear() {
 		if (head.next == head)
 			return;
 		do {

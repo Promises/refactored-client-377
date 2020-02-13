@@ -4,14 +4,14 @@ public class BZip2Decompressor {
 
 	public static Bzip2Context state = new Bzip2Context();
 
-	public static int decompress(byte output[], int lenght, byte compressed[], int decompressedLength, int minLen) {
+	public static int decompress(byte[] output, int lenght, byte[] compressed, int decompressedLength, int minLen) {
 		synchronized (state) {
 			state.compressed = compressed;
 			state.nextIn = minLen;
-			state.decompressed = output;
+			state.buf = output;
 			state.nextOut = 0;
 			state.decompressedLength = decompressedLength;
-			state.lenght = lenght;
+			state.availOut = lenght;
 			state.bsLive = 0;
 			state.bsBuff = 0;
 			state.totalInLo32 = 0;
@@ -20,487 +20,477 @@ public class BZip2Decompressor {
 			state.totalOutHigh32 = 0;
 			state.currentBlock = 0;
 			decompress(state);
-			lenght -= state.lenght;
+			lenght -= state.availOut;
 			return lenght;
 		}
 	}
 
 	public static void method313(Bzip2Context bzip2Context) {
-		byte byte4 = bzip2Context.aByte57;
-		int i = bzip2Context.anInt58;
-		int j = bzip2Context.anInt68;
-		int k = bzip2Context.anInt66;
-		int ai[] = Bzip2Context.anIntArray71;
-		int l = bzip2Context.anInt65;
-		byte abyte0[] = bzip2Context.decompressed;
-		int i1 = bzip2Context.nextOut;
-		int j1 = bzip2Context.lenght;
-		int k1 = j1;
-		int l1 = bzip2Context.anInt85 + 1;
-		label0: do {
-			if (i > 0) {
+		byte stateOutCh = bzip2Context.stateOutCh;
+		int stateOutLen = bzip2Context.stateOutLen;
+		int nBlockUsed = bzip2Context.nBlockUsed;
+		int k0 = bzip2Context.k0;
+		int[] tt = Bzip2Context.tt;
+		int tPos = bzip2Context.tPos;
+		byte[] buf = bzip2Context.buf;
+		int csNextOut = bzip2Context.nextOut;
+		int csAvailOut = bzip2Context.availOut;
+		int availOutInit = csAvailOut;
+		int savedNBlockPP = bzip2Context.nBlock + 1;
+		outer: do {
+			if (stateOutLen > 0) {
 				do {
-					if (j1 == 0)
-						break label0;
-					if (i == 1)
+					if (csAvailOut == 0)
+						break outer;
+					if (stateOutLen == 1)
 						break;
-					abyte0[i1] = byte4;
-					i--;
-					i1++;
-					j1--;
+					buf[csNextOut] = stateOutCh;
+					stateOutLen--;
+					csNextOut++;
+					csAvailOut--;
 				} while (true);
-				if (j1 == 0) {
-					i = 1;
+				if (csAvailOut == 0) {
+					stateOutLen = 1;
 					break;
 				}
-				abyte0[i1] = byte4;
-				i1++;
-				j1--;
+				buf[csNextOut] = stateOutCh;
+				csNextOut++;
+				csAvailOut--;
 			}
 			boolean flag = true;
 			while (flag) {
 				flag = false;
-				if (j == l1) {
-					i = 0;
-					break label0;
+				if (nBlockUsed == savedNBlockPP) {
+					stateOutLen = 0;
+					break outer;
 				}
-				byte4 = (byte) k;
-				l = ai[l];
-				byte byte0 = (byte) (l & 0xff);
-				l >>= 8;
-				j++;
-				if (byte0 != k) {
-					k = byte0;
-					if (j1 == 0) {
-						i = 1;
+				stateOutCh = (byte) k0;
+				tPos = tt[tPos];
+				byte k1 = (byte) (tPos & 0xff);
+				tPos >>= 8;
+				nBlockUsed++;
+				if (k1 != k0) {
+					k0 = k1;
+					if (csAvailOut == 0) {
+						stateOutLen = 1;
 					} else {
-						abyte0[i1] = byte4;
-						i1++;
-						j1--;
+						buf[csNextOut] = stateOutCh;
+						csNextOut++;
+						csAvailOut--;
 						flag = true;
 						continue;
 					}
-					break label0;
+					break outer;
 				}
-				if (j != l1)
+				if (nBlockUsed != savedNBlockPP)
 					continue;
-				if (j1 == 0) {
-					i = 1;
-					break label0;
+				if (csAvailOut == 0) {
+					stateOutLen = 1;
+					break outer;
 				}
-				abyte0[i1] = byte4;
-				i1++;
-				j1--;
+				buf[csNextOut] = stateOutCh;
+				csNextOut++;
+				csAvailOut--;
 				flag = true;
 			}
-			i = 2;
-			l = ai[l];
-			byte byte1 = (byte) (l & 0xff);
-			l >>= 8;
-			if (++j != l1)
-				if (byte1 != k) {
-					k = byte1;
+			stateOutLen = 2;
+			tPos = tt[tPos];
+			byte k1 = (byte) (tPos & 0xff);
+			tPos >>= 8;
+			if (++nBlockUsed != savedNBlockPP)
+				if (k1 != k0) {
+					k0 = k1;
 				} else {
-					i = 3;
-					l = ai[l];
-					byte byte2 = (byte) (l & 0xff);
-					l >>= 8;
-					if (++j != l1)
-						if (byte2 != k) {
-							k = byte2;
+					stateOutLen = 3;
+					tPos = tt[tPos];
+					byte k1_ = (byte) (tPos & 0xff);
+					tPos >>= 8;
+					if (++nBlockUsed != savedNBlockPP)
+						if (k1_ != k0) {
+							k0 = k1_;
 						} else {
-							l = ai[l];
-							byte byte3 = (byte) (l & 0xff);
-							l >>= 8;
-							j++;
-							i = (byte3 & 0xff) + 4;
-							l = ai[l];
-							k = (byte) (l & 0xff);
-							l >>= 8;
-							j++;
+							tPos = tt[tPos];
+							byte byte3 = (byte) (tPos & 0xff);
+							tPos >>= 8;
+							nBlockUsed++;
+							stateOutLen = (byte3 & 0xff) + 4;
+							tPos = tt[tPos];
+							k0 = (byte) (tPos & 0xff);
+							tPos >>= 8;
+							nBlockUsed++;
 						}
 				}
 		} while (true);
-		int i2 = bzip2Context.totalOutLo32;
-		bzip2Context.totalOutLo32 += k1 - j1;
-		if (bzip2Context.totalOutLo32 < i2)
+		int oldTotalOutLo32 = bzip2Context.totalOutLo32;
+		bzip2Context.totalOutLo32 += availOutInit - csAvailOut;
+		if (bzip2Context.totalOutLo32 < oldTotalOutLo32)
 			bzip2Context.totalOutHigh32++;
-		bzip2Context.aByte57 = byte4;
-		bzip2Context.anInt58 = i;
-		bzip2Context.anInt68 = j;
-		bzip2Context.anInt66 = k;
-		Bzip2Context.anIntArray71 = ai;
-		bzip2Context.anInt65 = l;
-		bzip2Context.decompressed = abyte0;
-		bzip2Context.nextOut = i1;
-		bzip2Context.lenght = j1;
+		bzip2Context.stateOutCh = stateOutCh;
+		bzip2Context.stateOutLen = stateOutLen;
+		bzip2Context.nBlockUsed = nBlockUsed;
+		bzip2Context.k0 = k0;
+		Bzip2Context.tt = tt;
+		bzip2Context.tPos = tPos;
+		bzip2Context.buf = buf;
+		bzip2Context.nextOut = csNextOut;
+		bzip2Context.availOut = csAvailOut;
 	}
 
 	public static void decompress(Bzip2Context bzip2Context) {
-		int k8 = 0;
-		int ai[] = null;
-		int ai1[] = null;
-		int ai2[] = null;
-		bzip2Context.anInt62 = 1;
-		if (Bzip2Context.anIntArray71 == null)
-			Bzip2Context.anIntArray71 = new int[bzip2Context.anInt62 * 0x186a0];
+		int gMinLen = 0;
+		int[] gLimit = null;
+		int[] gBase = null;
+		int[] gPerm = null;
+		bzip2Context.blockSize100k = 1;
+		if (Bzip2Context.tt == null)
+			Bzip2Context.tt = new int[bzip2Context.blockSize100k * 0x186a0];
 		boolean flag19 = true;
 		while (flag19) {
-			byte b = method315(bzip2Context);
-			if (b == 23)
+			byte uc = getUChar(bzip2Context);
+			if (uc == 23)
 				return;
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
 			bzip2Context.currentBlock++;
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method315(bzip2Context);
-			b = method316(bzip2Context);
-			if (b != 0)
-				bzip2Context.aBoolean59 = true;
-			else
-				bzip2Context.aBoolean59 = false;
-			if (bzip2Context.aBoolean59)
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getUChar(bzip2Context);
+			uc = getBit(bzip2Context);
+			bzip2Context.blockRandomised = uc != 0;
+			if (bzip2Context.blockRandomised)
 				System.out.println("PANIC! RANDOMISED BLOCK!");
-			bzip2Context.anInt64 = 0;
-			b = method315(bzip2Context);
-			bzip2Context.anInt64 = bzip2Context.anInt64 << 8 | b & 0xff;
-			b = method315(bzip2Context);
-			bzip2Context.anInt64 = bzip2Context.anInt64 << 8 | b & 0xff;
-			b = method315(bzip2Context);
-			bzip2Context.anInt64 = bzip2Context.anInt64 << 8 | b & 0xff;
-			for (int j = 0; j < 16; j++) {
-				byte byte1 = method316(bzip2Context);
-				if (byte1 == 1)
-					bzip2Context.aBooleanArray74[j] = true;
-				else
-					bzip2Context.aBooleanArray74[j] = false;
+			bzip2Context.origPtr = 0;
+			uc = getUChar(bzip2Context);
+			bzip2Context.origPtr = bzip2Context.origPtr << 8 | uc & 0xff;
+			uc = getUChar(bzip2Context);
+			bzip2Context.origPtr = bzip2Context.origPtr << 8 | uc & 0xff;
+			uc = getUChar(bzip2Context);
+			bzip2Context.origPtr = bzip2Context.origPtr << 8 | uc & 0xff;
+			for (int i = 0; i < 16; i++) {
+				byte bit = getBit(bzip2Context);
+				bzip2Context.inUse16[i] = bit == 1;
 			}
 
-			for (int k = 0; k < 256; k++)
-				bzip2Context.aBooleanArray73[k] = false;
+			for (int i = 0; i < 256; i++)
+				bzip2Context.inUse[i] = false;
 
-			for (int l = 0; l < 16; l++)
-				if (bzip2Context.aBooleanArray74[l]) {
-					for (int i3 = 0; i3 < 16; i3++) {
-						byte byte2 = method316(bzip2Context);
+			for (int i = 0; i < 16; i++)
+				if (bzip2Context.inUse16[i]) {
+					for (int j = 0; j < 16; j++) {
+						byte byte2 = getBit(bzip2Context);
 						if (byte2 == 1)
-							bzip2Context.aBooleanArray73[l * 16 + i3] = true;
+							bzip2Context.inUse[i * 16 + j] = true;
 					}
 
 				}
 
-			method318(bzip2Context);
-			int i4 = bzip2Context.anInt72 + 2;
-			int j4 = method317(3, bzip2Context);
-			int k4 = method317(15, bzip2Context);
-			for (int i1 = 0; i1 < k4; i1++) {
-				int j3 = 0;
+			makeMaps(bzip2Context);
+			int alphaSize = bzip2Context.nInUse + 2;
+			int nGroups = getBits(3, bzip2Context);
+			int nSelectors = getBits(15, bzip2Context);
+			for (int i = 0; i < nSelectors; i++) {
+				int count = 0;
 				do {
-					byte byte3 = method316(bzip2Context);
-					if (byte3 == 0)
+					byte terminator = getBit(bzip2Context);
+					if (terminator == 0)
 						break;
-					j3++;
+					count++;
 				} while (true);
-				bzip2Context.aByteArray79[i1] = (byte) j3;
+				bzip2Context.selectorMtf[i] = (byte) count;
 			}
 
-			byte abyte0[] = new byte[6];
-			for (byte byte16 = 0; byte16 < j4; byte16++)
-				abyte0[byte16] = byte16;
+			byte[] pos = new byte[6];
+			for (byte v = 0; v < nGroups; v++)
+				pos[v] = v;
 
-			for (int j1 = 0; j1 < k4; j1++) {
-				byte byte17 = bzip2Context.aByteArray79[j1];
-				byte byte15 = abyte0[byte17];
-				for (; byte17 > 0; byte17--)
-					abyte0[byte17] = abyte0[byte17 - 1];
+			for (int i = 0; i < nSelectors; i++) {
+				byte v = bzip2Context.selectorMtf[i];
+				byte temp = pos[v];
+				for (; v > 0; v--)
+					pos[v] = pos[v - 1];
 
-				abyte0[0] = byte15;
-				bzip2Context.aByteArray78[j1] = byte15;
+				pos[0] = temp;
+				bzip2Context.selector[i] = temp;
 			}
 
-			for (int k3 = 0; k3 < j4; k3++) {
-				int l6 = method317(5, bzip2Context);
-				for (int k1 = 0; k1 < i4; k1++) {
+			for (int t = 0; t < nGroups; t++) {
+				int curr = getBits(5, bzip2Context);
+				for (int i = 0; i < alphaSize; i++) {
 					do {
-						byte byte4 = method316(bzip2Context);
-						if (byte4 == 0)
+						byte bit = getBit(bzip2Context);
+						if (bit == 0)
 							break;
-						byte4 = method316(bzip2Context);
-						if (byte4 == 0)
-							l6++;
+						bit = getBit(bzip2Context);
+						if (bit == 0)
+							curr++;
 						else
-							l6--;
+							curr--;
 					} while (true);
-					bzip2Context.aByteArrayArray80[k3][k1] = (byte) l6;
+					bzip2Context.len[t][i] = (byte) curr;
 				}
 
 			}
 
-			for (int l3 = 0; l3 < j4; l3++) {
-				byte byte8 = 32;
-				int i = 0;
-				for (int l1 = 0; l1 < i4; l1++) {
-					if (bzip2Context.aByteArrayArray80[l3][l1] > i)
-						i = bzip2Context.aByteArrayArray80[l3][l1];
-					if (bzip2Context.aByteArrayArray80[l3][l1] < byte8)
-						byte8 = bzip2Context.aByteArrayArray80[l3][l1];
+			for (int t = 0; t < nGroups; t++) {
+				byte minLen = 32;
+				int maxLen = 0;
+				for (int i = 0; i < alphaSize; i++) {
+					if (bzip2Context.len[t][i] > maxLen)
+						maxLen = bzip2Context.len[t][i];
+					if (bzip2Context.len[t][i] < minLen)
+						minLen = bzip2Context.len[t][i];
 				}
 
-				method319(bzip2Context.anIntArrayArray81[l3], bzip2Context.anIntArrayArray82[l3], bzip2Context.anIntArrayArray83[l3],
-						bzip2Context.aByteArrayArray80[l3], byte8, i, i4);
-				bzip2Context.anIntArray84[l3] = byte8;
+				createDecodeTables(bzip2Context.limit[t], bzip2Context.base[t], bzip2Context.perm[t],
+						bzip2Context.len[t], minLen, maxLen, alphaSize);
+				bzip2Context.minLens[t] = minLen;
 			}
 
-			int l4 = bzip2Context.anInt72 + 1;
-			//int l5 = 0x186a0 * class1.anInt62;
-			int i5 = -1;
-			int j5 = 0;
-			for (int i2 = 0; i2 <= 255; i2++)
-				bzip2Context.anIntArray67[i2] = 0;
+			int eob = bzip2Context.nInUse + 1;
+			//int l5 = 0x186a0 * class1.blockSize100k;
+			int groupNo = -1;
+			int groupPos = 0;
+			for (int i = 0; i <= 255; i++)
+				bzip2Context.unzftab[i] = 0;
 
-			int j9 = 4095;
-			for (int l8 = 15; l8 >= 0; l8--) {
-				for (int i9 = 15; i9 >= 0; i9--) {
-					bzip2Context.aByteArray76[j9] = (byte) (l8 * 16 + i9);
-					j9--;
+			int kk = 4095;
+			for (int ii = 15; ii >= 0; ii--) {
+				for (int jj = 15; jj >= 0; jj--) {
+					bzip2Context.mtfa[kk] = (byte) (ii * 16 + jj);
+					kk--;
 				}
 
-				bzip2Context.anIntArray77[l8] = j9 + 1;
+				bzip2Context.mtfbase[ii] = kk + 1;
 			}
 
-			int i6 = 0;
-			if (j5 == 0) {
-				i5++;
-				j5 = 50;
-				byte byte12 = bzip2Context.aByteArray78[i5];
-				k8 = bzip2Context.anIntArray84[byte12];
-				ai = bzip2Context.anIntArrayArray81[byte12];
-				ai2 = bzip2Context.anIntArrayArray83[byte12];
-				ai1 = bzip2Context.anIntArrayArray82[byte12];
+			int nblock = 0;
+			if (groupPos == 0) {
+				groupNo++;
+				groupPos = 50;
+				byte gSel = bzip2Context.selector[groupNo];
+				gMinLen = bzip2Context.minLens[gSel];
+				gLimit = bzip2Context.limit[gSel];
+				gPerm = bzip2Context.perm[gSel];
+				gBase = bzip2Context.base[gSel];
 			}
-			j5--;
-			int i7 = k8;
-			int l7;
-			byte byte9;
-			for (l7 = method317(i7, bzip2Context); l7 > ai[i7]; l7 = l7 << 1 | byte9) {
-				i7++;
-				byte9 = method316(bzip2Context);
+			groupPos--;
+			int zn = gMinLen;
+			int zvec;
+			byte zj;
+			for (zvec = getBits(zn, bzip2Context); zvec > gLimit[zn]; zvec = zvec << 1 | zj) {
+				zn++;
+				zj = getBit(bzip2Context);
 			}
 
-			for (int k5 = ai2[l7 - ai1[i7]]; k5 != l4;)
-				if (k5 == 0 || k5 == 1) {
-					int j6 = -1;
-					int k6 = 1;
+			for (int nextSym = gPerm[zvec - gBase[zn]]; nextSym != eob;)
+				if (nextSym == 0 || nextSym == 1) {
+					int es = -1;
+					int n = 1;
 					do {
-						if (k5 == 0)
-							j6 += k6;
-						else if (k5 == 1)
-							j6 += 2 * k6;
-						k6 *= 2;
-						if (j5 == 0) {
-							i5++;
-							j5 = 50;
-							byte byte13 = bzip2Context.aByteArray78[i5];
-							k8 = bzip2Context.anIntArray84[byte13];
-							ai = bzip2Context.anIntArrayArray81[byte13];
-							ai2 = bzip2Context.anIntArrayArray83[byte13];
-							ai1 = bzip2Context.anIntArrayArray82[byte13];
+						if (nextSym == 0)
+							es += n;
+						else if (nextSym == 1)
+							es += 2 * n;
+						n *= 2;
+						if (groupPos == 0) {
+							groupNo++;
+							groupPos = 50;
+							byte gSel = bzip2Context.selector[groupNo];
+							gMinLen = bzip2Context.minLens[gSel];
+							gLimit = bzip2Context.limit[gSel];
+							gPerm = bzip2Context.perm[gSel];
+							gBase = bzip2Context.base[gSel];
 						}
-						j5--;
-						int j7 = k8;
-						int i8;
+						groupPos--;
+						int zn_ = gMinLen;
+						int zvec_;
 						byte byte10;
-						for (i8 = method317(j7, bzip2Context); i8 > ai[j7]; i8 = i8 << 1 | byte10) {
-							j7++;
-							byte10 = method316(bzip2Context);
+						for (zvec_ = getBits(zn_, bzip2Context); zvec_ > gLimit[zn_]; zvec_ = zvec_ << 1 | byte10) {
+							zn_++;
+							byte10 = getBit(bzip2Context);
 						}
 
-						k5 = ai2[i8 - ai1[j7]];
-					} while (k5 == 0 || k5 == 1);
-					j6++;
-					byte byte5 = bzip2Context.aByteArray75[bzip2Context.aByteArray76[bzip2Context.anIntArray77[0]] & 0xff];
-					bzip2Context.anIntArray67[byte5 & 0xff] += j6;
-					for (; j6 > 0; j6--) {
-						Bzip2Context.anIntArray71[i6] = byte5 & 0xff;
-						i6++;
+						nextSym = gPerm[zvec_ - gBase[zn_]];
+					} while (nextSym == 0 || nextSym == 1);
+					es++;
+					byte ec = bzip2Context.seqToUnseq[bzip2Context.mtfa[bzip2Context.mtfbase[0]] & 0xff];
+					bzip2Context.unzftab[ec & 0xff] += es;
+					for (; es > 0; es--) {
+						Bzip2Context.tt[nblock] = ec & 0xff;
+						nblock++;
 					}
 
 				} else {
-					int j11 = k5 - 1;
-					byte byte6;
-					if (j11 < 16) {
-						int j10 = bzip2Context.anIntArray77[0];
-						byte6 = bzip2Context.aByteArray76[j10 + j11];
-						for (; j11 > 3; j11 -= 4) {
-							int k11 = j10 + j11;
-							bzip2Context.aByteArray76[k11] = bzip2Context.aByteArray76[k11 - 1];
-							bzip2Context.aByteArray76[k11 - 1] = bzip2Context.aByteArray76[k11 - 2];
-							bzip2Context.aByteArray76[k11 - 2] = bzip2Context.aByteArray76[k11 - 3];
-							bzip2Context.aByteArray76[k11 - 3] = bzip2Context.aByteArray76[k11 - 4];
+					int nn = nextSym - 1;
+					byte uc_;
+					if (nn < 16) {
+						int j10 = bzip2Context.mtfbase[0];
+						uc_ = bzip2Context.mtfa[j10 + nn];
+						for (; nn > 3; nn -= 4) {
+							int k11 = j10 + nn;
+							bzip2Context.mtfa[k11] = bzip2Context.mtfa[k11 - 1];
+							bzip2Context.mtfa[k11 - 1] = bzip2Context.mtfa[k11 - 2];
+							bzip2Context.mtfa[k11 - 2] = bzip2Context.mtfa[k11 - 3];
+							bzip2Context.mtfa[k11 - 3] = bzip2Context.mtfa[k11 - 4];
 						}
 
-						for (; j11 > 0; j11--)
-							bzip2Context.aByteArray76[j10 + j11] = bzip2Context.aByteArray76[(j10 + j11) - 1];
+						for (; nn > 0; nn--)
+							bzip2Context.mtfa[j10 + nn] = bzip2Context.mtfa[(j10 + nn) - 1];
 
-						bzip2Context.aByteArray76[j10] = byte6;
+						bzip2Context.mtfa[j10] = uc_;
 					} else {
-						int l10 = j11 / 16;
-						int i11 = j11 % 16;
-						int k10 = bzip2Context.anIntArray77[l10] + i11;
-						byte6 = bzip2Context.aByteArray76[k10];
-						for (; k10 > bzip2Context.anIntArray77[l10]; k10--)
-							bzip2Context.aByteArray76[k10] = bzip2Context.aByteArray76[k10 - 1];
+						int l10 = nn / 16;
+						int i11 = nn % 16;
+						int k10 = bzip2Context.mtfbase[l10] + i11;
+						uc_ = bzip2Context.mtfa[k10];
+						for (; k10 > bzip2Context.mtfbase[l10]; k10--)
+							bzip2Context.mtfa[k10] = bzip2Context.mtfa[k10 - 1];
 
-						bzip2Context.anIntArray77[l10]++;
+						bzip2Context.mtfbase[l10]++;
 						for (; l10 > 0; l10--) {
-							bzip2Context.anIntArray77[l10]--;
-							bzip2Context.aByteArray76[bzip2Context.anIntArray77[l10]] = bzip2Context.aByteArray76[(bzip2Context.anIntArray77[l10 - 1] + 16) - 1];
+							bzip2Context.mtfbase[l10]--;
+							bzip2Context.mtfa[bzip2Context.mtfbase[l10]] = bzip2Context.mtfa[(bzip2Context.mtfbase[l10 - 1] + 16) - 1];
 						}
 
-						bzip2Context.anIntArray77[0]--;
-						bzip2Context.aByteArray76[bzip2Context.anIntArray77[0]] = byte6;
-						if (bzip2Context.anIntArray77[0] == 0) {
+						bzip2Context.mtfbase[0]--;
+						bzip2Context.mtfa[bzip2Context.mtfbase[0]] = uc_;
+						if (bzip2Context.mtfbase[0] == 0) {
 							int i10 = 4095;
 							for (int k9 = 15; k9 >= 0; k9--) {
 								for (int l9 = 15; l9 >= 0; l9--) {
-									bzip2Context.aByteArray76[i10] = bzip2Context.aByteArray76[bzip2Context.anIntArray77[k9] + l9];
+									bzip2Context.mtfa[i10] = bzip2Context.mtfa[bzip2Context.mtfbase[k9] + l9];
 									i10--;
 								}
 
-								bzip2Context.anIntArray77[k9] = i10 + 1;
+								bzip2Context.mtfbase[k9] = i10 + 1;
 							}
 
 						}
 					}
-					bzip2Context.anIntArray67[bzip2Context.aByteArray75[byte6 & 0xff] & 0xff]++;
-					Bzip2Context.anIntArray71[i6] = bzip2Context.aByteArray75[byte6 & 0xff] & 0xff;
-					i6++;
-					if (j5 == 0) {
-						i5++;
-						j5 = 50;
-						byte byte14 = bzip2Context.aByteArray78[i5];
-						k8 = bzip2Context.anIntArray84[byte14];
-						ai = bzip2Context.anIntArrayArray81[byte14];
-						ai2 = bzip2Context.anIntArrayArray83[byte14];
-						ai1 = bzip2Context.anIntArrayArray82[byte14];
+					bzip2Context.unzftab[bzip2Context.seqToUnseq[uc_ & 0xff] & 0xff]++;
+					Bzip2Context.tt[nblock] = bzip2Context.seqToUnseq[uc_ & 0xff] & 0xff;
+					nblock++;
+					if (groupPos == 0) {
+						groupNo++;
+						groupPos = 50;
+						byte byte14 = bzip2Context.selector[groupNo];
+						gMinLen = bzip2Context.minLens[byte14];
+						gLimit = bzip2Context.limit[byte14];
+						gPerm = bzip2Context.perm[byte14];
+						gBase = bzip2Context.base[byte14];
 					}
-					j5--;
-					int k7 = k8;
+					groupPos--;
+					int k7 = gMinLen;
 					int j8;
 					byte byte11;
-					for (j8 = method317(k7, bzip2Context); j8 > ai[k7]; j8 = j8 << 1 | byte11) {
+					for (j8 = getBits(k7, bzip2Context); j8 > gLimit[k7]; j8 = j8 << 1 | byte11) {
 						k7++;
-						byte11 = method316(bzip2Context);
+						byte11 = getBit(bzip2Context);
 					}
 
-					k5 = ai2[j8 - ai1[k7]];
+					nextSym = gPerm[j8 - gBase[k7]];
 				}
 
-			bzip2Context.anInt58 = 0;
-			bzip2Context.aByte57 = 0;
-			bzip2Context.anIntArray69[0] = 0;
-			for (int j2 = 1; j2 <= 256; j2++)
-				bzip2Context.anIntArray69[j2] = bzip2Context.anIntArray67[j2 - 1];
+			bzip2Context.stateOutLen = 0;
+			bzip2Context.stateOutCh = 0;
+			bzip2Context.cftab[0] = 0;
+			System.arraycopy(bzip2Context.unzftab, 0, bzip2Context.cftab, 1, 256);
 
 			for (int k2 = 1; k2 <= 256; k2++)
-				bzip2Context.anIntArray69[k2] += bzip2Context.anIntArray69[k2 - 1];
+				bzip2Context.cftab[k2] += bzip2Context.cftab[k2 - 1];
 
-			for (int l2 = 0; l2 < i6; l2++) {
-				byte byte7 = (byte) (Bzip2Context.anIntArray71[l2] & 0xff);
-				Bzip2Context.anIntArray71[bzip2Context.anIntArray69[byte7 & 0xff]] |= l2 << 8;
-				bzip2Context.anIntArray69[byte7 & 0xff]++;
+			for (int l2 = 0; l2 < nblock; l2++) {
+				byte byte7 = (byte) (Bzip2Context.tt[l2] & 0xff);
+				Bzip2Context.tt[bzip2Context.cftab[byte7 & 0xff]] |= l2 << 8;
+				bzip2Context.cftab[byte7 & 0xff]++;
 			}
 
-			bzip2Context.anInt65 = Bzip2Context.anIntArray71[bzip2Context.anInt64] >> 8;
-			bzip2Context.anInt68 = 0;
-			bzip2Context.anInt65 = Bzip2Context.anIntArray71[bzip2Context.anInt65];
-			bzip2Context.anInt66 = (byte) (bzip2Context.anInt65 & 0xff);
-			bzip2Context.anInt65 >>= 8;
-			bzip2Context.anInt68++;
-			bzip2Context.anInt85 = i6;
+			bzip2Context.tPos = Bzip2Context.tt[bzip2Context.origPtr] >> 8;
+			bzip2Context.nBlockUsed = 0;
+			bzip2Context.tPos = Bzip2Context.tt[bzip2Context.tPos];
+			bzip2Context.k0 = (byte) (bzip2Context.tPos & 0xff);
+			bzip2Context.tPos >>= 8;
+			bzip2Context.nBlockUsed++;
+			bzip2Context.nBlock = nblock;
 			method313(bzip2Context);
-			if (bzip2Context.anInt68 == bzip2Context.anInt85 + 1 && bzip2Context.anInt58 == 0)
-				flag19 = true;
-			else
-				flag19 = false;
+			flag19 = bzip2Context.nBlockUsed == bzip2Context.nBlock + 1 && bzip2Context.stateOutLen == 0;
 		}
 	}
 
-	public static byte method315(Bzip2Context class1) {
-		return (byte) method317(8, class1);
+	public static byte getUChar(Bzip2Context bzip2Context) {
+		return (byte) getBits(8, bzip2Context);
 	}
 
-	public static byte method316(Bzip2Context class1) {
-		return (byte) method317(1, class1);
+	public static byte getBit(Bzip2Context bzip2Context) {
+		return (byte) getBits(1, bzip2Context);
 	}
 
-	public static int method317(int i, Bzip2Context class1) {
-		int j;
+	public static int getBits(int numBits, Bzip2Context bzip2Context) {
+		int bits;
 		do {
-			if (class1.bsLive >= i) {
-				int k = class1.bsBuff >> class1.bsLive - i & (1 << i) - 1;
-				class1.bsLive -= i;
-				j = k;
+			if (bzip2Context.bsLive >= numBits) {
+				int k = bzip2Context.bsBuff >> bzip2Context.bsLive - numBits & (1 << numBits) - 1;
+				bzip2Context.bsLive -= numBits;
+				bits = k;
 				break;
 			}
-			class1.bsBuff = class1.bsBuff << 8 | class1.compressed[class1.nextIn] & 0xff;
-			class1.bsLive += 8;
-			class1.nextIn++;
-			class1.decompressedLength--;
-			class1.totalInLo32++;
-			if (class1.totalInLo32 == 0)
-				class1.totalInHi32++;
+			bzip2Context.bsBuff = bzip2Context.bsBuff << 8 | bzip2Context.compressed[bzip2Context.nextIn] & 0xff;
+			bzip2Context.bsLive += 8;
+			bzip2Context.nextIn++;
+			bzip2Context.decompressedLength--;
+			bzip2Context.totalInLo32++;
+			if (bzip2Context.totalInLo32 == 0)
+				bzip2Context.totalInHi32++;
 		} while (true);
-		return j;
+		return bits;
 	}
 
-	public static void method318(Bzip2Context class1) {
-		class1.anInt72 = 0;
+	public static void makeMaps(Bzip2Context bzip2Context) {
+		bzip2Context.nInUse = 0;
 		for (int i = 0; i < 256; i++)
-			if (class1.aBooleanArray73[i]) {
-				class1.aByteArray75[class1.anInt72] = (byte) i;
-				class1.anInt72++;
+			if (bzip2Context.inUse[i]) {
+				bzip2Context.seqToUnseq[bzip2Context.nInUse] = (byte) i;
+				bzip2Context.nInUse++;
 			}
 
 	}
 
-	public static void method319(int ai[], int ai1[], int ai2[], byte abyte0[], int i, int j, int k) {
-		int l = 0;
-		for (int i1 = i; i1 <= j; i1++) {
-			for (int l2 = 0; l2 < k; l2++)
-				if (abyte0[l2] == i1) {
-					ai2[l] = l2;
-					l++;
+	public static void createDecodeTables(int[] limit, int[] base, int[] ai2, byte[] len, int minLen, int maxLen, int alphaSize) {
+		int pp = 0;
+		for (int i = minLen; i <= maxLen; i++) {
+			for (int j = 0; j < alphaSize; j++)
+				if (len[j] == i) {
+					ai2[pp] = j;
+					pp++;
 				}
 
 		}
 
-		for (int j1 = 0; j1 < 23; j1++)
-			ai1[j1] = 0;
+		for (int i = 0; i < 23; i++)
+			base[i] = 0;
 
-		for (int k1 = 0; k1 < k; k1++)
-			ai1[abyte0[k1] + 1]++;
+		for (int i = 0; i < alphaSize; i++)
+			base[len[i] + 1]++;
 
-		for (int l1 = 1; l1 < 23; l1++)
-			ai1[l1] += ai1[l1 - 1];
+		for (int i = 1; i < 23; i++)
+			base[i] += base[i - 1];
 
-		for (int i2 = 0; i2 < 23; i2++)
-			ai[i2] = 0;
+		for (int i = 0; i < 23; i++)
+			limit[i] = 0;
 
-		int i3 = 0;
-		for (int j2 = i; j2 <= j; j2++) {
-			i3 += ai1[j2 + 1] - ai1[j2];
-			ai[j2] = i3 - 1;
-			i3 <<= 1;
+		int vec = 0;
+		for (int i = minLen; i <= maxLen; i++) {
+			vec += base[i + 1] - base[i];
+			limit[i] = vec - 1;
+			vec <<= 1;
 		}
 
-		for (int k2 = i + 1; k2 <= j; k2++)
-			ai1[k2] = (ai[k2 - 1] + 1 << 1) - ai1[k2];
+		for (int i = minLen + 1; i <= maxLen; i++)
+			base[i] = (limit[i - 1] + 1 << 1) - base[i];
 
 	}
 

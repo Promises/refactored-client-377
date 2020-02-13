@@ -12,7 +12,7 @@ import com.jagex.runescape.media.renderable.Model;
 public class GameObjectDefinition {
 
     public static int bufferOffsets[];
-    public boolean actionsBoolean;
+    public boolean hasActions;
     public int modelSizeY;
     public int translateX;
     public static Cache animatedModelCache = new Cache(40);
@@ -50,16 +50,16 @@ public class GameObjectDefinition {
     public int anInt794;
     public int anInt795;
     public int modelSizeZ;
-    public boolean aBoolean797;
+    public boolean wall;
     public boolean unknown3;
     public int modifiedModelColors[];
     public int sizeX;
-    public int unknown4;
+    public int offsetAmplifier;
     public int animationId;
     public boolean nonFlatShading;
     public int childrenIds[];
     public int icon;
-    public boolean unknown2;
+    public boolean castsShadow;
     public static int definitionCount;
     public boolean walkable;
     public boolean solid;
@@ -106,19 +106,19 @@ public class GameObjectDefinition {
         sizeY = 1;
         solid = true;
         walkable = true;
-        actionsBoolean = false;
+        hasActions = false;
         adjustToTerrain = false;
         nonFlatShading = false;
-        aBoolean797 = false;
+        wall = false;
         animationId = -1;
-        unknown4 = 16;
+        offsetAmplifier = 16;
         modelLightFalloff = 0;
         modelLightAmbient = 0;
         options = null;
         icon = -1;
         anInt795 = -1;
         unknown3 = false;
-        unknown2 = true;
+        castsShadow = true;
         modelSizeX = 128;
         modelSizeY = 128;
         modelSizeZ = 128;
@@ -327,7 +327,7 @@ public class GameObjectDefinition {
                     case 19:
                         i = buf.getUnsignedByte();
                         if (i == 1)
-                            actionsBoolean = true;
+                            hasActions = true;
                         break;
                     case 21:
                         adjustToTerrain = true;
@@ -336,7 +336,7 @@ public class GameObjectDefinition {
                         nonFlatShading = true;
                         break;
                     case 23:
-                        aBoolean797 = true;
+                        wall = true;
                         break;
                     case 24:
                         animationId = buf.getUnsignedShortBE();
@@ -344,7 +344,7 @@ public class GameObjectDefinition {
                             animationId = -1;
                         break;
                     case 28:
-                        unknown4 = buf.getUnsignedByte();
+                        offsetAmplifier = buf.getUnsignedByte();
                         break;
                     case 29:
                         modelLightFalloff = buf.getByte();
@@ -372,7 +372,7 @@ public class GameObjectDefinition {
                             unknown3 = true;
                             break;
                         case 64:
-                            unknown2 = false;
+                            castsShadow = false;
                             break;
                         case 65:
                             modelSizeX = buf.getUnsignedShortBE();
@@ -435,11 +435,11 @@ public class GameObjectDefinition {
 
         }
         if (i == -1) {
-            actionsBoolean = false;
+            hasActions = false;
             if (modelIds != null && (modelTypes == null || modelTypes[0] == 10))
-                actionsBoolean = true;
+                hasActions = true;
             if (options != null)
-                actionsBoolean = true;
+                hasActions = true;
         }
         if (aBoolean791) {
             solid = false;

@@ -15,7 +15,7 @@ public abstract class Actor extends Renderable {
 	public int displayedMovementFrames;
 	public int anInt1590;
 	public boolean[] runningQueue = new boolean[10];
-	public boolean aBoolean1592 = false;
+	public boolean dynamic = false;
 	public int textEffect;
 	public int modelHeight = 200;
 	public int endCycle = -1000;
@@ -35,7 +35,7 @@ public abstract class Actor extends Renderable {
 	public int anInt1609 = -1;
 	public int worldX;
 	public int worldY;
-	public int anInt1612;
+	public int currentRotation;
 	public int anInt1613;
 	public int graphic = -1;
 	public int currentAnimation;
