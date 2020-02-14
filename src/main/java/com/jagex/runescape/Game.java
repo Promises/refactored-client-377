@@ -117,7 +117,7 @@ public class Game extends GameShell {
     private static int anInt895;
     private ImageRGB[] cursorCross = new ImageRGB[8];
     private ISAACCipher incomingRandom;
-    private boolean useJaggrab = Configuration.JAGGRAB_ENABLED;
+    private boolean useJaggrab;
     private long lastClickTime;
     private int lastOpcode;
     private int secondLastOpcode;
@@ -1917,6 +1917,8 @@ public class Game extends GameShell {
     }
 
     private DataInputStream openJaggrabStream(String request) throws IOException {
+        useJaggrab = Configuration.JAGGRAB_ENABLED;
+
         if (!useJaggrab) {
             return SignLink.openURL(request);
         }
@@ -7146,6 +7148,7 @@ public class Game extends GameShell {
                 error = "EOF problem";
                 archiveHashes[8] = 0;
             } catch (IOException _ex) {
+                _ex.printStackTrace();
                 error = "Connection problem";
                 archiveHashes[8] = 0;
             } catch (Exception _ex) {
@@ -11752,7 +11755,7 @@ public class Game extends GameShell {
             boolean flag1 = false;
             try {
                 Buffer stream = SoundTrack.data(sound[index], soundType[index]);
-                new SoundPlayer(new ByteArrayInputStream(stream.buffer, 0, stream.currentPosition), soundVolume[index], soundDelay[index]);
+                new SoundPlayer(new ByteArrayInputStream(stream.buffer, 0, stream.currentPosition), soundType[index], soundDelay[index]);
                 if (System.currentTimeMillis() + (long) (stream.currentPosition / 22) > aLong1172
                         + (long) (anInt1257 / 22)) {
                     anInt1257 = stream.currentPosition;
