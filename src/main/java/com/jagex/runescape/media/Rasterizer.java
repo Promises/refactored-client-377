@@ -74,7 +74,7 @@ public class Rasterizer extends CacheableNode {
 
     }
 
-    public static void drawFilledRectangleAlhpa(int x, int y, int width, int height, int colour, int alpha) {
+    public static void drawFilledRectangleAlpha(int x, int y, int width, int height, int colour, int alpha) {
         if (x < topX) {
             width -= topX - x;
             x = topX;

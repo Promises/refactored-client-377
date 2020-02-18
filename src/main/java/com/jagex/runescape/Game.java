@@ -5985,7 +5985,7 @@ public class Game extends GameShell {
         if (activeInterfaceType == 2)
             redrawTabArea = true;
         if (redrawTabArea) {
-            method134();
+            drawTabArea();
             redrawTabArea = false;
         }
         if (backDialogueId == -1 && inputType == 0) {
@@ -10200,7 +10200,7 @@ public class Game extends GameShell {
         int width = menuWidth;
         int height = menuHeight;
         int colour = 0x5d5447;
-        Rasterizer.drawFilledRectangle(offsetX, offsetY, width, height, colour);
+        Rasterizer.drawFilledRectangleAlpha(offsetX, offsetY, width, height, colour, 120);
         Rasterizer.drawFilledRectangle(offsetX + 1, offsetY + 1, width - 2, 16, 0);
         Rasterizer.drawUnfilledRectangle(offsetX + 1, offsetY + 18, width - 2, height - 19, 0);
         fontBold.drawString("Choose Option", offsetX + 3, offsetY + 14, colour);
@@ -10787,7 +10787,7 @@ public class Game extends GameShell {
         }
     }
 
-    private void method134() {
+    private void drawTabArea() {
         tabImageProducer.createRasterizer();
         Rasterizer3D.lineOffsets = sidebarOffsets;
         inventoryBackgroundImage.drawImage(0, 0);
@@ -11137,7 +11137,7 @@ public class Game extends GameShell {
                         else
                             Rasterizer.drawUnfilledRectangle(k2, l2, child.width, child.height, j3);
                     } else if (child.filled)
-                        Rasterizer.drawFilledRectangleAlhpa(k2, l2, child.width, child.height, j3,
+                        Rasterizer.drawFilledRectangleAlpha(k2, l2, child.width, child.height, j3,
                                 256 - (child.alpha & 0xff));
                     else
                         Rasterizer.drawUnfilledRectangleAlpha(k2, l2, child.width, child.height, j3,
