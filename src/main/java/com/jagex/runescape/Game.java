@@ -3842,8 +3842,18 @@ public class Game extends GameShell {
                                     secondMenuOperand[menuActionRow] = y;
                                     menuActionRow++;
                                 }
-
-                            menuActionTexts[menuActionRow] = "Examine @lre@" + itemDefinition.name;
+                            StringBuilder examineText = new StringBuilder();
+                            examineText.append(MessageFormat.format("Examine <col=ff9040>{0}</col>", itemDefinition.name));
+                            if (DEBUG_CONTEXT) {
+                                examineText.append(" <col=00ff00>(</col>");
+                                examineText.append(
+                                        MessageFormat.format("<col=ffffff>{0}</col>",
+                                                Integer.toString(itemDefinition.id)
+                                        )
+                                );
+                                examineText.append("<col=00ff00>)</col>");
+                            }
+                            menuActionTexts[menuActionRow] = examineText.toString();
                             menuActionTypes[menuActionRow] = 1564;
                             selectedMenuActions[menuActionRow] = item.itemId;
                             firstMenuOperand[menuActionRow] = x;
@@ -5557,7 +5567,18 @@ public class Game extends GameShell {
                                                 }
 
                                         }
-                                        menuActionTexts[menuActionRow] = "Examine @lre@" + definition.name;
+                                        StringBuilder examineText = new StringBuilder();
+                                        examineText.append(MessageFormat.format("Examine <col=ff9040>{0}</col>", definition.name));
+                                        if (DEBUG_CONTEXT) {
+                                            examineText.append(" <col=00ff00>(</col>");
+                                            examineText.append(
+                                                    MessageFormat.format("<col=ffffff>{0}</col>",
+                                                            Integer.toString(definition.id)
+                                                    )
+                                            );
+                                            examineText.append("<col=00ff00>)</col>");
+                                        }
+                                        menuActionTexts[menuActionRow] = examineText.toString();
                                         menuActionTypes[menuActionRow] = Actions.EXAMINE_ITEM;
                                         selectedMenuActions[menuActionRow] = definition.id;
                                         firstMenuOperand[menuActionRow] = l2;
@@ -6795,11 +6816,11 @@ public class Game extends GameShell {
             return;
         if (!actorDefinition.clickable)
             return;
-        String s = actorDefinition.name;
+        String name = actorDefinition.name;
         if (actorDefinition.combatLevel != 0)
-            s = s + getCombatLevelColour(localPlayer.combatLevel, actorDefinition.combatLevel) + " (level-" + actorDefinition.combatLevel + ")";
+            name = name + getCombatLevelColour(localPlayer.combatLevel, actorDefinition.combatLevel) + " (level-" + actorDefinition.combatLevel + ")";
         if (itemSelected == 1) {
-            menuActionTexts[menuActionRow] = "Use " + selectedItemName + " with @yel@" + s;
+            menuActionTexts[menuActionRow] = "Use " + selectedItemName + " with @yel@" + name;
             menuActionTypes[menuActionRow] = 347;
             selectedMenuActions[menuActionRow] = k;
             firstMenuOperand[menuActionRow] = j;
@@ -6809,7 +6830,7 @@ public class Game extends GameShell {
         }
         if (widgetSelected == 1) {
             if ((anInt1173 & 2) == 2) {
-                menuActionTexts[menuActionRow] = selectedWidgetName + " @yel@" + s;
+                menuActionTexts[menuActionRow] = selectedWidgetName + " @yel@" + name;
                 menuActionTypes[menuActionRow] = 67;
                 selectedMenuActions[menuActionRow] = k;
                 firstMenuOperand[menuActionRow] = j;
@@ -6820,7 +6841,7 @@ public class Game extends GameShell {
             if (actorDefinition.actions != null) {
                 for (int l = 4; l >= 0; l--)
                     if (actorDefinition.actions[l] != null && !actorDefinition.actions[l].equalsIgnoreCase("attack")) {
-                        menuActionTexts[menuActionRow] = actorDefinition.actions[l] + " @yel@" + s;
+                        menuActionTexts[menuActionRow] = actorDefinition.actions[l] + " @yel@" + name;
                         if (l == 0)
                             menuActionTypes[menuActionRow] = 318;
                         if (l == 1)
@@ -6844,7 +6865,7 @@ public class Game extends GameShell {
                         char c = '\0';
                         if (actorDefinition.combatLevel > localPlayer.combatLevel)
                             c = '\u07D0';
-                        menuActionTexts[menuActionRow] = actorDefinition.actions[i1] + " @yel@" + s;
+                        menuActionTexts[menuActionRow] = actorDefinition.actions[i1] + " @yel@" + name;
                         if (i1 == 0)
                             menuActionTypes[menuActionRow] = 318 + c;
                         if (i1 == 1)
@@ -6862,7 +6883,18 @@ public class Game extends GameShell {
                     }
 
             }
-            menuActionTexts[menuActionRow] = "Examine @yel@" + s;
+            StringBuilder examineText = new StringBuilder();
+            examineText.append(MessageFormat.format("Examine <col=ffff00>{0}</col>", name));
+            if (DEBUG_CONTEXT) {
+                examineText.append(" <col=00ff00>(</col>");
+                examineText.append(
+                        MessageFormat.format("<col=ffffff>{0}</col>",
+                                Long.toString(actorDefinition.id)
+                        )
+                );
+                examineText.append("<col=00ff00>)</col>");
+            }
+            menuActionTexts[menuActionRow] = examineText.toString();
             menuActionTypes[menuActionRow] = 1668;
             selectedMenuActions[menuActionRow] = k;
             firstMenuOperand[menuActionRow] = j;
