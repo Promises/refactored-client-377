@@ -458,7 +458,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
 
     public boolean handleInterfaceScrolling(MouseWheelEvent event, Game client) {
         int rotation = event.getWheelRotation();
-        if (mouseX > 0 && mouseY > 346 && mouseX < 516 && mouseY < 505 && client.backDialogueId == -1) {
+        if (mouseX > 0 && mouseY > 346 && mouseX < 516 && mouseY < 505 && client.openChatboxWidgetId == -1) {
             if (rotation < 0) {
                 if (client.chatboxInterface.scrollPosition >= 1) {
                     client.chatboxScroll = client.chatboxScroll + 30;
@@ -483,7 +483,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
             int offsetY = 0;
             int childID = 0;
             /* Tab interface scrolling */
-            int tabInterfaceID = client.tabInterfaceIDs[client.currentTabId];
+            int tabInterfaceID = client.tabWidgetIds[client.currentTabId];
             if (tabInterfaceID != -1) {
                 Widget tab = Widget.interfaces[tabInterfaceID];
                 offsetX = 765 - 218;
@@ -506,8 +506,8 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
                 }
             }
             /* Main interface scrolling */
-            if (client.openInterfaceId != -1) {
-                Widget widget = Widget.interfaces[client.openInterfaceId];
+            if (client.openScreenWidgetId != -1) {
+                Widget widget = Widget.interfaces[client.openScreenWidgetId];
                 offsetX = 4;
                 offsetY = 4;
                 for (int index = 0; index < widget.children.length; index++) {
