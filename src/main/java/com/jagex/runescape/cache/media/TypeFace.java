@@ -172,10 +172,7 @@ public class TypeFace extends Rasterizer {
                         character = 174;
                     }
                 }
-                if (character == '@' && character + 4 < string.length() && string.charAt(character + 4) == '@') {
-                    int stringColour = getColour(string.substring(character + 1, character + 4));
-                    if (stringColour != -1)
-                        textColor = stringColour;
+                if (character == '@' && idx + 4 < string.length() && string.charAt(idx + 4) == '@') {
                     idx += 4;
                     continue;
                 }

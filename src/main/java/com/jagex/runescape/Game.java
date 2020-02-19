@@ -256,7 +256,6 @@ public class Game extends GameShell {
     private int fullscreenWidgetId = -1;
     private int[] skillMaxLevel = new int[SkillConstants.SKILL_COUNT];
     private int anInt1055 = 2;
-    private int anInt1056 = 3;
     private int systemUpdateTime;
     private String clickToContinueString;
     private TypeFace fontSmall;
@@ -266,7 +265,6 @@ public class Game extends GameShell {
     private int mouseInvInterfaceIndex;
     private int lastActiveInvInterface;
     private boolean menuOpen = false;
-    private byte aByte1066 = 1;
     private boolean aBoolean1067 = false;
     private int playerMembers;
     private String[] aStringArray1069 = new String[5];
@@ -400,8 +398,6 @@ public class Game extends GameShell {
     private ProducingGraphicsBuffer aClass18_1204;
     private ProducingGraphicsBuffer aClass18_1205;
     private ProducingGraphicsBuffer aClass18_1206;
-    private static boolean aBoolean1207;
-    private int anInt1208;
     private boolean loadingMap = false;
     private LinkedList gameAnimableObjectQueue = new LinkedList();
     private boolean cutsceneActive = false;
@@ -2294,9 +2290,9 @@ public class Game extends GameShell {
             }
             if (opcode == UPDATE_WELCOME_SCREEN) { // @TODO rename all these vars
                 lastPasswordChangeTime = buffer.getUnsignedShortLE();
-                anInt1075 = buffer.getUnsignedNegativeOffsetShortLE(); // Never read anywhere... Junk?...
+                buffer.getUnsignedNegativeOffsetShortLE(); // Never read anywhere... Junk?...
                 buffer.getUnsignedShortBE(); // junk...
-                anInt1208 = buffer.getUnsignedShortBE(); // Never read anywhere... Junk?...
+                buffer.getUnsignedShortBE(); // Never read anywhere... Junk?...
                 loginScreenUpdateTime = buffer.getUnsignedShortLE();
                 unreadWebsiteMessages = buffer.getUnsignedNegativeOffsetShortBE();
                 lastLoginTime = buffer.getUnsignedNegativeOffsetShortBE();
@@ -7954,24 +7950,20 @@ public class Game extends GameShell {
         }
     }
 
-    private void method103(byte byte0, Widget widget) {
-        if (byte0 == 2)
-            byte0 = 0;
-        else
-            anInt1004 = -82;
-        int i = widget.contentType;
-        if (i >= 1 && i <= 100 || i >= 701 && i <= 800) {
-            if (i == 1 && friendListStatus == 0) {
+    private void updateWidget(Widget widget) {
+        int type = widget.contentType;
+        if (type >= 1 && type <= 100 || type >= 701 && type <= 800) {
+            if (type == 1 && friendListStatus == 0) {
                 widget.disabledText = "Loading friend list";
                 widget.actionType = 0;
                 return;
             }
-            if (i == 1 && friendListStatus == 1) {
+            if (type == 1 && friendListStatus == 1) {
                 widget.disabledText = "Connecting to friendserver";
                 widget.actionType = 0;
                 return;
             }
-            if (i == 2 && friendListStatus != 2) {
+            if (type == 2 && friendListStatus != 2) {
                 widget.disabledText = "Please wait...";
                 widget.actionType = 0;
                 return;
@@ -7979,87 +7971,87 @@ public class Game extends GameShell {
             int j = friendsCount;
             if (friendListStatus != 2)
                 j = 0;
-            if (i > 700)
-                i -= 601;
+            if (type > 700)
+                type -= 601;
             else
-                i--;
-            if (i >= j) {
+                type--;
+            if (type >= j) {
                 widget.disabledText = "";
                 widget.actionType = 0;
                 return;
             } else {
-                widget.disabledText = friendUsernames[i];
+                widget.disabledText = friendUsernames[type];
                 widget.actionType = 1;
                 return;
             }
         }
-        if (i >= 101 && i <= 200 || i >= 801 && i <= 900) {
-            int k = friendsCount;
+        if (type >= 101 && type <= 200 || type >= 801 && type <= 900) {
+            int count = friendsCount;
             if (friendListStatus != 2)
-                k = 0;
-            if (i > 800)
-                i -= 701;
+                count = 0;
+            if (type > 800)
+                type -= 701;
             else
-                i -= 101;
-            if (i >= k) {
+                type -= 101;
+            if (type >= count) {
                 widget.disabledText = "";
                 widget.actionType = 0;
                 return;
             }
-            if (friendWorlds[i] == 0)
+            if (friendWorlds[type] == 0)
                 widget.disabledText = "@red@Offline";
-            else if (friendWorlds[i] < 200) {
-                if (friendWorlds[i] == world)
-                    widget.disabledText = "@gre@World" + (friendWorlds[i] - 9);
+            else if (friendWorlds[type] < 200) {
+                if (friendWorlds[type] == world)
+                    widget.disabledText = "@gre@World" + (friendWorlds[type] - 9);
                 else
-                    widget.disabledText = "@yel@World" + (friendWorlds[i] - 9);
-            } else if (friendWorlds[i] == world)
-                widget.disabledText = "@gre@Classic" + (friendWorlds[i] - 219);
+                    widget.disabledText = "@yel@World" + (friendWorlds[type] - 9);
+            } else if (friendWorlds[type] == world)
+                widget.disabledText = "@gre@Classic" + (friendWorlds[type] - 219);
             else
-                widget.disabledText = "@yel@Classic" + (friendWorlds[i] - 219);
+                widget.disabledText = "@yel@Classic" + (friendWorlds[type] - 219);
             widget.actionType = 1;
             return;
         }
-        if (i == 203) {
-            int l = friendsCount;
+        if (type == 203) {
+            int count = friendsCount;
             if (friendListStatus != 2)
-                l = 0;
-            widget.scrollLimit = l * 15 + 20;
+                count = 0;
+            widget.scrollLimit = count * 15 + 20;
             if (widget.scrollLimit <= widget.height)
                 widget.scrollLimit = widget.height + 1;
             return;
         }
-        if (i >= 401 && i <= 500) {
-            if ((i -= 401) == 0 && friendListStatus == 0) {
+        if (type >= 401 && type <= 500) {
+            if ((type -= 401) == 0 && friendListStatus == 0) {
                 widget.disabledText = "Loading ignore list";
                 widget.actionType = 0;
                 return;
             }
-            if (i == 1 && friendListStatus == 0) {
+            if (type == 1 && friendListStatus == 0) {
                 widget.disabledText = "Please wait...";
                 widget.actionType = 0;
                 return;
             }
-            int i1 = ignoresCount;
+            int count = ignoresCount;
             if (friendListStatus == 0)
-                i1 = 0;
-            if (i >= i1) {
+                count = 0;
+            if (type >= count) {
                 widget.disabledText = "";
                 widget.actionType = 0;
                 return;
             } else {
-                widget.disabledText = TextUtils.formatName(TextUtils.longToName(ignores[i]));
+                widget.disabledText = TextUtils.formatName(TextUtils.longToName(ignores[type]));
                 widget.actionType = 1;
                 return;
             }
         }
-        if (i == 503) {
+        if (type == 503) {
             widget.scrollLimit = ignoresCount * 15 + 20;
             if (widget.scrollLimit <= widget.height)
                 widget.scrollLimit = widget.height + 1;
             return;
         }
-        if (i == 327) {
+        if (type == 327) {
             widget.rotationX = 150;
             widget.rotationY = (int) (Math.sin((double) pulseCycle / 40D) * 256D) & 0x7ff;
             if (characterModelChanged) {
@@ -8097,7 +8089,7 @@ public class Game extends GameShell {
             }
             return;
         }
-        if (i == 324) {
+        if (type == 324) {
             if (aClass50_Sub1_Sub1_Sub1_1102 == null) {
                 aClass50_Sub1_Sub1_Sub1_1102 = widget.disabledImage;
                 aClass50_Sub1_Sub1_Sub1_1103 = widget.enabledImage;
@@ -8110,7 +8102,7 @@ public class Game extends GameShell {
                 return;
             }
         }
-        if (i == 325) {
+        if (type == 325) {
             if (aClass50_Sub1_Sub1_Sub1_1102 == null) {
                 aClass50_Sub1_Sub1_Sub1_1102 = widget.disabledImage;
                 aClass50_Sub1_Sub1_Sub1_1103 = widget.enabledImage;
@@ -8123,7 +8115,7 @@ public class Game extends GameShell {
                 return;
             }
         }
-        if (i == 600) {
+        if (type == 600) {
             widget.disabledText = reportedName;
             if (pulseCycle % 20 < 10) {
                 widget.disabledText += "|";
@@ -8133,7 +8125,7 @@ public class Game extends GameShell {
                 return;
             }
         }
-        if (i == 620)
+        if (type == 620)
             if (playerRights >= 1) {
                 if (reportMutePlayer) {
                     widget.disabledColor = 0xff0000;
@@ -8145,7 +8137,7 @@ public class Game extends GameShell {
             } else {
                 widget.disabledText = "";
             }
-        if (i == 660) {
+        if (type == 660) {
             int k1 = loginScreenUpdateTime - lastLoginTime;
             String s1;
             if (k1 <= 0)
@@ -8156,7 +8148,7 @@ public class Game extends GameShell {
                 s1 = k1 + " days ago";
             widget.disabledText = "You last logged in @red@" + s1 + "@bla@ from: @red@" + SignLink.dns;
         }
-        if (i == 661)
+        if (type == 661)
             if (recoveryQuestionSetTime == 0)
                 widget.disabledText = "\\nYou have not yet set any recovery questions.\\nIt is @lre@strongly@yel@ recommended that you do so.\\n\\nIf you don't you will be @lre@unable to recover your\\n@lre@password@yel@ if you forget it, or it is stolen.";
             else if (recoveryQuestionSetTime <= loginScreenUpdateTime) {
@@ -8175,7 +8167,7 @@ public class Game extends GameShell {
                         + formatWelcomeScreenDate(recoveryQuestionSetTime)
                         + "\\n\\nIf you do not remember making this request\\ncancel it immediately, and change your password.";
             }
-        if (i == 662) {
+        if (type == 662) {
             String s;
             if (unreadWebsiteMessages == 0)
                 s = "@yel@0 unread messages";
@@ -8185,12 +8177,12 @@ public class Game extends GameShell {
                 s = "@gre@" + unreadWebsiteMessages + " unread messages";
             widget.disabledText = "You have " + s + "\\nin your message centre.";
         }
-        if (i == 663)
+        if (type == 663)
             if (lastPasswordChangeTime <= 0 || lastPasswordChangeTime > loginScreenUpdateTime + 10)
                 widget.disabledText = "Last password change:\\n@gre@Never changed";
             else
                 widget.disabledText = "Last password change:\\n@gre@" + formatWelcomeScreenDate(lastPasswordChangeTime);
-        if (i == 665)
+        if (type == 665)
             if (membershipCreditRemaining > 2 && !memberServer)
                 widget.disabledText = "This is a non-members\\nworld. To enjoy your\\nmembers benefits we\\nrecommend you play on a\\nmembers world instead.";
             else if (membershipCreditRemaining > 2)
@@ -8201,14 +8193,14 @@ public class Game extends GameShell {
                         + "@yel@ days of\\nmember credit remaining.\\n\\n@lre@Credit low! Renew now\\n@lre@to avoid losing members.";
             else
                 widget.disabledText = "You are not a member.\\n\\nChoose to subscribe and\\nyou'll get loads of extra\\nbenefits and features.";
-        if (i == 667)
+        if (type == 667)
             if (membershipCreditRemaining > 2 && !memberServer)
                 widget.disabledText = "To switch to a members-only world:\\n1) Logout and return to the world selection page.\\n2) Choose one of the members world with a gold star next to it's name.\\n\\nIf you prefer you can continue to use this world,\\nbut members only features will be unavailable here.";
             else if (membershipCreditRemaining > 0)
                 widget.disabledText = "To extend or cancel a subscription:\\n1) Logout and return to the frontpage of this website.\\n2)Choose the relevant option from the 'membership' section.\\n\\nNote: If you are a credit card subscriber a top-up payment will\\nautomatically be taken when 3 days credit remain.\\n(unless you cancel your subscription, which can be done at any time.)";
             else
                 widget.disabledText = "To initializeApplication a subscripton:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Start a new subscription'";
-        if (i == 668) {
+        if (type == 668) {
             if (recoveryQuestionSetTime > loginScreenUpdateTime) {
                 widget.disabledText = "To cancel this request:\\n1) Logout and return to the frontpage of this website.\\n2) Choose 'Cancel recovery questions'.";
                 return;
@@ -11028,7 +11020,7 @@ public class Game extends GameShell {
             k2 += child.xOffset;
             l2 += child.yOffset;
             if (child.contentType > 0)
-                method103((byte) 2, child);
+                updateWidget(child);
             if (child.type == 0) {
                 if (child.scrollPosition > child.scrollLimit - child.height)
                     child.scrollPosition = child.scrollLimit - child.height;
