@@ -17,3 +17,4 @@ login:
 game:
   roofsEnabled: true
   freeTeleports: true
+  debugContext: true

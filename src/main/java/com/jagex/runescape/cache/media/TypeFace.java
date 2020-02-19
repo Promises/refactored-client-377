@@ -122,16 +122,7 @@ public class TypeFace extends Rasterizer {
     }
 
     public int getStringEffectWidth(String string) {
-        if (string == null)
-            return 0;
-        int width = 0;
-        for (int character = 0; character < string.length(); character++)
-            if (string.charAt(character) == '@' && character + 4 < string.length() && string.charAt(character + 4) == '@')
-                character += 4;
-            else
-                width += characterScreenWidths[string.charAt(character)];
-
-        return width;
+        return getDisplayedWidth(string);
     }
 
     public final int getDisplayedWidth(String string) {
@@ -349,7 +340,7 @@ public class TypeFace extends Rasterizer {
         if (code.equals("yel"))
             return 0xffff00;
         if (code.equals("cya"))
-            return 65535;
+            return 0x00ffff;
         if (code.equals("mag"))
             return 0xff00ff;
         if (code.equals("whi"))

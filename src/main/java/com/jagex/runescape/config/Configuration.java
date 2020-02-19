@@ -35,6 +35,7 @@ public class Configuration {
             PASSWORD = (String) login.get("password");
             ROOFS_ENABLED = (boolean) game.get("roofsEnabled");
             FREE_TELEPORTS = (boolean) game.get("freeTeleports");
+            DEBUG_CONTEXT = (boolean) game.get("debugContextMenu");
 
             if(USERNAME == null) {
                 USERNAME = "";
@@ -120,6 +121,11 @@ public class Configuration {
      * Always light up teleports
      */
     public static boolean FREE_TELEPORTS = true;
+
+    /**
+     * When rightclicking objects show id and location
+     */
+    public static boolean DEBUG_CONTEXT = true;
 
 
 }
