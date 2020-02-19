@@ -212,7 +212,7 @@ public class Player extends Actor {
 			if (spotAnimationModel != null) {
 				Model spotAnimationModel2 = new Model(true,
 						spotAnimationModel, Animation.exists(super.currentAnimation));
-				spotAnimationModel2.translate(0, 0, -super.spotAnimationDelay);
+				spotAnimationModel2.translate(0, 0, -super.spotGraphicHeight);
 				spotAnimationModel2.createBones();
 				spotAnimationModel2.applyTransform(spotAnimation.sequences.getPrimaryFrame[super.currentAnimation]);
 				spotAnimationModel2.triangleSkin = null;

@@ -32,7 +32,7 @@ public abstract class Actor extends Renderable {
 	public int anInt1606;
 	public int anInt1607;
 	public int anInt1608;
-	public int anInt1609 = -1;
+	public int faceActor = -1;
 	public int worldX;
 	public int worldY;
 	public int currentRotation;
@@ -40,8 +40,8 @@ public abstract class Actor extends Renderable {
 	public int graphic = -1;
 	public int currentAnimation;
 	public int anInt1616;
-	public int anInt1617;
-	public int spotAnimationDelay;
+	public int spotGraphicDelay;
+	public int spotGraphicHeight;
 	public int walkAnimationId = -1;
 	public int turnAroundAnimationId = -1;
 	public int turnRightAnimationId = -1;

@@ -38,7 +38,7 @@ public class Npc extends Actor {
 				int animationId = spotanimation.sequences.getPrimaryFrame[super.currentAnimation];
 				Model animationModel = new Model(true,
 						model_4_, Animation.exists(animationId));
-				animationModel.translate(0, 0, -super.spotAnimationDelay);
+				animationModel.translate(0, 0, -super.spotGraphicHeight);
 				animationModel.createBones();
 				animationModel.applyTransform(animationId);
 				animationModel.triangleSkin = null;
