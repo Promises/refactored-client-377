@@ -14,12 +14,12 @@ public class AnimationSequence {
 	public int frameLenghts[];
 	public int frameStep = -1;
 	public int flowControl[];
-	public boolean aBoolean300 = false;
+	public boolean dynamic = false;
 	public int anInt301 = 5;
 	public int getPlayerShieldDelta = -1;
 	public int getPlayerWeaponDelta = -1;
-	public int anInt304 = 99;
-	public int anInt305 = -1;
+	public int resetCycle = 99;
+	public int speedFlag = -1;
 	public int priority = -1;
 	public int anInt307 = 2;
 
@@ -79,7 +79,7 @@ public class AnimationSequence {
 					flowControl[flowCount] = 0x98967f;
 					break;
 				case 4:
-					aBoolean300 = true;
+					dynamic = true;
 					break;
 				case 5:
 					anInt301 = buf.getUnsignedByte();
@@ -91,10 +91,10 @@ public class AnimationSequence {
 					getPlayerWeaponDelta = buf.getUnsignedShortBE();
 					break;
 				case 8:
-					anInt304 = buf.getUnsignedByte();
+					resetCycle = buf.getUnsignedByte();
 					break;
 				case 9:
-					anInt305 = buf.getUnsignedByte();
+					speedFlag = buf.getUnsignedByte();
 					break;
 				case 10:
 					priority = buf.getUnsignedByte();
@@ -119,11 +119,11 @@ public class AnimationSequence {
 			frameLenghts = new int[1];
 			frameLenghts[0] = -1;
 		}
-		if (anInt305 == -1)
+		if (speedFlag == -1)
 			if (flowControl != null)
-				anInt305 = 2;
+				speedFlag = 2;
 			else
-				anInt305 = 0;
+				speedFlag = 0;
 		if (priority == -1) {
 			if (flowControl != null) {
 				priority = 2;

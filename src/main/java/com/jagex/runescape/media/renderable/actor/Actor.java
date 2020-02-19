@@ -13,7 +13,7 @@ public abstract class Actor extends Renderable {
 	public int[] pathY = new int[10];
 	public int movementAnimation = -1;
 	public int displayedMovementFrames;
-	public int anInt1590;
+	public int movementCycle;
 	public boolean[] runningQueue = new boolean[10];
 	public boolean dynamic = false;
 	public int textEffect;
@@ -21,37 +21,37 @@ public abstract class Actor extends Renderable {
 	public int endCycle = -1000;
 	public int anInt1596;
 	public int anInt1597;
-	public int anInt1598;
-	public int anInt1599;
-	public int anInt1600 = 32;
+	public int faceX;
+	public int faceY;
+	public int turnSpeed = 32;
 	public int boundaryDimension = 1;
-	public int anInt1602;
-	public int anInt1603;
-	public int anInt1604;
-	public int anInt1605;
-	public int anInt1606;
-	public int anInt1607;
-	public int anInt1608;
+	public int movementStartX;
+	public int movementEndX;
+	public int movementStartY;
+	public int movementEndY;
+	public int moveCycleEnd;
+	public int moveCycleStart;
+	public int moveDirection;
 	public int faceActor = -1;
 	public int worldX;
 	public int worldY;
 	public int currentRotation;
-	public int anInt1613;
+	public int stillPathPosition;
 	public int graphic = -1;
 	public int currentAnimation;
-	public int anInt1616;
+	public int animationCycle;
 	public int spotGraphicDelay;
 	public int spotGraphicHeight;
 	public int walkAnimationId = -1;
 	public int turnAroundAnimationId = -1;
 	public int turnRightAnimationId = -1;
 	public int turnLeftAnimationId = -1;
-	public int anInt1623;
+	public int resyncWalkCycle;
 	public int emoteAnimation = -1;
 	public int displayedEmoteFrames;
-	public int anInt1626;
+	public int animationSequence;
 	public int animationDelay;
-	public int anInt1628;
+	public int animationResetCycle;
 	public int runAnimationId = -1;
 	public int[] hitDamages = new int[4];
 	public int[] hitTypes = new int[4];
@@ -62,7 +62,7 @@ public abstract class Actor extends Renderable {
 
 	public void resetPath() {
 		pathLength = 0;
-		anInt1613 = 0;
+		stillPathPosition = 0;
 	}
 
 	public boolean isVisible() {
@@ -144,8 +144,8 @@ public abstract class Actor extends Renderable {
 			}
 		}
 		pathLength = 0;
-		anInt1613 = 0;
-		anInt1623 = 0;
+		stillPathPosition = 0;
+		resyncWalkCycle = 0;
 		pathX[0] = x;
 		pathY[0] = y;
 		worldX = pathX[0] * 128 + boundaryDimension * 64;

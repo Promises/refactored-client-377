@@ -69,7 +69,7 @@ public class Model extends Renderable {
     private static int vertexXModifier;
     private static int vertexYModifier;
     private static int vertexZModifier;
-    public static boolean aBoolean1705;
+    public static boolean gameScreenClickable;
     public static int cursorX;
     public static int cursorY;
     public static int resourceCount;
@@ -1464,7 +1464,7 @@ public class Model extends Renderable {
             flag = true;
         }
         boolean flag1 = false;
-        if (i2 > 0 && aBoolean1705) {
+        if (i2 > 0 && gameScreenClickable) {
             int k5 = k2 - l2;
             if (k5 <= 50) {
                 k5 = 50;
