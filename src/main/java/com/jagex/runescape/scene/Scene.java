@@ -862,23 +862,26 @@ public class Scene {
 
     }
 
-    public void renderMinimapDot(int[] ai, int i, int j, int z, int x, int y) {
+    public void renderMinimapTile(int[] pixels, int pixelPointer, int j, int z, int x, int y) {
         SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return;
         }
         GenericTile genericTile = sceneTile.plainTile;
         if (genericTile != null) {
-            int j1 = genericTile.rgbColor;
-            if (j1 == 0) {
+            int tileRGB = genericTile.rgbColor;
+            if (tileRGB == 0) {
                 return;
             }
+            if((tileRGB & 0xFF0000) >> 16 >= 160){
+                System.out.println("FOUND RED!!!");
+            }
             for (int k1 = 0; k1 < 4; k1++) {
-                ai[i] = j1;
-                ai[i + 1] = j1;
-                ai[i + 2] = j1;
-                ai[i + 3] = j1;
-                i += j;
+                pixels[pixelPointer] = tileRGB;
+                pixels[pixelPointer + 1] = tileRGB;
+                pixels[pixelPointer + 2] = tileRGB;
+                pixels[pixelPointer + 3] = tileRGB;
+                pixelPointer += j;
             }
 
             return;
@@ -887,38 +890,38 @@ public class Scene {
         if (complexTile == null) {
             return;
         }
-        int l1 = complexTile.shape;
-        int i2 = complexTile.rotation;
-        int j2 = complexTile.underlayRGB;
-        int k2 = complexTile.overlayRGB;
-        int[] ai1 = tileShapePoints[l1];
-        int[] ai2 = tileShapeIndices[i2];
-        int l2 = 0;
-        if (j2 != 0) {
-            for (int i3 = 0; i3 < 4; i3++) {
-                ai[i] = ai1[ai2[l2++]] != 0 ? k2 : j2;
-                ai[i + 1] = ai1[ai2[l2++]] != 0 ? k2 : j2;
-                ai[i + 2] = ai1[ai2[l2++]] != 0 ? k2 : j2;
-                ai[i + 3] = ai1[ai2[l2++]] != 0 ? k2 : j2;
-                i += j;
+        int shapeA = complexTile.shape;
+        int shapeB = complexTile.rotation;
+        int underlayRGB = complexTile.underlayRGB;
+        int overlayRGB = complexTile.overlayRGB;
+        int[] shapePoints = tileShapePoints[shapeA];
+        int[] shapeIndices = tileShapeIndices[shapeB];
+        int shapePtr = 0;
+        if (underlayRGB != 0) {
+            for (int linePtr = 0; linePtr < 4; linePtr++) {
+                pixels[pixelPointer] = shapePoints[shapeIndices[shapePtr++]] != 0 ? overlayRGB : underlayRGB;
+                pixels[pixelPointer + 1] = shapePoints[shapeIndices[shapePtr++]] != 0 ? overlayRGB : underlayRGB;
+                pixels[pixelPointer + 2] = shapePoints[shapeIndices[shapePtr++]] != 0 ? overlayRGB : underlayRGB;
+                pixels[pixelPointer + 3] = shapePoints[shapeIndices[shapePtr++]] != 0 ? overlayRGB : underlayRGB;
+                pixelPointer += j;
             }
 
             return;
         }
-        for (int j3 = 0; j3 < 4; j3++) {
-            if (ai1[ai2[l2++]] != 0) {
-                ai[i] = k2;
+        for (int linePtr = 0; linePtr < 4; linePtr++) {
+            if (shapePoints[shapeIndices[shapePtr++]] != 0) {
+                pixels[pixelPointer] = overlayRGB;
             }
-            if (ai1[ai2[l2++]] != 0) {
-                ai[i + 1] = k2;
+            if (shapePoints[shapeIndices[shapePtr++]] != 0) {
+                pixels[pixelPointer + 1] = overlayRGB;
             }
-            if (ai1[ai2[l2++]] != 0) {
-                ai[i + 2] = k2;
+            if (shapePoints[shapeIndices[shapePtr++]] != 0) {
+                pixels[pixelPointer + 2] = overlayRGB;
             }
-            if (ai1[ai2[l2++]] != 0) {
-                ai[i + 3] = k2;
+            if (shapePoints[shapeIndices[shapePtr++]] != 0) {
+                pixels[pixelPointer + 3] = overlayRGB;
             }
-            i += j;
+            pixelPointer += j;
         }
 
     }

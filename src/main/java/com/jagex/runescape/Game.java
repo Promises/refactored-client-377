@@ -8722,9 +8722,9 @@ public class Game extends GameShell {
             int drawPoint = 24628 + (103 - viewportY) * 512 * 4;
             for (int viewportX = 1; viewportX < 103; viewportX++) {
                 if ((currentSceneTileFlags[plane][viewportX][viewportY] & 0x18) == 0)
-                    currentScene.renderMinimapDot(pixels, drawPoint, 512, plane, viewportX, viewportY);
+                    currentScene.renderMinimapTile(pixels, drawPoint, 512, plane, viewportX, viewportY);
                 if (plane < 3 && (currentSceneTileFlags[plane + 1][viewportX][viewportY] & 8) != 0)
-                    currentScene.renderMinimapDot(pixels, drawPoint, 512, plane + 1, viewportX, viewportY);
+                    currentScene.renderMinimapTile(pixels, drawPoint, 512, plane + 1, viewportX, viewportY);
                 drawPoint += 4;
             }
 
