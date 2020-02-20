@@ -395,7 +395,7 @@ public class Game extends GameShell {
     private int loginScreenUpdateTime;
     private int widgetSelected;
     private int anInt1172;
-    private int anInt1173;
+    private int selectedMask;
     private String selectedWidgetName;
     private int[] anIntArray1176;
     private int[] anIntArray1177;
@@ -3416,7 +3416,7 @@ public class Game extends GameShell {
         }
     }
 
-    private void processPLayerMenuOptions(int i, int j, int k, Player player) {
+    private void processPlayerMenuOptions(Player player, int x, int y, int index) {
         if (player == localPlayer)
             return;
         if (menuActionRow >= 400)
@@ -3431,17 +3431,17 @@ public class Game extends GameShell {
         if (itemSelected == 1) {
             menuActionTexts[menuActionRow] = "Use " + selectedItemName + " with @whi@" + s;
             menuActionTypes[menuActionRow] = 596;
-            selectedMenuActions[menuActionRow] = i;
-            firstMenuOperand[menuActionRow] = k;
-            secondMenuOperand[menuActionRow] = j;
+            selectedMenuActions[menuActionRow] = index;
+            firstMenuOperand[menuActionRow] = x;
+            secondMenuOperand[menuActionRow] = y;
             menuActionRow++;
         } else if (widgetSelected == 1) {
-            if ((anInt1173 & 8) == 8) {
+            if ((selectedMask & 8) == 8) {
                 menuActionTexts[menuActionRow] = selectedWidgetName + " @whi@" + s;
                 menuActionTypes[menuActionRow] = 918;
-                selectedMenuActions[menuActionRow] = i;
-                firstMenuOperand[menuActionRow] = k;
-                secondMenuOperand[menuActionRow] = j;
+                selectedMenuActions[menuActionRow] = index;
+                firstMenuOperand[menuActionRow] = x;
+                secondMenuOperand[menuActionRow] = y;
                 menuActionRow++;
             }
         } else {
@@ -3469,9 +3469,9 @@ public class Game extends GameShell {
                         menuActionTypes[menuActionRow] = 677 + c;
                     if (i1 == 4)
                         menuActionTypes[menuActionRow] = 876 + c;
-                    selectedMenuActions[menuActionRow] = i;
-                    firstMenuOperand[menuActionRow] = k;
-                    secondMenuOperand[menuActionRow] = j;
+                    selectedMenuActions[menuActionRow] = index;
+                    firstMenuOperand[menuActionRow] = x;
+                    secondMenuOperand[menuActionRow] = y;
                     menuActionRow++;
                 }
 
@@ -3642,7 +3642,7 @@ public class Game extends GameShell {
         }
     }
 
-    private void method43(byte byte0) {
+    private void handleViewportMouse() {
         if (itemSelected == 0 && widgetSelected == 0) {
             menuActionTexts[menuActionRow] = "Walk here";
             menuActionTypes[menuActionRow] = 14;
@@ -3650,20 +3650,18 @@ public class Game extends GameShell {
             secondMenuOperand[menuActionRow] = super.mouseY;
             menuActionRow++;
         }
-        int i = -1;
-        if (byte0 != 7)
-            opcode = -1;
-        for (int j = 0; j < Model.resourceCount; j++) {
-            int k = Model.anIntArray1709[j];
-            int x = k & 0x7f;
-            int y = k >> 7 & 0x7f;
-            int type = k >> 29 & 3;
-            int k1 = k >> 14 & 0x7fff;
-            if (k == i)
+        int lastHash = -1;
+        for (int idx = 0; idx < Model.resourceCount; idx++) {
+            int hash = Model.hoveredHash[idx];
+            int x = hash & 0x7f;
+            int y = hash >> 7 & 0x7f;
+            int type = hash >> 29 & 3;
+            int index = hash >> 14 & 0x7fff;
+            if (hash == lastHash)
                 continue;
-            i = k;
-            if (type == 2 && currentScene.method271(plane, x, y, k) >= 0) {
-                GameObjectDefinition gameObject = GameObjectDefinition.getDefinition(k1);
+            lastHash = hash;
+            if (type == 2 && currentScene.getArrangement(plane, x, y, hash) >= 0) {
+                GameObjectDefinition gameObject = GameObjectDefinition.getDefinition(index);
                 if (gameObject.childrenIds != null)
                     gameObject = gameObject.getChildDefinition();
                 if (gameObject == null)
@@ -3671,15 +3669,15 @@ public class Game extends GameShell {
                 if (itemSelected == 1) {
                     menuActionTexts[menuActionRow] = "Use " + selectedItemName + " with @cya@" + gameObject.name;
                     menuActionTypes[menuActionRow] = 467;
-                    selectedMenuActions[menuActionRow] = k;
+                    selectedMenuActions[menuActionRow] = hash;
                     firstMenuOperand[menuActionRow] = x;
                     secondMenuOperand[menuActionRow] = y;
                     menuActionRow++;
                 } else if (widgetSelected == 1) {
-                    if ((anInt1173 & 4) == 4) {
+                    if ((selectedMask & 4) == 4) {
                         menuActionTexts[menuActionRow] = selectedWidgetName + " @cya@" + gameObject.name;
                         menuActionTypes[menuActionRow] = 376;
-                        selectedMenuActions[menuActionRow] = k;
+                        selectedMenuActions[menuActionRow] = hash;
                         firstMenuOperand[menuActionRow] = x;
                         secondMenuOperand[menuActionRow] = y;
                         menuActionRow++;
@@ -3700,7 +3698,7 @@ public class Game extends GameShell {
                                     menuActionTypes[menuActionRow] = 892; // packet 136
                                 if (l1 == 4)
                                     menuActionTypes[menuActionRow] = 1280; // packet 55
-                                selectedMenuActions[menuActionRow] = k;
+                                selectedMenuActions[menuActionRow] = hash;
                                 firstMenuOperand[menuActionRow] = x;
                                 secondMenuOperand[menuActionRow] = y;
                                 menuActionRow++;
@@ -3736,7 +3734,7 @@ public class Game extends GameShell {
                 }
             }
             if (type == 1) {
-                Npc npc = npcs[k1];
+                Npc npc = npcs[index];
                 if (npc.npcDefinition.boundaryDimension == 1
                         && (npc.worldX & 0x7f) == 64
                         && (npc.worldY & 0x7f) == 64) {
@@ -3755,14 +3753,14 @@ public class Game extends GameShell {
                         if (player != null
                                 && player.worldX == npc.worldX
                                 && player.worldY == npc.worldY)
-                            processPLayerMenuOptions(playerList[i2], y, x, player);
+                            processPlayerMenuOptions(player, x, y, playerList[i2]);
                     }
 
                 }
-                processNpcMenuOptions(npc.npcDefinition, y, x, k1);
+                processNpcMenuOptions(npc.npcDefinition, y, x, index);
             }
             if (type == 0) {
-                Player player1 = players[k1];
+                Player player1 = players[index];
                 if ((player1.worldX & 0x7f) == 64
                         && (player1.worldY & 0x7f) == 64) {
                     for (int j2 = 0; j2 < npcCount; j2++) {
@@ -3780,11 +3778,11 @@ public class Game extends GameShell {
                                 && player != player1
                                 && player.worldX == player1.worldX
                                 && player.worldY == player1.worldY)
-                            processPLayerMenuOptions(playerList[l2], y, x, player);
+                            processPlayerMenuOptions(player, x, y, playerList[l2]);
                     }
 
                 }
-                processPLayerMenuOptions(k1, y, x, player1);
+                processPlayerMenuOptions(player1, x, y, index);
             }
             if (type == 3) {
                 LinkedList itemList = groundItems.getTile(plane, x, y);
@@ -3800,7 +3798,7 @@ public class Game extends GameShell {
                             secondMenuOperand[menuActionRow] = y;
                             menuActionRow++;
                         } else if (widgetSelected == 1) {
-                            if ((anInt1173 & 1) == 1) {
+                            if ((selectedMask & 1) == 1) {
                                 menuActionTexts[menuActionRow] = selectedWidgetName + " @lre@" + itemDefinition.name;
                                 menuActionTypes[menuActionRow] = 199;
                                 selectedMenuActions[menuActionRow] = item.itemId;
@@ -3878,7 +3876,7 @@ public class Game extends GameShell {
             if (classType == 3)
                 locationHash = currentScene.getFloorDecorationHash(plane, x, y);
             if (locationHash != 0) {
-                int locationArrangement = currentScene.method271(plane, x, y, locationHash);
+                int locationArrangement = currentScene.getArrangement(plane, x, y, locationHash);
                 int locationIndex = locationHash >> 14 & 0x7fff;
                 int locationType = locationArrangement & 0x1f;
                 int locationRot = locationArrangement >> 6;
@@ -5480,7 +5478,7 @@ public class Game extends GameShell {
                                             menuActionRow++;
                                         }
                                     } else if (widgetSelected == 1 && child.isInventory) {
-                                        if ((anInt1173 & 0x10) == 16) {
+                                        if ((selectedMask & 0x10) == 16) {
                                             menuActionTexts[menuActionRow] = selectedWidgetName + " @lre@" + definition.name;
                                             menuActionTypes[menuActionRow] = 361;
                                             selectedMenuActions[menuActionRow] = definition.id;
@@ -6694,7 +6692,7 @@ public class Game extends GameShell {
 
     private boolean method80(int dstY, int j, int dstX, int l) {
         int i1 = l >> 14 & 0x7fff;
-        int j1 = currentScene.method271(plane, dstX, dstY, l);
+        int j1 = currentScene.getArrangement(plane, dstX, dstY, l);
         if (j1 == -1)
             return false;
         int objectType = j1 & 0x1f;
@@ -6814,7 +6812,7 @@ public class Game extends GameShell {
             return;
         }
         if (widgetSelected == 1) {
-            if ((anInt1173 & 2) == 2) {
+            if ((selectedMask & 2) == 2) {
                 menuActionTexts[menuActionRow] = selectedWidgetName + " @yel@" + name;
                 menuActionTypes[menuActionRow] = 67;
                 selectedMenuActions[menuActionRow] = k;
@@ -7478,7 +7476,7 @@ public class Game extends GameShell {
             if (openScreenWidgetId != -1)
                 method66(4, Widget.forId(openScreenWidgetId), 0, 0, 4, super.mouseX, 23658, super.mouseY);
             else
-                method43((byte) 7);
+                handleViewportMouse();
         if (anInt915 != anInt1302)
             anInt1302 = anInt915;
         if (anInt1315 != anInt1129)
@@ -9406,7 +9404,7 @@ public class Game extends GameShell {
             Widget widget = Widget.forId(second);
             widgetSelected = 1;
             anInt1172 = second;
-            anInt1173 = widget.optionAttributes;
+            selectedMask = widget.optionAttributes;
             itemSelected = 0;
             redrawTabArea = true;
             String prefix = widget.optionCircumfix;
@@ -9416,7 +9414,7 @@ public class Game extends GameShell {
             if (suffix.indexOf(" ") != -1)
                 suffix = suffix.substring(suffix.indexOf(" ") + 1);
             selectedWidgetName = prefix + " " + widget.optionText + " " + suffix;
-            if (anInt1173 == 16) {
+            if (selectedMask == 16) {
                 redrawTabArea = true;
                 currentTabId = 3;
                 drawTabIcons = true;
@@ -10958,7 +10956,7 @@ public class Game extends GameShell {
         if (spawnObjectNode.classType == 3)
             i = currentScene.getFloorDecorationHash(spawnObjectNode.plane, spawnObjectNode.x, spawnObjectNode.y);
         if (i != 0) {
-            int i1 = currentScene.method271(spawnObjectNode.plane, spawnObjectNode.x, spawnObjectNode.y, i);
+            int i1 = currentScene.getArrangement(spawnObjectNode.plane, spawnObjectNode.x, spawnObjectNode.y, i);
             j = i >> 14 & 0x7fff;
             k = i1 & 0x1f;
             l = i1 >> 6;
@@ -11592,7 +11590,7 @@ public class Game extends GameShell {
         int k1 = currentScene.getWallObjectHash(k, i, j);
         i1 = 62 / i1;
         if (k1 != 0) {
-            int l1 = currentScene.method271(j, k, i, k1);
+            int l1 = currentScene.getArrangement(j, k, i, k1);
             int k2 = l1 >> 6 & 3;
             int i3 = l1 & 0x1f;
             int k3 = j1;
@@ -11668,7 +11666,7 @@ public class Game extends GameShell {
         }
         k1 = currentScene.getLocationHash(j, k, i);
         if (k1 != 0) {
-            int i2 = currentScene.method271(j, k, i, k1);
+            int i2 = currentScene.getArrangement(j, k, i, k1);
             int l2 = i2 >> 6 & 3;
             int j3 = i2 & 0x1f;
             int l3 = k1 >> 14 & 0x7fff;
