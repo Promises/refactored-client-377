@@ -370,75 +370,69 @@ public class ImageRGB extends Rasterizer {
 		}
 	}
 
-	public void method466(int i, int j, int k, int l, int i1, int j1, int k1, double d, int l1) {
-		if (j1 != -30658)
-			return;
+	public void drawRotated(int x, int y, int pivotX, int pivotY, int width, int height, int zoom, double angle) {
 		try {
-			int i2 = -k1 / 2;
-			int j2 = -i1 / 2;
-			int k2 = (int) (Math.sin(d) * 65536D);
-			int l2 = (int) (Math.cos(d) * 65536D);
-			k2 = k2 * i >> 8;
-			l2 = l2 * i >> 8;
-			int i3 = (j << 16) + (j2 * k2 + i2 * l2);
-			int j3 = (l << 16) + (j2 * l2 - i2 * k2);
-			int k3 = k + l1 * Rasterizer.width;
-			for (l1 = 0; l1 < i1; l1++) {
-				int l3 = k3;
-				int i4 = i3;
-				int j4 = j3;
-				for (k = -k1; k < 0; k++) {
-					int k4 = pixels[(i4 >> 16) + (j4 >> 16) * width];
-					if (k4 != 0)
-						Rasterizer.pixels[l3++] = k4;
+			int centerX = -width / 2;
+			int centerY = -height / 2;
+			int sine = (int) (Math.sin(angle) * 65536D);
+			int cosine = (int) (Math.cos(angle) * 65536D);
+			sine = sine * zoom >> 8;
+			cosine = cosine * zoom >> 8;
+			int sourceOffsetX = (pivotX << 16) + (centerY * sine + centerX * cosine);
+			int sourceOffsetY = (pivotY << 16) + (centerY * cosine - centerX * sine);
+			int destinationOffset = x + y * Rasterizer.width;
+			for (y = 0; y < height; y++) {
+				int i = destinationOffset;
+				int offsetX = sourceOffsetX;
+				int offsetY = sourceOffsetY;
+				for (x = -width; x < 0; x++) {
+					int colour = pixels[(offsetX >> 16) + (offsetY >> 16) * this.width];
+					if (colour != 0)
+						Rasterizer.pixels[i++] = colour;
 					else
-						l3++;
-					i4 += l2;
-					j4 -= k2;
+						i++;
+					offsetX += cosine;
+					offsetY -= sine;
 				}
 
-				i3 += k2;
-				j3 += l2;
-				k3 += Rasterizer.width;
+				sourceOffsetX += sine;
+				sourceOffsetY += cosine;
+				destinationOffset += Rasterizer.width;
 			}
 
-			return;
 		} catch (Exception _ex) {
-			return;
 		}
 	}
 
-	public void method467(IndexedImage class50_sub1_sub1_sub3, int i, int j, int k) {
-		if (j != -49993)
-			return;
-		k += offsetX;
-		i += offsetY;
-		int l = k + i * Rasterizer.width;
+	public void drawTo(IndexedImage indexedImage, int x, int y) {
+		x += offsetX;
+		y += offsetY;
+		int l = x + y * Rasterizer.width;
 		int i1 = 0;
 		int j1 = height;
 		int k1 = width;
 		int l1 = Rasterizer.width - k1;
 		int i2 = 0;
-		if (i < Rasterizer.topY) {
-			int j2 = Rasterizer.topY - i;
+		if (y < Rasterizer.topY) {
+			int j2 = Rasterizer.topY - y;
 			j1 -= j2;
-			i = Rasterizer.topY;
+			y = Rasterizer.topY;
 			i1 += j2 * k1;
 			l += j2 * Rasterizer.width;
 		}
-		if (i + j1 > Rasterizer.bottomY)
-			j1 -= (i + j1) - Rasterizer.bottomY;
-		if (k < Rasterizer.topX) {
-			int k2 = Rasterizer.topX - k;
+		if (y + j1 > Rasterizer.bottomY)
+			j1 -= (y + j1) - Rasterizer.bottomY;
+		if (x < Rasterizer.topX) {
+			int k2 = Rasterizer.topX - x;
 			k1 -= k2;
-			k = Rasterizer.topX;
+			x = Rasterizer.topX;
 			i1 += k2;
 			l += k2;
 			i2 += k2;
 			l1 += k2;
 		}
-		if (k + k1 > Rasterizer.bottomX) {
-			int l2 = (k + k1) - Rasterizer.bottomX;
+		if (x + k1 > Rasterizer.bottomX) {
+			int l2 = (x + k1) - Rasterizer.bottomX;
 			k1 -= l2;
 			i2 += l2;
 			l1 += l2;
@@ -447,7 +441,7 @@ public class ImageRGB extends Rasterizer {
 			return;
 		} else {
 			method468(l, l1, pixels, k1, Rasterizer.pixels,
-					class50_sub1_sub1_sub3.pixels, 40303, j1, i1, 0, i2);
+					indexedImage.pixels, 40303, j1, i1, 0, i2);
 			return;
 		}
 	}

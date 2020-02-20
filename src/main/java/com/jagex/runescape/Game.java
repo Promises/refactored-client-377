@@ -370,7 +370,6 @@ public class Game extends GameShell {
     private int npcCount;
     private int[] npcIds = new int[16384];
     private int renderCount;
-    private int anInt1140 = -110;
     private long aLong1141;
     private ImageRGB[] moderatorIcon = new ImageRGB[2];
     private boolean characterEditChangeGenger = true;
@@ -492,8 +491,8 @@ public class Game extends GameShell {
     private int[] anIntArray1290 = {17, 24, 34, 40};
     private IndexedImage titleboxImage;
     private IndexedImage titleboxButtonImage;
-    private int removePlayerCount;
-    private int[] removePlayers = new int[1000];
+    private int enityUpdateCount;
+    private int[] eneityUpdateIndices = new int[1000];
     private int[] chatTypes = new int[100];
     private String[] chatPlayerNames = new String[100];
     private String[] chatMessages = new String[100];
@@ -879,7 +878,7 @@ public class Game extends GameShell {
         playerList = null;
         updatedPlayers = null;
         cachedAppearances = null;
-        removePlayers = null;
+        eneityUpdateIndices = null;
         aClass18_906 = null;
         aClass18_907 = null;
         aClass18_908 = null;
@@ -2978,7 +2977,7 @@ public class Game extends GameShell {
                 return true;
             }
             if (NPC_UPDATING.equals(opcode)) {
-                updateNpcs(buffer, aBoolean1038, packetSize);
+                updateNpcs(buffer, packetSize);
                 opcode = -1;
                 return true;
             }
@@ -3915,12 +3914,12 @@ public class Game extends GameShell {
         }
     }
 
-    private void method46(Buffer buffer) {
+    private void updateNpcMovement(Buffer buffer) {
         buffer.initBitAccess();
         int j = buffer.getBits(8);
         if (j < npcCount) {
             for (int k = j; k < npcCount; k++)
-                removePlayers[removePlayerCount++] = npcIds[k];
+                eneityUpdateIndices[enityUpdateCount++] = npcIds[k];
 
         }
         if (j > npcCount) {
@@ -3960,24 +3959,23 @@ public class Game extends GameShell {
                     if (blockUpdateRequired == 1)
                         updatedPlayers[updatedPlayerCount++] = i1;
                 } else if (moveType == MovementType.TELEPORT)
-                    removePlayers[removePlayerCount++] = i1;
+                    eneityUpdateIndices[enityUpdateCount++] = i1;
             }
         }
 
     }
 
-    private void updateNpcs(Buffer buffer, boolean flag, int packetSize) {
-        loggedIn &= flag;
-        removePlayerCount = 0;
+    private void updateNpcs(Buffer buffer, int packetSize) {
+        enityUpdateCount = 0;
         updatedPlayerCount = 0;
-        method46(buffer);
-        method132(buffer, packetSize, false);
+        updateNpcMovement(buffer);
+        processNewNpcs(buffer, packetSize);
         parseNpcUpdateMasks(buffer, packetSize, 838);
-        for (int j = 0; j < removePlayerCount; j++) {
-            int k = removePlayers[j];
-            if (npcs[k].pulseCycle != pulseCycle) {
-                npcs[k].npcDefinition = null;
-                npcs[k] = null;
+        for (int i = 0; i < enityUpdateCount; i++) {
+            int npcIndex = eneityUpdateIndices[i];
+            if (npcs[npcIndex].pulseCycle != pulseCycle) {
+                npcs[npcIndex].npcDefinition = null;
+                npcs[npcIndex] = null;
             }
         }
 
@@ -4247,23 +4245,23 @@ public class Game extends GameShell {
         }
     }
 
-    private void drawMinimap(ImageRGB sprite, int x, int y) {
-        int r = x * x + y * y;
+    private void drawMinimapMark(ImageRGB sprite, int mapX, int mapY) {
+        int len = mapX * mapX + mapY * mapY;
 
-        if (r > 4225 && r < 0x15f90) {
+        if (len > 4225 && len < 90000) {
             int theta = cameraHorizontal + cameraYawOffset & 0x7ff;
             int sin = Model.SINE[theta];
             int cos = Model.COSINE[theta];
             sin = (sin * 256) / (mapZoomOffset + 256);
             cos = (cos * 256) / (mapZoomOffset + 256);
-            int l1 = y * sin + x * cos >> 16;
-            int i2 = y * cos - x * sin >> 16;
-            double d = Math.atan2(l1, i2);
-            int j2 = (int) (Math.sin(d) * 63D);
-            int k2 = (int) (Math.cos(d) * 57D);
-            minimapEdge.method466(256, 15, (94 + j2 + 4) - 10, 15, 20, anInt1119, 20, d, 83 - k2 - 20);
+            int x = mapY * sin + mapX * cos >> 16;
+            int y = mapY * cos - mapX * sin >> 16;
+            double angle = Math.atan2(x, y);
+            int drawX = (int) (Math.sin(angle) * 63D);
+            int drawY = (int) (Math.cos(angle) * 57D);
+            minimapEdge.drawRotated((94 + drawX + 4) - 10, 83 - drawY - 20, 15, 15, 20, 20, 256, angle);
         } else {
-            drawOnMinimap(sprite, x, y);
+            drawOnMinimap(sprite, mapX, mapY);
         }
     }
 
@@ -7341,7 +7339,7 @@ public class Game extends GameShell {
                     int npcX = npc.worldX / 32 - localPlayer.worldX / 32;
                     int npcY = npc.worldY / 32 - localPlayer.worldY / 32;
 
-                    drawMinimap(aClass50_Sub1_Sub1_Sub1_1037, npcX, npcY);
+                    drawMinimapMark(aClass50_Sub1_Sub1_Sub1_1037, npcX, npcY);
                 }
             }
 
@@ -7349,7 +7347,7 @@ public class Game extends GameShell {
                 int hintX = ((hintIconX - nextTopLeftTileX) * 4 + 2) - localPlayer.worldX / 32;
                 int hintY = ((hintIconY - nextTopRightTileY) * 4 + 2) - localPlayer.worldY / 32;
 
-                drawMinimap(aClass50_Sub1_Sub1_Sub1_1037, hintX, hintY);
+                drawMinimapMark(aClass50_Sub1_Sub1_Sub1_1037, hintX, hintY);
             }
 
             if (headIconDrawType == 10 && otherPlayerId >= 0 && otherPlayerId < players.length) {
@@ -7359,7 +7357,7 @@ public class Game extends GameShell {
                     int playerX = player.worldX / 32 - localPlayer.worldX / 32;
                     int playerY = player.worldY / 32 - localPlayer.worldY / 32;
 
-                    drawMinimap(aClass50_Sub1_Sub1_Sub1_1037, playerX, playerY);
+                    drawMinimapMark(aClass50_Sub1_Sub1_Sub1_1037, playerX, playerY);
                 }
             }
         }
@@ -7782,7 +7780,7 @@ public class Game extends GameShell {
     }
 
     private void updatePlayers(int size, Buffer buffer) {
-        removePlayerCount = 0;
+        enityUpdateCount = 0;
         updatedPlayerCount = 0;
 
         updateLocalPlayerMovement(buffer);
@@ -7790,8 +7788,8 @@ public class Game extends GameShell {
         addNewPlayers(size, buffer);
         parsePlayerBlocks(buffer);
 
-        for (int i = 0; i < removePlayerCount; i++) {
-            int index = removePlayers[i];
+        for (int i = 0; i < enityUpdateCount; i++) {
+            int index = eneityUpdateIndices[i];
 
             if (players[index].pulseCycle != pulseCycle)
                 players[index] = null;
@@ -8656,7 +8654,7 @@ public class Game extends GameShell {
 
         if (playerCount < localPlayerCount) {
             for (int i = playerCount; i < localPlayerCount; i++)
-                removePlayers[removePlayerCount++] = playerList[i];
+                eneityUpdateIndices[enityUpdateCount++] = playerList[i];
         }
 
         if (playerCount > localPlayerCount) {
@@ -8708,7 +8706,7 @@ public class Game extends GameShell {
                     if (updateRequired == 1)
                         updatedPlayers[updatedPlayerCount++] = id;
                 } else if (moveType == MovementType.TELEPORT) {
-                    removePlayers[removePlayerCount++] = id;
+                    eneityUpdateIndices[enityUpdateCount++] = id;
                 }
             }
         }
@@ -10340,8 +10338,8 @@ public class Game extends GameShell {
         int k1 = y * i1 + x * j1 >> 16;
         int l1 = y * j1 - x * i1 >> 16;
         if (l > 2500) {
-            sprite.method467(minimapBackgroundImage, 83 - l1 - sprite.maxHeight
-                    / 2 - 4, -49993, ((94 + k1) - sprite.maxWidth / 2) + 4);
+            sprite.drawTo(minimapBackgroundImage, ((94 + k1) - sprite.maxWidth / 2) + 4, 83 - l1 - sprite.maxHeight
+                    / 2 - 4);
         } else {
             sprite.drawImage(((94 + k1) - sprite.maxWidth / 2) + 4, 83 - l1 - sprite.maxHeight / 2 - 4
             );
@@ -10428,9 +10426,7 @@ public class Game extends GameShell {
         }
     }
 
-    private void method132(Buffer buffer, int i, boolean flag) {
-        if (flag)
-            anInt1140 = 287;
+    private void processNewNpcs(Buffer buffer, int i) {
         while (buffer.bitPosition + 21 < i * 8) {
             int j = buffer.getBits(14);
             if (j == 16383)

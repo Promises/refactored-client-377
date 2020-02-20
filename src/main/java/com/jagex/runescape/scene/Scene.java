@@ -626,7 +626,7 @@ public class Scene {
         }
     }
 
-    public int method271(int z, int x, int y, int l) {
+    public int getArrangement(int z, int x, int y, int l) {
         SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return -1;

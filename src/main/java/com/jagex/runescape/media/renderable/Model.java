@@ -73,7 +73,7 @@ public class Model extends Renderable {
     public static int cursorX;
     public static int cursorY;
     public static int resourceCount;
-    public static int[] anIntArray1709 = new int[1000];
+    public static int[] hoveredHash = new int[1000];
     public static int[] SINE;
     public static int[] COSINE;
     private static int[] HSLtoRGB;
@@ -1487,7 +1487,7 @@ public class Model extends Renderable {
             int k6 = cursorY - Rasterizer3D.centerY;
             if (i6 > k3 && i6 < l3 && k6 > i5 && k6 < k4) {
                 if (singleTile) {
-                    anIntArray1709[resourceCount++] = i2;
+                    hoveredHash[resourceCount++] = i2;
                 } else {
                     flag1 = true;
                 }
@@ -1561,7 +1561,7 @@ public class Model extends Renderable {
                     if (flag1
                             && method602(cursorX, cursorY, vertexScreenY[l], vertexScreenY[k1],
                             vertexScreenY[j2], i3, l3, k4)) {
-                        anIntArray1709[resourceCount++] = i;
+                        hoveredHash[resourceCount++] = i;
                         flag1 = false;
                     }
                     if ((i3 - l3) * (vertexScreenY[j2] - vertexScreenY[k1])
