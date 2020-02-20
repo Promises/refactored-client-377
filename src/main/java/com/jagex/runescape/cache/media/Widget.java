@@ -47,7 +47,7 @@ public class Widget {
 	public static int anInt243;
 	public int itemSpritePadsY;
 	public ImageRGB enabledImage;
-	public static int anInt246 = -1;
+	public static int instanceWidgetParent = -1;
 	public boolean typeFaceShadowed;
 	public int parentId;
 	public String enabledText;
@@ -161,7 +161,7 @@ public class Widget {
 		else
 			widget.hoveredPopup = -1;
 		if (widget.contentType == 600)
-			anInt246 = parentId;
+			instanceWidgetParent = parentId;
 		if (widget.contentType == 650)
 			anInt255 = parentId;
 		if (widget.contentType == 655)

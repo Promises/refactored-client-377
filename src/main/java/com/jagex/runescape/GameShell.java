@@ -50,7 +50,6 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public int mouseWheelY;
 
 
-
     public final void initializeApplication(int _width, int _height) {
         width = _width;
         height = _height;
@@ -445,7 +444,7 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
     public void mouseWheelMoved(MouseWheelEvent event) {
         int rotation = event.getWheelRotation();
         if (this instanceof Game) {
-            if(!handleInterfaceScrolling(event, (Game) this)) {
+            if (!handleInterfaceScrolling(event, (Game) this)) {
                 if ((cameraZoom <= 300 && rotation <= 0)
                         || (cameraZoom >= 1200 && rotation >= 0)) {
                     return;
@@ -461,11 +460,20 @@ public class GameShell extends Canvas implements Runnable, MouseListener, MouseM
         if (mouseX > 0 && mouseY > 346 && mouseX < 516 && mouseY < 505 && client.openChatboxWidgetId == -1) {
             if (rotation < 0) {
                 if (client.chatboxInterface.scrollPosition >= 1) {
-                    client.chatboxScroll = client.chatboxScroll + 30;
-                    client.redrawChatbox = true;
+
+                    if (client.inputType == 3) {
+                        client.itemSearchScroll = client.itemSearchScroll - 30;
+                        client.redrawChatbox = true;
+                    } else {
+                        client.chatboxScroll = client.chatboxScroll + 30;
+                        client.redrawChatbox = true;
+                    }
                 }
             } else {
-                if (client.chatboxScroll < 1) {
+                if (client.inputType == 3) {
+                    client.itemSearchScroll = client.itemSearchScroll + 30;
+                    client.redrawChatbox = true;
+                } else if (client.chatboxScroll < 1) {
                     client.chatboxScroll = 0;
                     client.redrawChatbox = true;
                 } else {

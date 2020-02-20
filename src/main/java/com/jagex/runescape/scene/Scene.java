@@ -602,7 +602,7 @@ public class Scene {
         }
     }
 
-    public int method269(int z, int x, int y) {
+    public int getLocationHash(int z, int x, int y) {
         SceneTile sceneTile = groundArray.getTile(z, x, y);
         if (sceneTile == null) {
             return 0;
