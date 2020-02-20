@@ -206,16 +206,16 @@ public class Game extends GameShell {
     private int drawY = -1;
     private int lastSoundType = -1;
     private String chatboxInputMessage = "";
-    private int anInt939;
-    private int anInt940 = 50;
-    private int[] anIntArray941 = new int[anInt940];
-    private int[] anIntArray942 = new int[anInt940];
-    private int[] anIntArray943 = new int[anInt940];
-    private int[] anIntArray944 = new int[anInt940];
-    private int[] anIntArray945 = new int[anInt940];
-    private int[] anIntArray946 = new int[anInt940];
-    private int[] anIntArray947 = new int[anInt940];
-    private String[] aStringArray948 = new String[anInt940];
+    private int spokenCount;
+    private int spokenMax = 50;
+    private int[] spokenX = new int[spokenMax];
+    private int[] spokenY = new int[spokenMax];
+    private int[] spokenOffsetY = new int[spokenMax];
+    private int[] spokenOffsetX = new int[spokenMax];
+    private int[] spokenColour = new int[spokenMax];
+    private int[] spokenEffect = new int[spokenMax];
+    private int[] spokenCycle = new int[spokenMax];
+    private String[] spoken = new String[spokenMax];
     private String inputInputMessage = "";
     private boolean drawTabIcons = false;
     private int tickDelta;
@@ -226,17 +226,17 @@ public class Game extends GameShell {
     private int fullscreenWidgetChildId = -1;
     private int thisPlayerServerId = -1;
     private Buffer outBuffer = Buffer.allocate(1);
-    private IndexedImage anIndexedImage1052;
-    private IndexedImage anIndexedImage1053;
-    private IndexedImage anIndexedImage1054;
-    private int anInt968 = 2048;
-    private int thisPlayerId = 2047;
-    private Player[] players = new Player[anInt968];
+    private IndexedImage bottomChatBack;
+    private IndexedImage tabBottomBack;
+    private IndexedImage tabTopBack;
+    private int maxPlayerCount = 2048;
+    private int maxPlayerIndex = 2047;
+    private Player[] players = new Player[maxPlayerCount];
     private int localPlayerCount;
-    private int[] playerList = new int[anInt968];
+    private int[] playerList = new int[maxPlayerCount];
     private int updatedPlayerCount;
-    private int[] updatedPlayers = new int[anInt968];
-    private Buffer[] cachedAppearances = new Buffer[anInt968];
+    private int[] updatedPlayers = new int[maxPlayerCount];
+    private Buffer[] cachedAppearances = new Buffer[maxPlayerCount];
     private IndexedImage[] tabIcon = new IndexedImage[13];
     private int loginScreenFocus;
     private int[] firstMenuOperand = new int[500];
@@ -257,7 +257,7 @@ public class Game extends GameShell {
     private int anInt995;
     private int anInt996;
     private int anInt997;
-    private int anInt998;
+    private int showChatEffects;
     private int[] chatboxLineOffsets;
     private int[] sidebarOffsets;
     private int[] viewportOffsets;
@@ -319,7 +319,7 @@ public class Game extends GameShell {
     private int minimapHintCount;
     private int[] minimapHintX = new int[1000];
     private int[] minimapHintY = new int[1000];
-    private ImageRGB[] aClass50_Sub1_Sub1_Sub1Array1079 = new ImageRGB[32];
+    private ImageRGB[] headiconsPrayer = new ImageRGB[32];
     private int anInt1080 = 0x4d4233;
     private int lastPasswordChangeTime;
     private int[] anIntArray1084;
@@ -382,7 +382,7 @@ public class Game extends GameShell {
     private String selectedItemName;
     private int otherPlayerId;
     private int anInt1152;
-    private IndexedImage[] aClass50_Sub1_Sub1_Sub3Array1153 = new IndexedImage[100];
+    private IndexedImage[] mapIcons = new IndexedImage[100];
     private boolean lastItemDragged = false;
     private ProducingGraphicsBuffer tabImageProducer;
     private ProducingGraphicsBuffer aClass18_1157;
@@ -401,7 +401,7 @@ public class Game extends GameShell {
     private int[] anIntArray1177;
     private int lastSoundPosition;
     private int[] anIntArray1180 = new int[33];
-    private ImageRGB[] aClass50_Sub1_Sub1_Sub1Array1182 = new ImageRGB[20];
+    private ImageRGB[] hitmarks = new ImageRGB[20];
     private int menuActionRow;
     private String[] menuActionTexts = new String[500];
     private IndexedImage inventoryBackgroundImage;
@@ -487,7 +487,7 @@ public class Game extends GameShell {
     private boolean loadingError = false;
     private int anInt1284;
     private int[] anIntArray1286 = new int[33];
-    private ImageRGB[] aClass50_Sub1_Sub1_Sub1Array1288 = new ImageRGB[32];
+    private ImageRGB[] headiconsPk = new ImageRGB[32];
     private int secondaryCameraVertical;
     private int[] anIntArray1290 = {17, 24, 34, 40};
     private IndexedImage titleboxImage;
@@ -922,9 +922,9 @@ public class Game extends GameShell {
         if (mouseCapturer != null)
             mouseCapturer.capturing = false;
         mouseCapturer = null;
-        anIndexedImage1052 = null;
-        anIndexedImage1053 = null;
-        anIndexedImage1054 = null;
+        bottomChatBack = null;
+        tabBottomBack = null;
+        tabTopBack = null;
         aClass18_910 = null;
         aClass18_911 = null;
         aClass18_912 = null;
@@ -941,9 +941,9 @@ public class Game extends GameShell {
         aClass18_1199 = null;
         aClass18_1200 = null;
         minimapCompass = null;
-        aClass50_Sub1_Sub1_Sub1Array1182 = null;
-        aClass50_Sub1_Sub1_Sub1Array1288 = null;
-        aClass50_Sub1_Sub1_Sub1Array1079 = null;
+        hitmarks = null;
+        headiconsPk = null;
+        headiconsPrayer = null;
         imageHeadIcons = null;
         cursorCross = null;
         stopMidi();
@@ -970,7 +970,7 @@ public class Game extends GameShell {
         npcIds = null;
         aByteArray1245 = null;
         chatBuffer = null;
-        aClass50_Sub1_Sub1_Sub3Array1153 = null;
+        mapIcons = null;
         worldMapHintIcons = null;
         tileRenderCount = null;
         tabIcon = null;
@@ -2849,7 +2849,7 @@ public class Game extends GameShell {
                     }
                 }
 
-                for (int id = 0; id < anInt968; id++) {
+                for (int id = 0; id < maxPlayerCount; id++) {
                     Player player = players[id];
                     if (player != null) {
                         for (int pos = 0; pos < 10; pos++) {
@@ -3556,7 +3556,7 @@ public class Game extends GameShell {
 
 
         if (moveType == MovementType.NONE) {
-            updatedPlayers[updatedPlayerCount++] = thisPlayerId;
+            updatedPlayers[updatedPlayerCount++] = maxPlayerIndex;
             return;
         }
 
@@ -3568,7 +3568,7 @@ public class Game extends GameShell {
             int blockUpdateRequired = buffer.getBits(1);
 
             if (blockUpdateRequired == 1)
-                updatedPlayers[updatedPlayerCount++] = thisPlayerId;
+                updatedPlayers[updatedPlayerCount++] = maxPlayerIndex;
             return;
         }
 
@@ -3584,7 +3584,7 @@ public class Game extends GameShell {
             int blockUpdateRequired = buffer.getBits(1);
 
             if (blockUpdateRequired == 1)
-                updatedPlayers[updatedPlayerCount++] = thisPlayerId;
+                updatedPlayers[updatedPlayerCount++] = maxPlayerIndex;
             return;
         }
 
@@ -3596,7 +3596,7 @@ public class Game extends GameShell {
             int blockUpdateRequired = buffer.getBits(1);
 
             if (blockUpdateRequired == 1)
-                updatedPlayers[updatedPlayerCount++] = thisPlayerId;
+                updatedPlayers[updatedPlayerCount++] = maxPlayerIndex;
 
             localPlayer.setPosition(localX, localY, discardWalkingQueue == 1);
         }
@@ -5106,9 +5106,9 @@ public class Game extends GameShell {
             inventoryBackgroundImage = new IndexedImage(archiveMedia, "invback", 0);
             chatboxBackgroundImage = new IndexedImage(archiveMedia, "chatback", 0);
             minimapBackgroundImage = new IndexedImage(archiveMedia, "mapback", 0);
-            anIndexedImage1052 = new IndexedImage(archiveMedia, "backbase1", 0);
-            anIndexedImage1053 = new IndexedImage(archiveMedia, "backbase2", 0);
-            anIndexedImage1054 = new IndexedImage(archiveMedia, "backhmid1", 0);
+            bottomChatBack = new IndexedImage(archiveMedia, "backbase1", 0);
+            tabBottomBack = new IndexedImage(archiveMedia, "backbase2", 0);
+            tabTopBack = new IndexedImage(archiveMedia, "backhmid1", 0);
 
             for (int i = 0; i < 13; i++)
                 tabIcon[i] = new IndexedImage(archiveMedia, "sideicons", i);
@@ -5118,19 +5118,19 @@ public class Game extends GameShell {
             minimapEdge.trim();
 
             for (int i = 0; i < 72; i++)
-                aClass50_Sub1_Sub1_Sub3Array1153[i] = new IndexedImage(archiveMedia, "mapscene", i);
+                mapIcons[i] = new IndexedImage(archiveMedia, "mapscene", i);
 
             for (int i = 0; i < 70; i++)
                 worldMapHintIcons[i] = new ImageRGB(archiveMedia, "mapfunction", i);
 
             for (int i = 0; i < 5; i++)
-                aClass50_Sub1_Sub1_Sub1Array1182[i] = new ImageRGB(archiveMedia, "hitmarks", i);
+                hitmarks[i] = new ImageRGB(archiveMedia, "hitmarks", i);
 
             for (int i = 0; i < 6; i++)
-                aClass50_Sub1_Sub1_Sub1Array1288[i] = new ImageRGB(archiveMedia, "headicons_pk", i);
+                headiconsPk[i] = new ImageRGB(archiveMedia, "headicons_pk", i);
 
             for (int i = 0; i < 9; i++)
-                aClass50_Sub1_Sub1_Sub1Array1079[i] = new ImageRGB(archiveMedia, "headicons_prayer", i);
+                headiconsPrayer[i] = new ImageRGB(archiveMedia, "headicons_prayer", i);
 
             for (int i = 0; i < 6; i++)
                 imageHeadIcons[i] = new ImageRGB(archiveMedia, "headicons_hint", i);
@@ -5223,8 +5223,8 @@ public class Game extends GameShell {
                 if (worldMapHintIcons[i] != null)
                     worldMapHintIcons[i].adjustRGB(red, green, blue);
 
-                if (aClass50_Sub1_Sub1_Sub3Array1153[i] != null)
-                    aClass50_Sub1_Sub1_Sub3Array1153[i].mixPalette(red, green, blue);
+                if (mapIcons[i] != null)
+                    mapIcons[i].mixPalette(red, green, blue);
             }
 
             drawLoadingText(83, "Unpacking textures");
@@ -5800,7 +5800,7 @@ public class Game extends GameShell {
         if (actor.faceActor >= 32768) {
             int playerIndex = actor.faceActor - 32768;
             if (playerIndex == thisPlayerServerId)
-                playerIndex = thisPlayerId;
+                playerIndex = maxPlayerIndex;
             Player player = players[playerIndex];
             if (player != null) {
                 int dx = actor.worldX - player.worldX;
@@ -6036,7 +6036,7 @@ public class Game extends GameShell {
             }
             drawTabIcons = false;
             aClass18_1110.createRasterizer();
-            anIndexedImage1054.drawImage(0, 0);
+            tabTopBack.drawImage(0, 0);
             if (tabAreaOverlayWidgetId == -1) {
                 if (tabWidgetIds[currentTabId] != -1) {
                     if (currentTabId == 0)
@@ -6071,7 +6071,7 @@ public class Game extends GameShell {
             }
             aClass18_1110.drawGraphics(516, 160, super.gameGraphics);
             aClass18_1109.createRasterizer();
-            anIndexedImage1053.drawImage(0, 0);
+            tabBottomBack.drawImage(0, 0);
             if (tabAreaOverlayWidgetId == -1) {
                 if (tabWidgetIds[currentTabId] != -1) {
                     if (currentTabId == 7)
@@ -6109,7 +6109,7 @@ public class Game extends GameShell {
         if (redrawChatMode) {
             redrawChatMode = false;
             aClass18_1108.createRasterizer();
-            anIndexedImage1052.drawImage(0, 0);
+            bottomChatBack.drawImage(0, 0);
             fontNormal.drawStringCenter("Public chat", 55, 28, 0xffffff, true);
             if (publicChatMode == 0)
                 fontNormal.drawStringCenter("On", 55, 41, 65280, true);
@@ -6425,7 +6425,7 @@ public class Game extends GameShell {
                 localPlayerCount = 0;
                 npcCount = 0;
 
-                for (int i2 = 0; i2 < anInt968; i2++) {
+                for (int i2 = 0; i2 < maxPlayerCount; i2++) {
                     players[i2] = null;
                     cachedAppearances[i2] = null;
                 }
@@ -6433,7 +6433,7 @@ public class Game extends GameShell {
                 for (int k2 = 0; k2 < 16384; k2++)
                     npcs[k2] = null;
 
-                localPlayer = players[thisPlayerId] = new Player();
+                localPlayer = players[maxPlayerIndex] = new Player();
 
                 projectileQueue.clear();
                 gameAnimableObjectQueue.clear();
@@ -7140,7 +7140,7 @@ public class Game extends GameShell {
 
     private void processActorOverheadText() {
         for (int i = -1; i < localPlayerCount; i++) {
-            int index = i == -1 ? thisPlayerId : playerList[i];
+            int index = i == -1 ? maxPlayerIndex : playerList[i];
             Player player = players[index];
 
             if (player != null && player.textCycle > 0) {
@@ -7249,7 +7249,7 @@ public class Game extends GameShell {
                 if (mmBackgroundPixels[i] == 0)
                     rasterPixels[i] = 0;
 
-            minimapCompass.shapeImageToPixels(0, 33, 25, 33, anIntArray1286, 0, cameraHorizontal, 256,
+            minimapCompass.shapeImageToPixels(0, 0, 33, 33, 256, 25, anIntArray1286, cameraHorizontal,
                     anIntArray1180, 25);
             gameScreenImageProducer.createRasterizer();
 
@@ -7261,10 +7261,10 @@ public class Game extends GameShell {
         int centerX = 48 + localPlayer.worldX / 32;
         int centerY = 464 - localPlayer.worldY / 32;
 
-        minimapImage.shapeImageToPixels(5, 151, centerX, 146, anIntArray920,
-                25, angle, 256 + mapZoomOffset, anIntArray1019, centerY);
-        minimapCompass.shapeImageToPixels(0, 33, 25, 33, anIntArray1286,
-                0, cameraHorizontal, 256, anIntArray1180, 25);
+        minimapImage.shapeImageToPixels(25, 5, 146, 151, 256 + mapZoomOffset, centerX, anIntArray920,
+                angle, anIntArray1019, centerY);
+        minimapCompass.shapeImageToPixels(0, 0, 33, 33, 256, 25, anIntArray1286,
+                cameraHorizontal, anIntArray1180, 25);
 
         for (int i = 0; i < minimapHintCount; i++) {
             int hintX = (minimapHintX[i] * 4 + 2) - localPlayer.worldX / 32;
@@ -7938,7 +7938,7 @@ public class Game extends GameShell {
         for (int i = -1; i < localPlayerCount; i++) {
             int index;
             if (i == -1) {
-                index = thisPlayerId;
+                index = maxPlayerIndex;
             } else {
                 index = playerList[i];
             }
@@ -8301,7 +8301,7 @@ public class Game extends GameShell {
         if (action == 5)
             oneMouseButton = config;
         if (action == 6)
-            anInt998 = config;
+            showChatEffects = config;
         if (action == 8) {
             anInt1223 = config;
             redrawChatbox = true;
@@ -8923,7 +8923,7 @@ public class Game extends GameShell {
             int hash;
             if (priority) {
                 player = localPlayer;
-                hash = thisPlayerId << 14;
+                hash = maxPlayerIndex << 14;
             } else {
                 player = players[playerList[p]];
                 hash = playerList[p] << 14;
@@ -9288,11 +9288,11 @@ public class Game extends GameShell {
         if (action == Actions.CLOSE_WIDGETS)
             closeWidgets();
         if (action == 918) {
-            Player class50_sub1_sub4_sub3_sub2_4 = players[clicked];
-            if (class50_sub1_sub4_sub3_sub2_4 != null) {
-                walk(false, false, class50_sub1_sub4_sub3_sub2_4.pathY[0],
+            Player clickedPlayer = players[clicked];
+            if (clickedPlayer != null) {
+                walk(false, false, clickedPlayer.pathY[0],
                         localPlayer.pathY[0], 1, 1, 2, 0,
-                        class50_sub1_sub4_sub3_sub2_4.pathX[0], 0, 0,
+                        clickedPlayer.pathX[0], 0, 0,
                         localPlayer.pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
@@ -9779,7 +9779,7 @@ public class Game extends GameShell {
     }
 
     private void drawScene2d(boolean flag) {
-        anInt939 = 0;
+        spokenCount = 0;
         for (int i = -1; i < localPlayerCount + npcCount; i++) {
             Object obj;
             if (i == -1)
@@ -9791,25 +9791,25 @@ public class Game extends GameShell {
             if (obj == null || !((Actor) (obj)).isVisible())
                 continue;
             if (obj instanceof Npc) {
-                ActorDefinition class37 = ((Npc) obj).npcDefinition;
-                if (class37.childrenIds != null)
-                    class37 = class37.getChildDefinition();
-                if (class37 == null)
+                ActorDefinition npc = ((Npc) obj).npcDefinition;
+                if (npc.childrenIds != null)
+                    npc = npc.getChildDefinition();
+                if (npc == null)
                     continue;
             }
             if (i < localPlayerCount) {
                 int k = 30;
-                Player class50_sub1_sub4_sub3_sub2 = (Player) obj;
-                if (class50_sub1_sub4_sub3_sub2.isSkulled != -1 || class50_sub1_sub4_sub3_sub2.headIcon != -1) {
+                Player otherPlayer = (Player) obj;
+                if (otherPlayer.isSkulled != -1 || otherPlayer.headIcon != -1) {
                     setDrawXY(((Actor) (obj)), ((Actor) (obj)).modelHeight + 15);
                     if (drawX > -1) {
-                        if (class50_sub1_sub4_sub3_sub2.isSkulled != -1) {
-                            aClass50_Sub1_Sub1_Sub1Array1288[class50_sub1_sub4_sub3_sub2.isSkulled].drawImage(drawX - 12, drawY
+                        if (otherPlayer.isSkulled != -1) {
+                            headiconsPk[otherPlayer.isSkulled].drawImage(drawX - 12, drawY
                                     - k);
                             k += 25;
                         }
-                        if (class50_sub1_sub4_sub3_sub2.headIcon != -1) {
-                            aClass50_Sub1_Sub1_Sub1Array1079[class50_sub1_sub4_sub3_sub2.headIcon].drawImage(drawX - 12, drawY
+                        if (otherPlayer.headIcon != -1) {
+                            headiconsPrayer[otherPlayer.headIcon].drawImage(drawX - 12, drawY
                                     - k);
                             k += 25;
                         }
@@ -9822,10 +9822,10 @@ public class Game extends GameShell {
                 }
             } else {
                 ActorDefinition class37_1 = ((Npc) obj).npcDefinition;
-                if (class37_1.headIcon >= 0 && class37_1.headIcon < aClass50_Sub1_Sub1_Sub1Array1079.length) {
+                if (class37_1.headIcon >= 0 && class37_1.headIcon < headiconsPrayer.length) {
                     setDrawXY(((Actor) (obj)), ((Actor) (obj)).modelHeight + 15);
                     if (drawX > -1)
-                        aClass50_Sub1_Sub1_Sub1Array1079[class37_1.headIcon].drawImage(drawX - 12, drawY - 30
+                        headiconsPrayer[class37_1.headIcon].drawImage(drawX - 12, drawY - 30
                         );
                 }
                 if (headIconDrawType == 1 && anInt1226 == npcIds[i - localPlayerCount] && pulseCycle % 20 < 10) {
@@ -9838,24 +9838,24 @@ public class Game extends GameShell {
                     && (i >= localPlayerCount || publicChatMode == 0 || publicChatMode == 3 || publicChatMode == 1
                     && hasFriend(((Player) obj).playerName))) {
                 setDrawXY(((Actor) (obj)), ((Actor) (obj)).modelHeight);
-                if (drawX > -1 && anInt939 < anInt940) {
-                    anIntArray944[anInt939] = fontBold.getDisplayedWidth(((Actor) (obj)).forcedChat
+                if (drawX > -1 && spokenCount < spokenMax) {
+                    spokenOffsetX[spokenCount] = fontBold.getDisplayedWidth(((Actor) (obj)).forcedChat
                     ) / 2;
-                    anIntArray943[anInt939] = fontBold.characterDefaultHeight;
-                    anIntArray941[anInt939] = drawX;
-                    anIntArray942[anInt939] = drawY;
-                    anIntArray945[anInt939] = ((Actor) (obj)).textColour;
-                    anIntArray946[anInt939] = ((Actor) (obj)).textEffect;
-                    anIntArray947[anInt939] = ((Actor) (obj)).textCycle;
-                    aStringArray948[anInt939++] = ((Actor) (obj)).forcedChat;
-                    if (anInt998 == 0 && ((Actor) (obj)).textEffect >= 1 && ((Actor) (obj)).textEffect <= 3) {
-                        anIntArray943[anInt939] += 10;
-                        anIntArray942[anInt939] += 5;
+                    spokenOffsetY[spokenCount] = fontBold.characterDefaultHeight;
+                    spokenX[spokenCount] = drawX;
+                    spokenY[spokenCount] = drawY;
+                    spokenColour[spokenCount] = ((Actor) (obj)).textColour;
+                    spokenEffect[spokenCount] = ((Actor) (obj)).textEffect;
+                    spokenCycle[spokenCount] = ((Actor) (obj)).textCycle;
+                    spoken[spokenCount++] = ((Actor) (obj)).forcedChat;
+                    if (showChatEffects == 0 && ((Actor) (obj)).textEffect >= 1 && ((Actor) (obj)).textEffect <= 3) {
+                        spokenOffsetY[spokenCount] += 10;
+                        spokenY[spokenCount] += 5;
                     }
-                    if (anInt998 == 0 && ((Actor) (obj)).textEffect == 4)
-                        anIntArray944[anInt939] = 60;
-                    if (anInt998 == 0 && ((Actor) (obj)).textEffect == 5)
-                        anIntArray943[anInt939] += 5;
+                    if (showChatEffects == 0 && ((Actor) (obj)).textEffect == 4)
+                        spokenOffsetX[spokenCount] = 60;
+                    if (showChatEffects == 0 && ((Actor) (obj)).textEffect == 5)
+                        spokenOffsetY[spokenCount] += 5;
                 }
             }
             if (((Actor) (obj)).endCycle > pulseCycle) {
@@ -9882,7 +9882,7 @@ public class Game extends GameShell {
                             drawX += 15;
                             drawY -= 10;
                         }
-                        aClass50_Sub1_Sub1_Sub1Array1182[((Actor) (obj)).hitTypes[i1]].drawImage(
+                        hitmarks[((Actor) (obj)).hitTypes[i1]].drawImage(
                                 drawX - 12, drawY - 12);
                         fontSmall.drawStringLeft(String
                                 .valueOf(((Actor) (obj)).hitDamages[i1]), drawX, drawY + 4, 0);
@@ -9893,39 +9893,39 @@ public class Game extends GameShell {
 
         }
 
-        for (int j = 0; j < anInt939; j++) {
-            int j1 = anIntArray941[j];
-            int k1 = anIntArray942[j];
-            int l1 = anIntArray944[j];
-            int i2 = anIntArray943[j];
+        for (int j = 0; j < spokenCount; j++) {
+            int j1 = spokenX[j];
+            int k1 = spokenY[j];
+            int l1 = spokenOffsetX[j];
+            int i2 = spokenOffsetY[j];
             boolean flag1 = true;
             while (flag1) {
                 flag1 = false;
                 for (int j2 = 0; j2 < j; j2++)
-                    if (k1 + 2 > anIntArray942[j2] - anIntArray943[j2] && k1 - i2 < anIntArray942[j2] + 2
-                            && j1 - l1 < anIntArray941[j2] + anIntArray944[j2]
-                            && j1 + l1 > anIntArray941[j2] - anIntArray944[j2]
-                            && anIntArray942[j2] - anIntArray943[j2] < k1) {
-                        k1 = anIntArray942[j2] - anIntArray943[j2];
+                    if (k1 + 2 > spokenY[j2] - spokenOffsetY[j2] && k1 - i2 < spokenY[j2] + 2
+                            && j1 - l1 < spokenX[j2] + spokenOffsetX[j2]
+                            && j1 + l1 > spokenX[j2] - spokenOffsetX[j2]
+                            && spokenY[j2] - spokenOffsetY[j2] < k1) {
+                        k1 = spokenY[j2] - spokenOffsetY[j2];
                         flag1 = true;
                     }
 
             }
-            drawX = anIntArray941[j];
-            drawY = anIntArray942[j] = k1;
-            String s = aStringArray948[j];
-            if (anInt998 == 0) {
+            drawX = spokenX[j];
+            drawY = spokenY[j] = k1;
+            String s = spoken[j];
+            if (showChatEffects == 0) {
                 int k2 = 0xffff00;
-                if (anIntArray945[j] < 6)
-                    k2 = spokenPalette[anIntArray945[j]];
-                if (anIntArray945[j] == 6)
+                if (spokenColour[j] < 6)
+                    k2 = spokenPalette[spokenColour[j]];
+                if (spokenColour[j] == 6)
                     k2 = renderCount % 20 >= 10 ? 0xffff00 : 0xff0000;
-                if (anIntArray945[j] == 7)
+                if (spokenColour[j] == 7)
                     k2 = renderCount % 20 >= 10 ? 65535 : 255;
-                if (anIntArray945[j] == 8)
+                if (spokenColour[j] == 8)
                     k2 = renderCount % 20 >= 10 ? 0x80ff80 : 45056;
-                if (anIntArray945[j] == 9) {
-                    int l2 = 150 - anIntArray947[j];
+                if (spokenColour[j] == 9) {
+                    int l2 = 150 - spokenCycle[j];
                     if (l2 < 50)
                         k2 = 0xff0000 + 1280 * l2;
                     else if (l2 < 100)
@@ -9933,8 +9933,8 @@ public class Game extends GameShell {
                     else if (l2 < 150)
                         k2 = 65280 + 5 * (l2 - 100);
                 }
-                if (anIntArray945[j] == 10) {
-                    int i3 = 150 - anIntArray947[j];
+                if (spokenColour[j] == 10) {
+                    int i3 = 150 - spokenCycle[j];
                     if (i3 < 50)
                         k2 = 0xff0000 + 5 * i3;
                     else if (i3 < 100)
@@ -9942,8 +9942,8 @@ public class Game extends GameShell {
                     else if (i3 < 150)
                         k2 = (255 + 0x50000 * (i3 - 100)) - 5 * (i3 - 100);
                 }
-                if (anIntArray945[j] == 11) {
-                    int j3 = 150 - anIntArray947[j];
+                if (spokenColour[j] == 11) {
+                    int j3 = 150 - spokenCycle[j];
                     if (j3 < 50)
                         k2 = 0xffffff - 0x50005 * j3;
                     else if (j3 < 100)
@@ -9951,34 +9951,34 @@ public class Game extends GameShell {
                     else if (j3 < 150)
                         k2 = 0xffffff - 0x50000 * (j3 - 100);
                 }
-                if (anIntArray946[j] == 0) {
+                if (spokenEffect[j] == 0) {
                     fontBold.drawStringLeft(s, drawX, drawY + 1, 0);
                     fontBold.drawStringLeft(s, drawX, drawY, k2);
                 }
-                if (anIntArray946[j] == 1) {
+                if (spokenEffect[j] == 1) {
                     fontBold.drawCenteredStringWaveY(s, drawX, drawY + 1, renderCount, 0);
                     fontBold.drawCenteredStringWaveY(s, drawX, drawY, renderCount, k2);
                 }
-                if (anIntArray946[j] == 2) {
+                if (spokenEffect[j] == 2) {
                     fontBold.drawCeneteredStringWaveXY(s, drawX, drawY + 1, renderCount, 0);
                     fontBold.drawCeneteredStringWaveXY(s, drawX, drawY, renderCount, k2);
                 }
-                if (anIntArray946[j] == 3) {
-                    fontBold.drawCenteredStringWaveXYMove(s, drawX, drawY + 1, renderCount, 150 - anIntArray947[j], 0
+                if (spokenEffect[j] == 3) {
+                    fontBold.drawCenteredStringWaveXYMove(s, drawX, drawY + 1, renderCount, 150 - spokenCycle[j], 0
                     );
-                    fontBold.drawCenteredStringWaveXYMove(s, drawX, drawY, renderCount, 150 - anIntArray947[j], k2
+                    fontBold.drawCenteredStringWaveXYMove(s, drawX, drawY, renderCount, 150 - spokenCycle[j], k2
                     );
                 }
-                if (anIntArray946[j] == 4) {
+                if (spokenEffect[j] == 4) {
                     int k3 = fontBold.getDisplayedWidth(s);
-                    int i4 = ((150 - anIntArray947[j]) * (k3 + 100)) / 150;
+                    int i4 = ((150 - spokenCycle[j]) * (k3 + 100)) / 150;
                     Rasterizer.setCoordinates(0, drawX - 50, 334, drawX + 50);
                     fontBold.drawString(s, (drawX + 50) - i4, drawY + 1, 0);
                     fontBold.drawString(s, (drawX + 50) - i4, drawY, k2);
                     Rasterizer.resetCoordinates();
                 }
-                if (anIntArray946[j] == 5) {
-                    int l3 = 150 - anIntArray947[j];
+                if (spokenEffect[j] == 5) {
+                    int l3 = 150 - spokenCycle[j];
                     int j4 = 0;
                     if (l3 < 25)
                         j4 = l3 - 25;
@@ -11603,7 +11603,7 @@ public class Game extends GameShell {
             int i5 = k1 >> 14 & 0x7fff;
             GameObjectDefinition gameObjectDefinition = GameObjectDefinition.getDefinition(i5);
             if (gameObjectDefinition.anInt795 != -1) {
-                IndexedImage indexedImage = aClass50_Sub1_Sub1_Sub3Array1153[gameObjectDefinition.anInt795];
+                IndexedImage indexedImage = mapIcons[gameObjectDefinition.anInt795];
                 if (indexedImage != null) {
                     int i6 = (gameObjectDefinition.sizeX * 4 - indexedImage.width) / 2;
                     int j6 = (gameObjectDefinition.sizeY * 4 - indexedImage.height) / 2;
@@ -11674,7 +11674,7 @@ public class Game extends GameShell {
             int l3 = k1 >> 14 & 0x7fff;
             GameObjectDefinition gameObjectDefinition = GameObjectDefinition.getDefinition(l3);
             if (gameObjectDefinition.anInt795 != -1) {
-                IndexedImage indexedImage = aClass50_Sub1_Sub1_Sub3Array1153[gameObjectDefinition.anInt795];
+                IndexedImage indexedImage = mapIcons[gameObjectDefinition.anInt795];
                 if (indexedImage != null) {
                     int j5 = (gameObjectDefinition.sizeX * 4 - indexedImage.width) / 2;
                     int k5 = (gameObjectDefinition.sizeY * 4 - indexedImage.height) / 2;
@@ -11705,7 +11705,7 @@ public class Game extends GameShell {
             int j2 = k1 >> 14 & 0x7fff;
             GameObjectDefinition class47 = GameObjectDefinition.getDefinition(j2);
             if (class47.anInt795 != -1) {
-                IndexedImage indexedImage = aClass50_Sub1_Sub1_Sub3Array1153[class47.anInt795];
+                IndexedImage indexedImage = mapIcons[class47.anInt795];
                 if (indexedImage != null) {
                     int i4 = (class47.sizeX * 4 - indexedImage.width) / 2;
                     int j4 = (class47.sizeY * 4 - indexedImage.height) / 2;

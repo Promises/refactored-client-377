@@ -339,36 +339,34 @@ public class ImageRGB extends Rasterizer {
 
 	}
 
-	public void shapeImageToPixels(int i, int k, int l, int i1, int[] ai, int j1, int k1, int l1, int[] ai1, int i2) {
+	public void shapeImageToPixels(int x, int y, int width, int height, int zoom, int l, int[] ai, int k1, int[] ai1, int i2) {
 		try {
-			int j2 = -i1 / 2;
-			int k2 = -k / 2;
-			int l2 = (int) (Math.sin(k1 / 326.11000000000001D) * 65536D);
-			int i3 = (int) (Math.cos(k1 / 326.11000000000001D) * 65536D);
-			l2 = l2 * l1 >> 8;
-			i3 = i3 * l1 >> 8;
-			int j3 = (l << 16) + (k2 * l2 + j2 * i3);
-			int k3 = (i2 << 16) + (k2 * i3 - j2 * l2);
-			int l3 = j1 + i * Rasterizer.width;
-			for (i = 0; i < k; i++) {
-				int i4 = ai1[i];
-				int j4 = l3 + i4;
-				int k4 = j3 + i3 * i4;
-				int l4 = k3 - l2 * i4;
-				for (j1 = -ai[i]; j1 < 0; j1++) {
-					Rasterizer.pixels[j4++] = pixels[(k4 >> 16) + (l4 >> 16) * width];
-					k4 += i3;
-					l4 -= l2;
+			int centerX = -width / 2;
+			int centerY = -height / 2;
+			int sine = (int) (Math.sin(k1 / 326.11000000000001D) * 65536D);
+			int cosine = (int) (Math.cos(k1 / 326.11000000000001D) * 65536D);
+			sine = sine * zoom >> 8;
+			cosine = cosine * zoom >> 8;
+			int sourceOffsetX = (l << 16) + (centerY * sine + centerX * cosine);
+			int sourceOffsetY = (i2 << 16) + (centerY * cosine - centerX * sine);
+			int destinationOffset = x + y * Rasterizer.width;
+			for (y = 0; y < height; y++) {
+				int i4 = ai1[y];
+				int j4 = destinationOffset + i4;
+				int k4 = sourceOffsetX + cosine * i4;
+				int l4 = sourceOffsetY - sine * i4;
+				for (x = -ai[y]; x < 0; x++) {
+					Rasterizer.pixels[j4++] = pixels[(k4 >> 16) + (l4 >> 16) * this.width];
+					k4 += cosine;
+					l4 -= sine;
 				}
 
-				j3 += l2;
-				k3 += i3;
-				l3 += Rasterizer.width;
+				sourceOffsetX += sine;
+				sourceOffsetY += cosine;
+				destinationOffset += Rasterizer.width;
 			}
 
-			return;
 		} catch (Exception _ex) {
-			return;
 		}
 	}
 
