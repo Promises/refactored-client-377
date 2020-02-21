@@ -39,7 +39,7 @@ import com.jagex.runescape.net.BufferedConnection;
 import com.jagex.runescape.net.ISAACCipher;
 import com.jagex.runescape.net.requester.OnDemandNode;
 import com.jagex.runescape.net.requester.OnDemandRequester;
-import com.jagex.runescape.scene.Region;
+import com.jagex.runescape.scene.MapRegion;
 import com.jagex.runescape.scene.Scene;
 import com.jagex.runescape.scene.InteractiveObject;
 import com.jagex.runescape.scene.SpawnObjectNode;
@@ -588,7 +588,7 @@ public class Game extends GameShell {
         Scene.lowMemory = false;
         Rasterizer3D.lowMemory = false;
         lowMemory = false;
-        Region.lowMemory = false;
+        MapRegion.lowMemory = false;
         GameObjectDefinition.lowMemory = false;
     }
 
@@ -596,7 +596,7 @@ public class Game extends GameShell {
         Scene.lowMemory = true;
         Rasterizer3D.lowMemory = true;
         lowMemory = true;
-        Region.lowMemory = true;
+        MapRegion.lowMemory = true;
         GameObjectDefinition.lowMemory = true;
     }
 
@@ -3201,11 +3201,11 @@ public class Game extends GameShell {
                 break;
             }
             if (j1 != 0) {
-                if ((j1 < 5 || j1 == 10) && currentCollisionMap[plane].reachedWall(curX, curY, dstX, dstY, j1 - 1, i2)) {
+                if ((j1 < 5 || j1 == 10) && currentCollisionMap[plane].isWalkableA(curX, curY, dstX, dstY, j1 - 1, i2)) {
                     flag2 = true;
                     break;
                 }
-                if (j1 < 10 && currentCollisionMap[plane].reachedWallDecoration(curX, curY, dstX, dstY, j1 - 1, i2)) {
+                if (j1 < 10 && currentCollisionMap[plane].isWalkableB(curX, curY, dstX, dstY, j1 - 1, i2)) {
                     flag2 = true;
                     break;
                 }
@@ -3382,7 +3382,7 @@ public class Game extends GameShell {
                     spawnObjectNode.cycle--;
                 if (spawnObjectNode.cycle == 0) {
                     if (spawnObjectNode.index < 0
-                            || Region.method170(spawnObjectNode.type, spawnObjectNode.index)) {
+                            || MapRegion.method170(spawnObjectNode.type, spawnObjectNode.index)) {
                         addLocation(spawnObjectNode.x, spawnObjectNode.y, spawnObjectNode.plane, spawnObjectNode.index, spawnObjectNode.rotation,
                                 spawnObjectNode.type,
                                 spawnObjectNode.classType);
@@ -3396,7 +3396,7 @@ public class Game extends GameShell {
                             && spawnObjectNode.y >= 1
                             && spawnObjectNode.x <= 102
                             && spawnObjectNode.y <= 102
-                            && (spawnObjectNode.locationIndex < 0 || Region.method170(spawnObjectNode.locationType,
+                            && (spawnObjectNode.locationIndex < 0 || MapRegion.method170(spawnObjectNode.locationType,
                             spawnObjectNode.locationIndex))) {
                         addLocation(spawnObjectNode.x, spawnObjectNode.y, spawnObjectNode.plane, spawnObjectNode.locationIndex, spawnObjectNode.locationRotation,
                                 spawnObjectNode.locationType,
@@ -3894,7 +3894,7 @@ public class Game extends GameShell {
                             || y + class47_1.sizeY > 103)
                         return;
                     if (class47_1.solid)
-                        currentCollisionMap[plane].unmarkSolidOccupant(anInt1055, y, x, locationRot, class47_1.sizeY, class47_1.walkable,
+                        currentCollisionMap[plane].unmarkSolidOccupant(anInt1055, y, x, locationRot, class47_1.sizeY,
                                 class47_1.sizeX);
                 }
                 if (classType == 3) {
@@ -3908,7 +3908,7 @@ public class Game extends GameShell {
                 int objectPlane = plane;
                 if (objectPlane < 3 && (currentSceneTileFlags[1][x][y] & 2) == 2)
                     objectPlane++;
-                Region.forceRenderObject(x, y, plane, objectId, objectType, objectPlane, objectFace, currentScene, currentCollisionMap[plane],
+                MapRegion.forceRenderObject(x, y, plane, objectId, objectType, objectPlane, objectFace, currentScene, currentCollisionMap[plane],
                         intGroundArray);
             }
         }
@@ -6282,7 +6282,7 @@ public class Game extends GameShell {
 
                 }
             } while (onDemandNode.type != 93 || !onDemandRequester.method334(onDemandNode.id, false));
-            Region.passiveRequestGameObjectModels(onDemandRequester, new Buffer(onDemandNode.buffer));
+            MapRegion.passiveRequestGameObjectModels(onDemandRequester, new Buffer(onDemandNode.buffer));
         } while (true);
     }
 
@@ -7560,7 +7560,7 @@ public class Game extends GameShell {
 
             }
 
-            Region region = new Region(currentSceneTileFlags, 104, 104, intGroundArray);
+            MapRegion mapRegion = new MapRegion(104, 104, currentSceneTileFlags, intGroundArray);
             int dataLength = terrainData.length;
             outBuffer.putOpcode(40);
             if (!loadGeneratedMap) {
@@ -7569,7 +7569,7 @@ public class Game extends GameShell {
                     int offsetY = (mapCoordinates[pointer] & 0xff) * 64 - nextTopRightTileY;
                     byte[] data = terrainData[pointer];
                     if (data != null)
-                        region.loadTerrainBlock(offsetX, (chunkX - 6) * 8, offsetY, (chunkY - 6) * 8, data,
+                        mapRegion.loadTerrainBlock(offsetX, (chunkX - 6) * 8, offsetY, (chunkY - 6) * 8, data,
                                 currentCollisionMap);
                 }
 
@@ -7578,7 +7578,7 @@ public class Game extends GameShell {
                     int offsetY = (mapCoordinates[pointer] & 0xff) * 64 - nextTopRightTileY;
                     byte[] data = terrainData[pointer];
                     if (data == null && chunkY < 800)
-                        region.initiateVertexHeights(offsetX, 64, offsetY, 64);
+                        mapRegion.initiateVertexHeights(offsetX, 64, offsetY, 64);
                 }
 
                 outBuffer.putOpcode(40);
@@ -7587,7 +7587,7 @@ public class Game extends GameShell {
                     if (data != null) {
                         int offsetX = (mapCoordinates[_region] >> 8) * 64 - nextTopLeftTileX;
                         int offsetY = (mapCoordinates[_region] & 0xff) * 64 - nextTopRightTileY;
-                        region.loadObjectBlock(offsetX, offsetY, currentCollisionMap, currentScene, data);
+                        mapRegion.loadObjectBlock(offsetX, offsetY, currentCollisionMap, currentScene, data);
                     }
                 }
 
@@ -7607,7 +7607,7 @@ public class Game extends GameShell {
                                 for (int j12 = 0; j12 < mapCoordinates.length; j12++) {
                                     if (mapCoordinates[j12] != l11 || terrainData[j12] == null)
                                         continue;
-                                    region.method168(j10, (j11 & 7) * 8, false, terrainData[j12], k3, l9,
+                                    mapRegion.method168(j10, (j11 & 7) * 8, false, terrainData[j12], k3, l9,
                                             l4 * 8, currentCollisionMap, k6 * 8, (l10 & 7) * 8);
                                     flag = true;
                                     break;
@@ -7615,7 +7615,7 @@ public class Game extends GameShell {
 
                             }
                             if (!flag)
-                                region.method166(k3, k6 * 8, l4 * 8);
+                                mapRegion.method166(k3, k6 * 8, l4 * 8);
                         }
 
                     }
@@ -7626,7 +7626,7 @@ public class Game extends GameShell {
                     for (int l6 = 0; l6 < 13; l6++) {
                         int i8 = constructedMapPalette[0][i5][l6];
                         if (i8 == -1)
-                            region.initiateVertexHeights(i5 * 8, 8, l6 * 8, 8);
+                            mapRegion.initiateVertexHeights(i5 * 8, 8, l6 * 8, 8);
                     }
 
                 }
@@ -7645,7 +7645,7 @@ public class Game extends GameShell {
                                 for (int l12 = 0; l12 < mapCoordinates.length; l12++) {
                                     if (mapCoordinates[l12] != k12 || objectData[l12] == null)
                                         continue;
-                                    region.method172(i7, currentCollisionMap, currentScene, false,
+                                    mapRegion.method172(i7, currentCollisionMap, currentScene, false,
                                             objectData[l12], j9 * 8, i11, (k11 & 7) * 8, j8 * 8,
                                             (i12 & 7) * 8, k10);
                                     break;
@@ -7660,19 +7660,19 @@ public class Game extends GameShell {
 
             }
             outBuffer.putOpcode(40);
-            region.createRegionScene(currentCollisionMap, currentScene);
+            mapRegion.addTiles(currentCollisionMap, currentScene, 0);
             if (gameScreenImageProducer != null) {
                 gameScreenImageProducer.createRasterizer();
                 Rasterizer3D.lineOffsets = viewportOffsets;
             }
             outBuffer.putOpcode(40);
-            int l3 = Region.lowestPlane;
+            int l3 = MapRegion.setZ;
             if (l3 > plane)
                 l3 = plane;
             if (l3 < plane - 1)
                 l3 = plane - 1;
             if (lowMemory)
-                currentScene.setHeightLevel(Region.lowestPlane);
+                currentScene.setHeightLevel(MapRegion.setZ);
             else
                 currentScene.setHeightLevel(0);
             for (int j5 = 0; j5 < 104; j5++) {
@@ -11331,7 +11331,7 @@ public class Game extends GameShell {
     }
 
     private void loadingStages() {
-        if (lowMemory && loadingStage == 2 && Region.onBuildTimePlane != plane) {
+        if (lowMemory && loadingStage == 2 && MapRegion.onBuildTimePlane != plane) {
             method125(null, "Loading - please wait.");
             loadingStage = 1;
             loadRegionTime = System.currentTimeMillis();
@@ -11369,7 +11369,7 @@ public class Game extends GameShell {
                     blockX = 10;
                     blockY = 10;
                 }
-                regionsCached &= Region.regionCached(blockX, blockY, objects);
+                regionsCached &= MapRegion.regionCached(blockX, blockY, objects);
             }
         }
 
@@ -11379,7 +11379,7 @@ public class Game extends GameShell {
             return -4;
         } else {
             loadingStage = 2;
-            Region.onBuildTimePlane = plane;
+            MapRegion.onBuildTimePlane = plane;
             loadRegion();
             outBuffer.putOpcode(6);
             return 0;
