@@ -201,9 +201,9 @@ public class Scene {
         }
     }
 
-    void renderTile(int plane, int x, int y, int clippingPath, int clippingPathRotation, int textureId, int vertexHeightSW, int vertexHeightSE, int vertexHeightNE, int vertexHeightNW, int cA, int cB,
-                    int cD, int cC, int colourA, int colourB, int colourD, int colourC, int underlayRGB, int overlayRGB) {
-        if (clippingPath == 0) {
+    void addTile(int plane, int x, int y, int shape, int clippingPathRotation, int textureId, int vertexHeightSW, int vertexHeightSE, int vertexHeightNE, int vertexHeightNW, int cA, int cB,
+                 int cD, int cC, int colourA, int colourB, int colourD, int colourC, int underlayRGB, int overlayRGB) {
+        if (shape == 0) {
             GenericTile tile = new GenericTile(cA, cB, cC, cD, -1, underlayRGB, false);
             for (int _z = plane; _z >= 0; _z--) {
                 if (groundArray.isTileEmpty(_z, x, y)) {
@@ -212,28 +212,29 @@ public class Scene {
             }
 
             groundArray.getTile(plane, x, y).plainTile = tile;
-            return;
-        }
-        if (clippingPath == 1) {
+        } else if (shape == 1) {
             GenericTile tile = new GenericTile(colourA, colourB, colourC, colourD, textureId, overlayRGB, vertexHeightSW == vertexHeightSE && vertexHeightSW == vertexHeightNE && vertexHeightSW == vertexHeightNW);
             for (int _z = plane; _z >= 0; _z--) {
                 if (groundArray.isTileEmpty(_z, x, y)) {
                     groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
                 }
             }
+            if ((overlayRGB & 0xFF0000) >> 16 >= 160) {
+                System.out.println("FOUND RED INIT!!!" + overlayRGB);
+            }
 
             groundArray.getTile(plane, x, y).plainTile = tile;
-            return;
-        }
-        ComplexTile tile = new ComplexTile(x, vertexHeightSW, vertexHeightSE, vertexHeightNW, vertexHeightNE, y, clippingPathRotation, textureId, clippingPath, cA, colourA, cB, colourB, cC, colourC, cD, colourD, overlayRGB, underlayRGB);
-        for (int _z = plane; _z >= 0; _z--) {
-            if (groundArray.isTileEmpty(_z, x, y)) {
-                groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
+        } else {
+            ComplexTile tile = new ComplexTile(x, vertexHeightSW, vertexHeightSE, vertexHeightNW, vertexHeightNE, y, clippingPathRotation, textureId, shape, cA, colourA, cB, colourB, cC, colourC, cD, colourD, overlayRGB, underlayRGB);
+            for (int _z = plane; _z >= 0; _z--) {
+                if (groundArray.isTileEmpty(_z, x, y)) {
+                    groundArray.setTile(_z, x, y, new SceneTile(x, y, _z));
+                }
             }
+
+
+            groundArray.getTile(plane, x, y).shapedTile = tile;
         }
-
-
-        groundArray.getTile(plane, x, y).shapedTile = tile;
     }
 
     void addGroundDecoration(int x, int y, int z, int drawHeight, int uid, Renderable renderable, byte config) {
@@ -873,8 +874,9 @@ public class Scene {
             if (tileRGB == 0) {
                 return;
             }
-            if((tileRGB & 0xFF0000) >> 16 >= 160){
+            if ((tileRGB & 0xFF0000) >> 16 >= 160) {
                 System.out.println("FOUND RED!!!");
+                System.out.println(genericTile.flat);
             }
             for (int k1 = 0; k1 < 4; k1++) {
                 pixels[pixelPointer] = tileRGB;
@@ -1405,13 +1407,13 @@ public class Scene {
                         }
                     }
                     if (x > cameraPositionTileX && (k4 & 1) != 0) {
-                        SceneTile tile = groundArray.getTile(z, x-1, y);
+                        SceneTile tile = groundArray.getTile(z, x - 1, y);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
                     }
                     if (y > cameraPositionTileY && (k4 & 8) != 0) {
-                        SceneTile tile = groundArray.getTile(z, x, y-1);
+                        SceneTile tile = groundArray.getTile(z, x, y - 1);
                         if (tile != null && tile.visible) {
                             tileList.pushBack(tile);
                         }
@@ -1553,25 +1555,25 @@ public class Scene {
                 continue;
             }
             if (x <= cameraPositionTileX && x > currentPositionX) {
-                SceneTile tile = groundArray.getTile(z, x-1, y);
+                SceneTile tile = groundArray.getTile(z, x - 1, y);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (x >= cameraPositionTileX && x < mapBoundsX - 1) {
-                SceneTile tile = groundArray.getTile(z, x+1, y);
+                SceneTile tile = groundArray.getTile(z, x + 1, y);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (y <= cameraPositionTileY && y > currentPositionY) {
-                SceneTile tile = groundArray.getTile(z, x, y-1);
+                SceneTile tile = groundArray.getTile(z, x, y - 1);
                 if (tile != null && tile.visible) {
                     continue;
                 }
             }
             if (y >= cameraPositionTileY && y < mapBoundsY - 1) {
-                SceneTile tile = groundArray.getTile(z, x, y+1);
+                SceneTile tile = groundArray.getTile(z, x, y + 1);
                 if (tile != null && tile.visible) {
                     continue;
                 }
@@ -1649,31 +1651,31 @@ public class Scene {
                 }
             }
             if (z < mapSizeZ - 1) {
-                SceneTile tile = groundArray.getTile(z+1, x, y);
+                SceneTile tile = groundArray.getTile(z + 1, x, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (x < cameraPositionTileX) {
-                SceneTile tile = groundArray.getTile(z, x+1, y);
+                SceneTile tile = groundArray.getTile(z, x + 1, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (y < cameraPositionTileY) {
-                SceneTile tile = groundArray.getTile(z, x, y+1);
+                SceneTile tile = groundArray.getTile(z, x, y + 1);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (x > cameraPositionTileX) {
-                SceneTile tile = groundArray.getTile(z, x-1, y);
+                SceneTile tile = groundArray.getTile(z, x - 1, y);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
             }
             if (y > cameraPositionTileY) {
-                SceneTile tile = groundArray.getTile(z, x, y-1);
+                SceneTile tile = groundArray.getTile(z, x, y - 1);
                 if (tile != null && tile.visible) {
                     tileList.pushBack(tile);
                 }
@@ -1730,20 +1732,20 @@ public class Scene {
         if (yC < 50) {
             return;
         }
-        int screenXA = Rasterizer3D.centerX + (xA << 9) / yA;
-        int screenYA = Rasterizer3D.centerY + (zA << 9) / yA;
-        int screenXB = Rasterizer3D.centerX + (xB << 9) / yB;
-        int screenYB = Rasterizer3D.centerY + (zB << 9) / yB;
-        int screenXD = Rasterizer3D.centerX + (xD << 9) / yD;
-        int screenYD = Rasterizer3D.centerY + (zC << 9) / yD;
-        int screenXC = Rasterizer3D.centerX + (xC << 9) / yC;
-        int screenYC = Rasterizer3D.centerY + (zD << 9) / yC;
+        int screenXA = Rasterizer3D.center_x + (xA << 9) / yA;
+        int screenYA = Rasterizer3D.center_y + (zA << 9) / yA;
+        int screenXB = Rasterizer3D.center_x + (xB << 9) / yB;
+        int screenYB = Rasterizer3D.center_y + (zB << 9) / yB;
+        int screenXD = Rasterizer3D.center_x + (xD << 9) / yD;
+        int screenYD = Rasterizer3D.center_y + (zC << 9) / yD;
+        int screenXC = Rasterizer3D.center_x + (xC << 9) / yC;
+        int screenYC = Rasterizer3D.center_y + (zD << 9) / yC;
         Rasterizer3D.alpha = 0;
         if ((screenXD - screenXC) * (screenYB - screenYC) - (screenYD - screenYC) * (screenXB - screenXC) > 0) {
-            Rasterizer3D.restrictEdges = screenXD < 0 || screenXC < 0 || screenXB < 0 ||
-                    screenXD > Rasterizer.virtualBottomX ||
-                    screenXC > Rasterizer.virtualBottomX ||
-                    screenXB > Rasterizer.virtualBottomX;
+            Rasterizer3D.restrict_edges = screenXD < 0 || screenXC < 0 || screenXB < 0 ||
+                    screenXD > Rasterizer.viewportRx ||
+                    screenXC > Rasterizer.viewportRx ||
+                    screenXB > Rasterizer.viewportRx;
             if (clicked && isMouseWithinTriangle(clickX, clickY, screenYD, screenYC, screenYB, screenXD, screenXC, screenXB)) {
                 clickedTileX = tileX;
                 clickedTileY = tileY;
@@ -1768,8 +1770,8 @@ public class Scene {
             }
         }
         if ((screenXA - screenXB) * (screenYC - screenYB) - (screenYA - screenYB) * (screenXC - screenXB) > 0) {
-            Rasterizer3D.restrictEdges = screenXA < 0 || screenXB < 0 || screenXC < 0 || screenXA > Rasterizer.virtualBottomX || screenXB > Rasterizer.virtualBottomX
-                    || screenXC > Rasterizer.virtualBottomX;
+            Rasterizer3D.restrict_edges = screenXA < 0 || screenXB < 0 || screenXC < 0 || screenXA > Rasterizer.viewportRx || screenXB > Rasterizer.viewportRx
+                    || screenXC > Rasterizer.viewportRx;
             if (clicked && isMouseWithinTriangle(clickX, clickY, screenYA, screenYB, screenYC, screenXA, screenXB, screenXC)) {
                 clickedTileX = tileX;
                 clickedTileY = tileY;
@@ -1812,8 +1814,8 @@ public class Scene {
                 ComplexTile.viewspaceY[triangle] = viewspaceY;
                 ComplexTile.viewspaceZ[triangle] = viewspaceZ;
             }
-            ComplexTile.screenX[triangle] = Rasterizer3D.centerX + (viewspaceX << 9) / viewspaceZ;
-            ComplexTile.screenY[triangle] = Rasterizer3D.centerY + (viewspaceY << 9) / viewspaceZ;
+            ComplexTile.screenX[triangle] = Rasterizer3D.center_x + (viewspaceX << 9) / viewspaceZ;
+            ComplexTile.screenY[triangle] = Rasterizer3D.center_y + (viewspaceY << 9) / viewspaceZ;
         }
 
         Rasterizer3D.alpha = 0;
@@ -1829,8 +1831,8 @@ public class Scene {
             int screenYB = ComplexTile.screenY[b];
             int screenYC = ComplexTile.screenY[c];
             if ((screenXA - screenXB) * (screenYC - screenYB) - (screenYA - screenYB) * (screenXC - screenXB) > 0) {
-                Rasterizer3D.restrictEdges = screenXA < 0 || screenXB < 0 || screenXC < 0 || screenXA > Rasterizer.virtualBottomX || screenXB > Rasterizer.virtualBottomX
-                        || screenXC > Rasterizer.virtualBottomX;
+                Rasterizer3D.restrict_edges = screenXA < 0 || screenXB < 0 || screenXC < 0 || screenXA > Rasterizer.viewportRx || screenXB > Rasterizer.viewportRx
+                        || screenXC > Rasterizer.viewportRx;
                 if (clicked && isMouseWithinTriangle(clickX, clickY, screenYA, screenYB, screenYC, screenXA, screenXB, screenXC)) {
                     clickedTileX = tileX;
                     clickedTileY = tileY;

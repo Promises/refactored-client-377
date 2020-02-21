@@ -441,7 +441,7 @@ public class ImageRGB extends Rasterizer {
 			return;
 		} else {
 			method468(l, l1, pixels, k1, Rasterizer.pixels,
-					indexedImage.pixels, 40303, j1, i1, 0, i2);
+					indexedImage.imgPixels, 40303, j1, i1, 0, i2);
 			return;
 		}
 	}

@@ -6,9 +6,9 @@ import com.jagex.runescape.net.Buffer;
 
 public class IndexedImage extends Rasterizer {
 
-    public byte[] pixels;
+    public byte[] imgPixels;
     public int[] palette;
-    public int width;
+    public int imgWidth;
     public int height;
     public int xDrawOffset;
     public int yDrawOffset;
@@ -34,57 +34,57 @@ public class IndexedImage extends Rasterizer {
 
         xDrawOffset = indexBuffer.getUnsignedByte();
         yDrawOffset = indexBuffer.getUnsignedByte();
-        width = indexBuffer.getUnsignedShortBE();
+        imgWidth = indexBuffer.getUnsignedShortBE();
         height = indexBuffer.getUnsignedShortBE();
         int type = indexBuffer.getUnsignedByte();
-        int pixelLength = width * height;
-        pixels = new byte[pixelLength];
+        int pixelLength = imgWidth * height;
+        imgPixels = new byte[pixelLength];
         if (type == 0) {
             for (int pixel = 0; pixel < pixelLength; pixel++)
-                pixels[pixel] = dataBuffer.getByte();
+                imgPixels[pixel] = dataBuffer.getByte();
 
             return;
         }
         if (type == 1) {
-            for (int x = 0; x < width; x++) {
+            for (int x = 0; x < imgWidth; x++) {
                 for (int y = 0; y < height; y++)
-                    pixels[x + y * width] = dataBuffer.getByte();
+                    imgPixels[x + y * imgWidth] = dataBuffer.getByte();
 
             }
 
         }
     }
 
-    public void resizeToHalfMax() {
+    public void resizeToHalfLibSize() {
         maxWidth /= 2;
         maxHeight /= 2;
         byte[] resizedPixels = new byte[maxWidth * maxHeight];
         int pixelCount = 0;
         for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++)
-                resizedPixels[(x + xDrawOffset >> 1) + (y + yDrawOffset >> 1) * maxWidth] = pixels[pixelCount++];
+            for (int x = 0; x < imgWidth; x++)
+                resizedPixels[(x + xDrawOffset >> 1) + (y + yDrawOffset >> 1) * maxWidth] = imgPixels[pixelCount++];
 
         }
 
-        pixels = resizedPixels;
-        width = maxWidth;
+        imgPixels = resizedPixels;
+        imgWidth = maxWidth;
         height = maxHeight;
         xDrawOffset = 0;
         yDrawOffset = 0;
     }
 
-    public void resizeToMax() {
-        if (width != maxWidth || height != maxHeight) {
+    public void resizeToLibSize() {
+        if (imgWidth != maxWidth || height != maxHeight) {
             byte[] resizedPixels = new byte[maxWidth * maxHeight];
             int pixelCount = 0;
             for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++)
-                    resizedPixels[x + xDrawOffset + (y + yDrawOffset) * maxWidth] = pixels[pixelCount++];
+                for (int x = 0; x < imgWidth; x++)
+                    resizedPixels[x + xDrawOffset + (y + yDrawOffset) * maxWidth] = imgPixels[pixelCount++];
 
             }
 
-            pixels = resizedPixels;
-            width = maxWidth;
+            imgPixels = resizedPixels;
+            imgWidth = maxWidth;
             height = maxHeight;
             xDrawOffset = 0;
             yDrawOffset = 0;
@@ -93,28 +93,28 @@ public class IndexedImage extends Rasterizer {
     }
 
     public void flipHorizontal() {
-        byte[] flipedPixels = new byte[width * height];
+        byte[] flipedPixels = new byte[imgWidth * height];
         int pixelCount = 0;
         for (int y = 0; y < height; y++) {
-            for (int x = width - 1; x >= 0; x--)
-                flipedPixels[pixelCount++] = pixels[x + y * width];
+            for (int x = imgWidth - 1; x >= 0; x--)
+                flipedPixels[pixelCount++] = imgPixels[x + y * imgWidth];
 
         }
 
-        pixels = flipedPixels;
-        xDrawOffset = maxWidth - width - xDrawOffset;
+        imgPixels = flipedPixels;
+        xDrawOffset = maxWidth - imgWidth - xDrawOffset;
 
     }
 
     public void flipVertical() {
-        byte[] flipedPixels = new byte[width * height];
+        byte[] flipedPixels = new byte[imgWidth * height];
         int pixelCount = 0;
         for (int y = height - 1; y >= 0; y--) {
-            for (int x = 0; x < width; x++)
-                flipedPixels[pixelCount++] = pixels[x + y * width];
+            for (int x = 0; x < imgWidth; x++)
+                flipedPixels[pixelCount++] = imgPixels[x + y * imgWidth];
 
         }
-        pixels = flipedPixels;
+        imgPixels = flipedPixels;
         yDrawOffset = maxHeight - height - yDrawOffset;
     }
 
@@ -148,7 +148,7 @@ public class IndexedImage extends Rasterizer {
         int offset = x + y * Rasterizer.width;
         int originalOffset = 0;
         int imageHeight = height;
-        int imageWidth = width;
+        int imageWidth = imgWidth;
         int deviation = Rasterizer.width - imageWidth;
         int originalDeviation = 0;
         if (y < Rasterizer.topY) {
@@ -176,7 +176,7 @@ public class IndexedImage extends Rasterizer {
             deviation += xOffset;
         }
         if (imageWidth > 0 && imageHeight > 0) {
-            copyPixels(pixels, Rasterizer.pixels, imageWidth, imageHeight, offset, originalOffset, deviation, originalDeviation, palette);
+            copyPixels(imgPixels, Rasterizer.pixels, imageWidth, imageHeight, offset, originalOffset, deviation, originalDeviation, palette);
         }
     }
 

@@ -456,8 +456,8 @@ public class ItemDefinition {
 				return null;
 		}
 		ImageRGB rendered = new ImageRGB(32, 32);
-		int centreX = Rasterizer3D.centerX;
-		int centerY = Rasterizer3D.centerY;
+		int centreX = Rasterizer3D.center_x;
+		int centerY = Rasterizer3D.center_y;
 		int lineOffsets[] = Rasterizer3D.lineOffsets;
 		int pixels[] = Rasterizer.pixels;
 		int width = Rasterizer.width;
@@ -466,10 +466,10 @@ public class ItemDefinition {
 		int bottomX = Rasterizer.bottomX;
 		int topY = Rasterizer.topY;
 		int bottomY = Rasterizer.bottomY;
-		Rasterizer3D.approximateAlphaBlending = false;
+		Rasterizer3D.notTextured = false;
 		Rasterizer.createRasterizer(rendered.pixels, 32, 32);
 		Rasterizer.drawFilledRectangle(0, 0, 32, 32, 0);
-		Rasterizer3D.setDefaultBoundaries();
+		Rasterizer3D.setDefaultBounds();
 		int scale = definition.modelScale;
 		if (backColour == -1)
 			scale = (int) (scale * 1.5D);
@@ -532,10 +532,10 @@ public class ItemDefinition {
 			rgbImageCache.put(rendered, id);
 		Rasterizer.createRasterizer(pixels, width, height);
 		Rasterizer.setCoordinates(topY, topX, bottomY, bottomX);
-		Rasterizer3D.centerX = centreX;
-		Rasterizer3D.centerY = centerY;
+		Rasterizer3D.center_x = centreX;
+		Rasterizer3D.center_y = centerY;
 		Rasterizer3D.lineOffsets = lineOffsets;
-		Rasterizer3D.approximateAlphaBlending = true;
+		Rasterizer3D.notTextured = true;
 		if (definition.stackable)
 			rendered.maxWidth = 33;
 		else

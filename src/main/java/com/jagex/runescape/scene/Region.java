@@ -459,9 +459,9 @@ public class Region {
                                 }
                                 int rgbBitsetRandomized = 0;
                                 if (hslBitsetUnmodified != -1)
-                                    rgbBitsetRandomized = (Rasterizer3D.getRgbLookupTableId[trimHSLLightness(hslBitsetRandomized, 96)]);
+                                    rgbBitsetRandomized = (Rasterizer3D.hsl2rgb[trimHSLLightness(hslBitsetRandomized, 96)]);
                                 if (overlayFloorId == 0)
-                                    scene.renderTile(plane, x, y, 0, 0, -1, vertexSouthWest, vertexSouthEast, vertexNorthEast, vertexNorthWest,
+                                    scene.addTile(plane, x, y, 0, 0, -1, vertexSouthWest, vertexSouthEast, vertexNorthEast, vertexNorthWest,
                                             trimHSLLightness(hslBitsetUnmodified, lightSouthWest), trimHSLLightness(hslBitsetUnmodified, lightSouthEast), trimHSLLightness(hslBitsetUnmodified, lightNorthEast),
                                             trimHSLLightness(hslBitsetUnmodified, lightNorthWest), 0, 0, 0, 0, rgbBitsetRandomized, 0);
                                 else {
@@ -472,17 +472,17 @@ public class Region {
                                     int hslBitset;
                                     int rgbBitset;
                                     if (textureid >= 0) {
-                                        rgbBitset = Rasterizer3D.getAverageRgbColorForTexture(textureid, 0);
+                                        rgbBitset = Rasterizer3D.getAverageRgbColorForTexture(textureid);
                                         hslBitset = -1;
                                     } else if (floor.rgbColor == 16711935) {
                                         hslBitset = -2;
                                         textureid = -1;
-                                        rgbBitset = (Rasterizer3D.getRgbLookupTableId[mixLightnessSigned(floor.hslColor2, 96)]);
+                                        rgbBitset = (Rasterizer3D.hsl2rgb[mixLightnessSigned(floor.hslColor2, 96)]);
                                     } else {
                                         hslBitset = getHSLBitset(floor.hue2, floor.saturation, floor.lightness);
-                                        rgbBitset = (Rasterizer3D.getRgbLookupTableId[mixLightnessSigned(floor.hslColor2, 96)]);
+                                        rgbBitset = (Rasterizer3D.hsl2rgb[mixLightnessSigned(floor.hslColor2, 96)]);
                                     }
-                                    scene.renderTile(plane, x, y, clippingPath, clippingPathRotation, textureid, vertexSouthWest, vertexSouthEast, vertexNorthEast,
+                                    scene.addTile(plane, x, y, clippingPath, clippingPathRotation, textureid, vertexSouthWest, vertexSouthEast, vertexNorthEast,
                                             vertexNorthWest, trimHSLLightness(hslBitsetUnmodified, lightSouthWest), trimHSLLightness(hslBitsetUnmodified, lightSouthEast), trimHSLLightness(hslBitsetUnmodified,
                                                     lightNorthEast), trimHSLLightness(hslBitsetUnmodified, lightNorthWest), mixLightnessSigned(hslBitset, lightSouthWest),
                                             mixLightnessSigned(hslBitset, lightSouthEast), mixLightnessSigned(hslBitset, lightNorthEast),

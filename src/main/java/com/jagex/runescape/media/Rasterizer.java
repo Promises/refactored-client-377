@@ -11,7 +11,7 @@ public class Rasterizer extends CacheableNode {
     public static int bottomY;
     public static int topX;
     public static int bottomX;
-    public static int virtualBottomX;
+    public static int viewportRx;
     public static int centerX;
     public static int centerY;
 
@@ -28,7 +28,7 @@ public class Rasterizer extends CacheableNode {
         topY = 0;
         bottomX = width;
         bottomY = height;
-        virtualBottomX = bottomX - 1;
+        viewportRx = bottomX - 1;
         centerX = bottomX / 2;
     }
 
@@ -61,7 +61,7 @@ public class Rasterizer extends CacheableNode {
         topY = y;
         bottomX = width;
         bottomY = height;
-        virtualBottomX = bottomX - 1;
+        viewportRx = bottomX - 1;
         centerX = bottomX / 2;
         centerY = bottomY / 2;
 

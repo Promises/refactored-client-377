@@ -5224,9 +5224,9 @@ public class Game extends GameShell {
             }
 
             drawLoadingText(83, "Unpacking textures");
-            Rasterizer3D.loadIndexedImages(textureArchive);
-            Rasterizer3D.method501(0.80000000000000004D);
-            Rasterizer3D.method496(20);
+            Rasterizer3D.unpackTextures(textureArchive);
+            Rasterizer3D.calculatePalette(0.80000000000000004D);
+            Rasterizer3D.resetTextures(20);
             drawLoadingText(86, "Unpacking config");
             AnimationSequence.load(configArchive);
             GameObjectDefinition.load(configArchive);
@@ -5265,7 +5265,7 @@ public class Game extends GameShell {
                 int maxWidth = 0;
 
                 for (int x = 0; x < 34; x++) {
-                    if (minimapBackgroundImage.pixels[x + y * minimapBackgroundImage.width] == 0) {
+                    if (minimapBackgroundImage.imgPixels[x + y * minimapBackgroundImage.imgWidth] == 0) {
                         if (minWidth == 999)
                             minWidth = x;
 
@@ -5288,7 +5288,7 @@ public class Game extends GameShell {
                 int maxWidth = 0;
 
                 for (int x = 25; x < 172; x++) {
-                    if (minimapBackgroundImage.pixels[x + y * minimapBackgroundImage.width] == 0
+                    if (minimapBackgroundImage.imgPixels[x + y * minimapBackgroundImage.imgWidth] == 0
                             && (x > 34 || y > 34)) {
                         if (minWidth == 999)
                             minWidth = x;
@@ -5307,16 +5307,16 @@ public class Game extends GameShell {
                 anIntArray920[y - 5] = maxWidth - minWidth;
             }
 
-            Rasterizer3D.method494(765, 503);
+            Rasterizer3D.setBounds(765, 503);
             fullScreenTextureArray = Rasterizer3D.lineOffsets;
 
-            Rasterizer3D.method494(479, 96);
+            Rasterizer3D.setBounds(479, 96);
             chatboxLineOffsets = Rasterizer3D.lineOffsets;
 
-            Rasterizer3D.method494(190, 261);
+            Rasterizer3D.setBounds(190, 261);
             sidebarOffsets = Rasterizer3D.lineOffsets;
 
-            Rasterizer3D.method494(512, 334);
+            Rasterizer3D.setBounds(512, 334);
             viewportOffsets = Rasterizer3D.lineOffsets;
 
             int[] ai = new int[9];
@@ -5350,18 +5350,18 @@ public class Game extends GameShell {
         if (!lowMemory) {
             for (int k = 0; k < anIntArray1290.length; k++) {
                 int l = anIntArray1290[k];
-                if (Rasterizer3D.anIntArray1546[l] >= i) {
-                    IndexedImage class50_sub1_sub1_sub3 = Rasterizer3D.aClass50_Sub1_Sub1_Sub3Array1540[l];
-                    int i1 = class50_sub1_sub1_sub3.width * class50_sub1_sub1_sub3.height - 1;
-                    int j1 = class50_sub1_sub1_sub3.width * tickDelta * 2;
-                    byte[] abyte0 = class50_sub1_sub1_sub3.pixels;
+                if (Rasterizer3D.textureLastUsed[l] >= i) {
+                    IndexedImage class50_sub1_sub1_sub3 = Rasterizer3D.textureImages[l];
+                    int i1 = class50_sub1_sub1_sub3.imgWidth * class50_sub1_sub1_sub3.height - 1;
+                    int j1 = class50_sub1_sub1_sub3.imgWidth * tickDelta * 2;
+                    byte[] abyte0 = class50_sub1_sub1_sub3.imgPixels;
                     byte[] abyte1 = aByteArray1245;
                     for (int k1 = 0; k1 <= i1; k1++)
                         abyte1[k1] = abyte0[k1 - j1 & i1];
 
-                    class50_sub1_sub1_sub3.pixels = abyte1;
+                    class50_sub1_sub1_sub3.imgPixels = abyte1;
                     aByteArray1245 = abyte0;
-                    Rasterizer3D.method499(l, 9);
+                    Rasterizer3D.resetTexture(l);
                 }
             }
 
@@ -6912,8 +6912,8 @@ public class Game extends GameShell {
         if (class50_sub1_sub1_sub3 != null) {
             int l1 = 0;
             for (int j2 = 0; j2 < class50_sub1_sub1_sub3.height; j2++) {
-                for (int l2 = 0; l2 < class50_sub1_sub1_sub3.width; l2++)
-                    if (class50_sub1_sub1_sub3.pixels[l1++] != 0) {
+                for (int l2 = 0; l2 < class50_sub1_sub1_sub3.imgWidth; l2++)
+                    if (class50_sub1_sub1_sub3.imgPixels[l1++] != 0) {
                         int i3 = l2 + 16 + class50_sub1_sub1_sub3.xDrawOffset;
                         int j3 = j2 + 16 + class50_sub1_sub1_sub3.yDrawOffset;
                         int k3 = i3 + (j3 << 7);
@@ -7237,7 +7237,7 @@ public class Game extends GameShell {
         aClass18_1157.createRasterizer();
 
         if (minimapState == 2) {
-            byte[] mmBackgroundPixels = minimapBackgroundImage.pixels;
+            byte[] mmBackgroundPixels = minimapBackgroundImage.imgPixels;
             int[] rasterPixels = Rasterizer.pixels;
             int pixelCount = mmBackgroundPixels.length;
 
@@ -7699,7 +7699,7 @@ public class Game extends GameShell {
 
         }
         System.gc();
-        Rasterizer3D.method496(20);
+        Rasterizer3D.resetTextures(20);
         onDemandRequester.immediateRequestCount();
         int l = (chunkX - 6) / 8 - 1;
         int k1 = (chunkX + 6) / 8 + 1;
@@ -8232,13 +8232,13 @@ public class Game extends GameShell {
         int config = widgetSettings[j];
         if (action == 1) {
             if (config == 1)
-                Rasterizer3D.method501(0.90000000000000002D);
+                Rasterizer3D.calculatePalette(0.90000000000000002D);
             if (config == 2)
-                Rasterizer3D.method501(0.80000000000000004D);
+                Rasterizer3D.calculatePalette(0.80000000000000004D);
             if (config == 3)
-                Rasterizer3D.method501(0.69999999999999996D);
+                Rasterizer3D.calculatePalette(0.69999999999999996D);
             if (config == 4)
-                Rasterizer3D.method501(0.59999999999999998D);
+                Rasterizer3D.calculatePalette(0.59999999999999998D);
             ItemDefinition.rgbImageCache.removeAll();
             welcomeScreenRaised = true;
         }
@@ -10811,8 +10811,8 @@ public class Game extends GameShell {
         y = z * pitchSine + y * pitchCosine >> 16;
         z = i;
         if (y >= 50) {
-            drawX = Rasterizer3D.centerX + (x << 9) / y;
-            drawY = Rasterizer3D.centerY + (z << 9) / y;
+            drawX = Rasterizer3D.center_x + (x << 9) / y;
+            drawY = Rasterizer3D.center_y + (z << 9) / y;
         } else {
             drawX = -1;
             drawY = -1;
@@ -11225,10 +11225,10 @@ public class Game extends GameShell {
                     if (imageRGB != null)
                         imageRGB.drawImage(k2, l2);
                 } else if (child.type == 6) {
-                    int k3 = Rasterizer3D.centerX;
-                    int k4 = Rasterizer3D.centerY;
-                    Rasterizer3D.centerX = k2 + child.width / 2;
-                    Rasterizer3D.centerY = l2 + child.height / 2;
+                    int k3 = Rasterizer3D.center_x;
+                    int k4 = Rasterizer3D.center_y;
+                    Rasterizer3D.center_x = k2 + child.width / 2;
+                    Rasterizer3D.center_y = l2 + child.height / 2;
                     int k5 = Rasterizer3D.SINE[child.rotationX] * child.zoom >> 16;
                     int j6 = Rasterizer3D.COSINE[child.rotationX] * child.zoom >> 16;
                     boolean flag2 = componentEnabled(child);
@@ -11247,8 +11247,8 @@ public class Game extends GameShell {
                     }
                     if (model != null)
                         model.render(0, child.rotationY, 0, child.rotationX, 0, k5, j6);
-                    Rasterizer3D.centerX = k3;
-                    Rasterizer3D.centerY = k4;
+                    Rasterizer3D.center_x = k3;
+                    Rasterizer3D.center_y = k4;
                 } else {
                     if (child.type == 7) {
                         TypeFace typeFace = child.typeFaces;
@@ -11599,7 +11599,7 @@ public class Game extends GameShell {
             if (gameObjectDefinition.anInt795 != -1) {
                 IndexedImage indexedImage = mapIcons[gameObjectDefinition.anInt795];
                 if (indexedImage != null) {
-                    int i6 = (gameObjectDefinition.sizeX * 4 - indexedImage.width) / 2;
+                    int i6 = (gameObjectDefinition.sizeX * 4 - indexedImage.imgWidth) / 2;
                     int j6 = (gameObjectDefinition.sizeY * 4 - indexedImage.height) / 2;
                     indexedImage.drawImage(48 + k * 4 + i6, 48 + (104 - i - gameObjectDefinition.sizeY) * 4 + j6
                     );
@@ -11670,7 +11670,7 @@ public class Game extends GameShell {
             if (gameObjectDefinition.anInt795 != -1) {
                 IndexedImage indexedImage = mapIcons[gameObjectDefinition.anInt795];
                 if (indexedImage != null) {
-                    int j5 = (gameObjectDefinition.sizeX * 4 - indexedImage.width) / 2;
+                    int j5 = (gameObjectDefinition.sizeX * 4 - indexedImage.imgWidth) / 2;
                     int k5 = (gameObjectDefinition.sizeY * 4 - indexedImage.height) / 2;
                     indexedImage.drawImage(48 + k * 4 + j5, 48 + (104 - i - gameObjectDefinition.sizeY) * 4 + k5
                     );
@@ -11701,7 +11701,7 @@ public class Game extends GameShell {
             if (class47.anInt795 != -1) {
                 IndexedImage indexedImage = mapIcons[class47.anInt795];
                 if (indexedImage != null) {
-                    int i4 = (class47.sizeX * 4 - indexedImage.width) / 2;
+                    int i4 = (class47.sizeX * 4 - indexedImage.imgWidth) / 2;
                     int j4 = (class47.sizeY * 4 - indexedImage.height) / 2;
                     indexedImage.drawImage(48 + k * 4 + i4, 48 + (104 - i - class47.sizeY) * 4 + j4);
                 }

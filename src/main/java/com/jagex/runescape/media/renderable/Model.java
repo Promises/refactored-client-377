@@ -1377,8 +1377,8 @@ public class Model extends Renderable {
     }
 
     public void render(int i, int j, int k, int l, int i1, int j1, int k1) {
-        int l1 = Rasterizer3D.centerX;
-        int i2 = Rasterizer3D.centerY;
+        int l1 = Rasterizer3D.center_x;
+        int i2 = Rasterizer3D.center_y;
         int j2 = SINE[i];
         int k2 = COSINE[i];
         int l2 = SINE[j];
@@ -1483,8 +1483,8 @@ public class Model extends Renderable {
                 k4 /= i3;
                 i5 /= k5;
             }
-            int i6 = cursorX - Rasterizer3D.centerX;
-            int k6 = cursorY - Rasterizer3D.centerY;
+            int i6 = cursorX - Rasterizer3D.center_x;
+            int k6 = cursorY - Rasterizer3D.center_y;
             if (i6 > k3 && i6 < l3 && k6 > i5 && k6 < k4) {
                 if (singleTile) {
                     hoveredHash[resourceCount++] = i2;
@@ -1493,8 +1493,8 @@ public class Model extends Renderable {
                 }
             }
         }
-        int l5 = Rasterizer3D.centerX;
-        int j6 = Rasterizer3D.centerY;
+        int l5 = Rasterizer3D.center_x;
+        int j6 = Rasterizer3D.center_y;
         int l6 = 0;
         int i7 = 0;
         if (i != 0) {
@@ -1567,8 +1567,8 @@ public class Model extends Renderable {
                     if ((i3 - l3) * (vertexScreenY[j2] - vertexScreenY[k1])
                             - (vertexScreenY[l] - vertexScreenY[k1]) * (k4 - l3) > 0) {
                         aBooleanArray1685[k] = false;
-                        if (i3 < 0 || l3 < 0 || k4 < 0 || i3 > Rasterizer.virtualBottomX
-                                || l3 > Rasterizer.virtualBottomX || k4 > Rasterizer.virtualBottomX) {
+                        if (i3 < 0 || l3 < 0 || k4 < 0 || i3 > Rasterizer.viewportRx
+                                || l3 > Rasterizer.viewportRx || k4 > Rasterizer.viewportRx) {
                             restrictEdges[k] = true;
                         } else {
                             restrictEdges[k] = false;
@@ -1723,7 +1723,7 @@ public class Model extends Renderable {
         int j = trianglePointsX[i];
         int k = trianglePointsY[i];
         int l = trianglePointsZ[i];
-        Rasterizer3D.restrictEdges = restrictEdges[i];
+        Rasterizer3D.restrict_edges = restrictEdges[i];
         if (triangleAlphaValues == null) {
             Rasterizer3D.alpha = 0;
         } else {
@@ -1742,7 +1742,7 @@ public class Model extends Renderable {
             return;
         }
         if (i1 == 1) {
-            Rasterizer3D.method505(vertexScreenY[j], vertexScreenY[k], vertexScreenY[l],
+            Rasterizer3D.drawFlatTriangle(vertexScreenY[j], vertexScreenY[k], vertexScreenY[l],
                     vertexScreenX[j], vertexScreenX[k], vertexScreenX[l], HSLtoRGB[triangleHSLA[i]]);
             return;
         }
@@ -1770,8 +1770,8 @@ public class Model extends Renderable {
     }
 
     private void method601(int i) {
-        int j = Rasterizer3D.centerX;
-        int k = Rasterizer3D.centerY;
+        int j = Rasterizer3D.center_x;
+        int k = Rasterizer3D.center_y;
         int l = 0;
         int i1 = trianglePointsX[i];
         int j1 = trianglePointsY[i];
@@ -1849,11 +1849,11 @@ public class Model extends Renderable {
         int j7 = anIntArray1700[1];
         int k7 = anIntArray1700[2];
         if ((j3 - j4) * (k7 - j7) - (i7 - j7) * (j5 - j4) > 0) {
-            Rasterizer3D.restrictEdges = false;
+            Rasterizer3D.restrict_edges = false;
             if (l == 3) {
-                if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer.virtualBottomX || j4 > Rasterizer.virtualBottomX
-                        || j5 > Rasterizer.virtualBottomX) {
-                    Rasterizer3D.restrictEdges = true;
+                if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer.viewportRx || j4 > Rasterizer.viewportRx
+                        || j5 > Rasterizer.viewportRx) {
+                    Rasterizer3D.restrict_edges = true;
                 }
                 int l7;
                 if (triangleDrawType == null) {
@@ -1865,7 +1865,7 @@ public class Model extends Renderable {
                     Rasterizer3D.drawShadedTriangle(i7, j7, k7, j3, j4, j5, anIntArray1701[0], anIntArray1701[1],
                             anIntArray1701[2]);
                 } else if (l7 == 1) {
-                    Rasterizer3D.method505(i7, j7, k7, j3, j4, j5, HSLtoRGB[triangleHSLA[i]]);
+                    Rasterizer3D.drawFlatTriangle(i7, j7, k7, j3, j4, j5, HSLtoRGB[triangleHSLA[i]]);
                 } else if (l7 == 2) {
                     int j8 = triangleDrawType[i] >> 2;
                     int k9 = texturedTrianglePointsX[j8];
@@ -1887,10 +1887,10 @@ public class Model extends Renderable {
                 }
             }
             if (l == 4) {
-                if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer.virtualBottomX || j4 > Rasterizer.virtualBottomX
-                        || j5 > Rasterizer.virtualBottomX || anIntArray1699[3] < 0
-                        || anIntArray1699[3] > Rasterizer.virtualBottomX) {
-                    Rasterizer3D.restrictEdges = true;
+                if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer.viewportRx || j4 > Rasterizer.viewportRx
+                        || j5 > Rasterizer.viewportRx || anIntArray1699[3] < 0
+                        || anIntArray1699[3] > Rasterizer.viewportRx) {
+                    Rasterizer3D.restrict_edges = true;
                 }
                 int i8;
                 if (triangleDrawType == null) {
@@ -1907,8 +1907,8 @@ public class Model extends Renderable {
                 }
                 if (i8 == 1) {
                     int l8 = HSLtoRGB[triangleHSLA[i]];
-                    Rasterizer3D.method505(i7, j7, k7, j3, j4, j5, l8);
-                    Rasterizer3D.method505(i7, k7, anIntArray1700[3], j3, j5, anIntArray1699[3], l8);
+                    Rasterizer3D.drawFlatTriangle(i7, j7, k7, j3, j4, j5, l8);
+                    Rasterizer3D.drawFlatTriangle(i7, k7, anIntArray1700[3], j3, j5, anIntArray1699[3], l8);
                     return;
                 }
                 if (i8 == 2) {
@@ -1961,8 +1961,8 @@ public class Model extends Renderable {
     static {
         SINE = Rasterizer3D.SINE;
         COSINE = Rasterizer3D.COSINE;
-        HSLtoRGB = Rasterizer3D.getRgbLookupTableId;
-        anIntArray1713 = Rasterizer3D.anIntArray1535;
+        HSLtoRGB = Rasterizer3D.hsl2rgb;
+        anIntArray1713 = Rasterizer3D.anIntArray1469;
     }
 }
 
