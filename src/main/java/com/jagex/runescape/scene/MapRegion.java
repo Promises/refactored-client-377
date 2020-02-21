@@ -486,13 +486,15 @@ public class MapRegion {
                                     if (textureid >= 0) {
                                         rgbBitset = Rasterizer3D.getAverageRgbColorForTexture(textureid);
                                         hslBitset = -1;
-                                    } else if (floor.rgbColor == 16711935) {
+
+                                    } else if (floor.rgbColor == 0xff00ff) {
                                         hslBitset = -2;
                                         textureid = -1;
-                                        rgbBitset = (Rasterizer3D.hsl2rgb[mixLightnessSigned(floor.hslColor2, 96)]);
+                                        rgbBitset = 0;
                                     } else {
                                         hslBitset = getHSLBitset(floor.hue2, floor.saturation, floor.lightness);
                                         rgbBitset = (Rasterizer3D.hsl2rgb[mixLightnessSigned(floor.hslColor2, 96)]);
+
                                     }
                                     scene.addTile(plane, x, y, clippingPath, clippingPathRotation, textureid, vertexSouthWest, vertexSouthEast, vertexNorthEast,
                                             vertexNorthWest, trimHSLLightness(hslBitsetUnmodified, lightSouthWest), trimHSLLightness(hslBitsetUnmodified, lightSouthEast), trimHSLLightness(hslBitsetUnmodified,

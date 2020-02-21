@@ -326,7 +326,7 @@ public class CollisionMap {
 
     }
 
-    public void unset(int x, int y, int i) {
+    public void unset(int i, int x, int y) {
         clippingData[x][y] &= 0xffffff - i;
     }
 

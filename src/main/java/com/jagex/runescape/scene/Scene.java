@@ -219,9 +219,7 @@ public class Scene {
                     tileArray.setTile(_z, x, y, new SceneTile(x, y, _z));
                 }
             }
-            if ((overlayRGB & 0xFF0000) >> 16 >= 160) {
-                System.out.println("FOUND RED INIT!!!" + overlayRGB);
-            }
+
 
             tileArray.getTile(plane, x, y).plainTile = tile;
         } else {
@@ -874,10 +872,10 @@ public class Scene {
             if (tileRGB == 0) {
                 return;
             }
-            if ((tileRGB & 0xFF0000) >> 16 >= 160) {
-                System.out.println("FOUND RED!!!");
-                System.out.println(genericTile.flat);
-            }
+//            if ((tileRGB & 0xFF0000) >> 16 >= 160) {
+//                System.out.println("FOUND RED!!!");
+//                System.out.println(genericTile.flat);
+//            }
             for (int k1 = 0; k1 < 4; k1++) {
                 pixels[pixelPointer] = tileRGB;
                 pixels[pixelPointer + 1] = tileRGB;
