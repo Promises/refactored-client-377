@@ -379,15 +379,15 @@ public class Model extends Renderable {
                 triangleCount += model.triangleCount;
                 texturedTriangleCount += model.texturedTriangleCount;
                 setDrawType |= model.triangleDrawType != null;
-                if (model.trianglePriorities != null) {
-                    setPriority = true;
-                } else {
+                if (model.trianglePriorities == null) {
                     if (trianglePriority == -1) {
                         trianglePriority = model.trianglePriority;
                     }
                     if (trianglePriority != model.trianglePriority) {
                         setPriority = true;
                     }
+                } else {
+                    setPriority = true;
                 }
                 setAlpha |= model.triangleAlphaValues != null;
                 setSkins |= model.triangleSkinValues != null;
@@ -652,18 +652,18 @@ public class Model extends Renderable {
         texturedTrianglePointsZ = model.texturedTrianglePointsZ;
     }
 
-    public Model(boolean flag, boolean flag1, Model model) {
+    public Model(boolean adjustToTerrain, boolean nonFlatShading, Model model) {
         vertexCount = model.vertexCount;
         triangleCount = model.triangleCount;
         texturedTriangleCount = model.texturedTriangleCount;
-        if (flag) {
+        if (adjustToTerrain) {
             verticesY = new int[vertexCount];
             System.arraycopy(model.verticesY, 0, verticesY, 0, vertexCount);
 
         } else {
             verticesY = model.verticesY;
         }
-        if (flag1) {
+        if (nonFlatShading) {
             triangleHSLA = new int[triangleCount];
             triangleHSLB = new int[triangleCount];
             triangleHSLC = new int[triangleCount];

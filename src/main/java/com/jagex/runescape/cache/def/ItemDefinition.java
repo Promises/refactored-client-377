@@ -165,16 +165,16 @@ public class ItemDefinition {
 			return null;
 		Model primary = Model.getModel(primaryId);
 		if (secondaryId != -1)
-			if (tertiaryId != -1) {
+			if (tertiaryId == -1) {
+				Model secondary = Model.getModel(secondaryId);
+				Model parts[] = { primary, secondary };
+				primary = new Model(2, parts);
+			} else {
 				Model secondary = Model.getModel(secondaryId);
 				Model tertiary = Model.getModel(tertiaryId);
 				Model parts[] = { primary,
 						secondary, tertiary };
 				primary = new Model(3, parts);
-			} else {
-				Model secondary = Model.getModel(secondaryId);
-				Model parts[] = { primary, secondary };
-				primary = new Model(2, parts);
 			}
 		if (gender == 0 && maleTranslation != 0)
 			primary.translate(0, 0, maleTranslation);

@@ -1426,11 +1426,11 @@ public class Game extends GameShell {
                     processRightClick(-521);
                     if (lastActiveInvInterface == modifiedWidgetId && mouseInvInterfaceIndex != selectedInventorySlot) {
                         Widget childInterface = Widget.forId(modifiedWidgetId);
-                        int moveItemInsetionMode = 0;
+                        int moveItemInsertionMode = 0;
                         if (bankInsertMode == 1 && childInterface.contentType == 206)
-                            moveItemInsetionMode = 1;
+                            moveItemInsertionMode = 1;
                         if (childInterface.items[mouseInvInterfaceIndex] <= 0)
-                            moveItemInsetionMode = 0;
+                            moveItemInsertionMode = 0;
                         if (childInterface.itemDeletesDraged) {
                             int slotStart = selectedInventorySlot;
                             int slotEnd = mouseInvInterfaceIndex;
@@ -1438,7 +1438,7 @@ public class Game extends GameShell {
                             childInterface.itemAmounts[slotEnd] = childInterface.itemAmounts[slotStart];
                             childInterface.items[slotStart] = -1;
                             childInterface.itemAmounts[slotStart] = 0;
-                        } else if (moveItemInsetionMode == 1) {
+                        } else if (moveItemInsertionMode == 1) {
                             int slotStart = selectedInventorySlot;
                             for (int slotPointer = mouseInvInterfaceIndex; slotStart != slotPointer; )
                                 if (slotStart > slotPointer) {
@@ -1454,7 +1454,7 @@ public class Game extends GameShell {
                         }
                         outBuffer.putOpcode(123);
                         outBuffer.putOffsetShortLE(mouseInvInterfaceIndex);
-                        outBuffer.putOffsetByte(moveItemInsetionMode);
+                        outBuffer.putOffsetByte(moveItemInsertionMode);
                         outBuffer.putOffsetShortBE(modifiedWidgetId);
                         outBuffer.putShortLE(selectedInventorySlot);
                     }
@@ -5976,13 +5976,13 @@ public class Game extends GameShell {
             chatboxInterface.scrollPosition = chatboxScrollMax - chatboxScroll - 77;
             if (super.mouseX > 448 && super.mouseX < 560 && super.mouseY > 332)
                 scrollInterface(chatboxScrollMax, 0, chatboxInterface, (byte) 102, super.mouseY - 357, -1, super.mouseX - 17, 77, 463);
-            int j = chatboxScrollMax - 77 - chatboxInterface.scrollPosition;
-            if (j < 0)
-                j = 0;
-            if (j > chatboxScrollMax - 77)
-                j = chatboxScrollMax - 77;
-            if (chatboxScroll != j) {
-                chatboxScroll = j;
+            int currentScroll = chatboxScrollMax - 77 - chatboxInterface.scrollPosition;
+            if (currentScroll < 0)
+                currentScroll = 0;
+            if (currentScroll > chatboxScrollMax - 77)
+                currentScroll = chatboxScrollMax - 77;
+            if (chatboxScroll != currentScroll) {
+                chatboxScroll = currentScroll;
                 redrawChatbox = true;
             }
         }
@@ -9956,8 +9956,8 @@ public class Game extends GameShell {
                     fontBold.drawCenteredStringWaveY(s, drawX, drawY, renderCount, k2);
                 }
                 if (spokenEffect[j] == 2) {
-                    fontBold.drawCeneteredStringWaveXY(s, drawX, drawY + 1, renderCount, 0);
-                    fontBold.drawCeneteredStringWaveXY(s, drawX, drawY, renderCount, k2);
+                    fontBold.drawCenteredStringWaveXY(s, drawX, drawY + 1, renderCount, 0);
+                    fontBold.drawCenteredStringWaveXY(s, drawX, drawY, renderCount, k2);
                 }
                 if (spokenEffect[j] == 3) {
                     fontBold.drawCenteredStringWaveXYMove(s, drawX, drawY + 1, renderCount, 150 - spokenCycle[j], 0
@@ -10331,12 +10331,12 @@ public class Game extends GameShell {
         int l = x * x + y * y;
         if (l > 6400)
             return;
-        int i1 = Model.SINE[k];
-        int j1 = Model.COSINE[k];
-        i1 = (i1 * 256) / (mapZoomOffset + 256);
-        j1 = (j1 * 256) / (mapZoomOffset + 256);
-        int k1 = y * i1 + x * j1 >> 16;
-        int l1 = y * j1 - x * i1 >> 16;
+        int sine = Model.SINE[k];
+        int cosine = Model.COSINE[k];
+        sine = (sine * 256) / (mapZoomOffset + 256);
+        cosine = (cosine * 256) / (mapZoomOffset + 256);
+        int k1 = y * sine + x * cosine >> 16;
+        int l1 = y * cosine - x * sine >> 16;
         if (l > 2500) {
             sprite.drawTo(minimapBackgroundImage, ((94 + k1) - sprite.maxWidth / 2) + 4, 83 - l1 - sprite.maxHeight
                     / 2 - 4);

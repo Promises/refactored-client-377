@@ -229,7 +229,7 @@ public class TypeFace extends Rasterizer {
         }
     }
 
-    public void drawCeneteredStringWaveXY(String string, int x, int y, int wave, int colour) {
+    public void drawCenteredStringWaveXY(String string, int x, int y, int wave, int colour) {
         if (string == null)
             return;
         x -= getDisplayedWidth(string) / 2;

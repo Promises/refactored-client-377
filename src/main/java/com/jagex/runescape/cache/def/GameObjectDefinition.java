@@ -1,6 +1,7 @@
 package com.jagex.runescape.cache.def;
 
 import com.jagex.runescape.cache.Archive;
+import com.jagex.runescape.cache.FileOperations;
 import com.jagex.runescape.net.Buffer;
 import com.jagex.runescape.Game;
 import com.jagex.runescape.net.requester.OnDemandRequester;
@@ -21,13 +22,11 @@ public class GameObjectDefinition {
     public boolean unknown;
     public int translateZ;
     public static Buffer buffer;
-    public int anInt768 = -992;
     public boolean adjustToTerrain;
     public static Game client;
     public static Model models[] = new Model[4];
     public static boolean lowMemory;
     public int id = -1;
-    public boolean aBoolean774 = true;
     public int sizeY;
     public String name = "null";
     public static int cacheIndex;
@@ -41,12 +40,10 @@ public class GameObjectDefinition {
     public int translateY;
     public boolean aBoolean786 = true;
     public byte modelLightAmbient;
-    public int anInt788;
     public int modelTypes[];
     public String options[];
     public boolean aBoolean791;
     public int anIntArray792[];
-    public byte aByte793 = -113;
     public int anInt794;
     public int anInt795;
     public int modelSizeZ;
@@ -145,6 +142,8 @@ public class GameObjectDefinition {
     public static void load(Archive archive) {
         buffer = new Buffer(archive.getFile("loc.dat"));
         Buffer buffer = new Buffer(archive.getFile("loc.idx"));
+        FileOperations.WriteFile("DumpedData/377_OBJECTS.dat", archive.getFile("loc.dat"));
+        FileOperations.WriteFile("DumpedData/377_OBJECTS.idx", archive.getFile("loc.idx"));
         definitionCount = buffer.getUnsignedShortBE();
         bufferOffsets = new int[definitionCount];
         int offset = 2;
