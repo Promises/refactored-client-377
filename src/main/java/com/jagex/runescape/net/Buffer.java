@@ -1,6 +1,7 @@
 package com.jagex.runescape.net;
 
 import com.jagex.runescape.collection.CacheableNode;
+import com.jagex.runescape.config.Configuration;
 
 import java.math.BigInteger;
 
@@ -222,8 +223,12 @@ public class Buffer extends CacheableNode {
 		getBytes(bytes, 0, length);
 
 		BigInteger raw = new BigInteger(bytes);
-		BigInteger encrypted = raw.modPow(key, modulus);
-        bytes = encrypted.toByteArray();
+
+    if (Configuration.RSA_ENABLED)
+			bytes = raw.modPow(key, modulus).toByteArray();
+		else
+			bytes = raw.toByteArray();
+
 		currentPosition = 0;
 
 		putByte(bytes.length);

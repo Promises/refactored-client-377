@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.yaml:snakeyaml:1.25'
+    implementation 'org.yaml:snakeyaml:1.25'
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 }
 
@@ -17,4 +17,9 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+}
+
+task run(type: JavaExec) {
+    mainClass = 'com.jagex.runescape.Game'
+    classpath = sourceSets.main.runtimeClasspath
 }

@@ -60,3 +60,9 @@ gradlew.bat
 
 # Config
 config/client-config.yaml
+DumpedData
+
+# jdtls LSP
+.classpath
+.project
+.settings

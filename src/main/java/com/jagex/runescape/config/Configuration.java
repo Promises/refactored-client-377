@@ -28,6 +28,7 @@ public class Configuration {
             HTTP_PORT = (int) net.get("http_port");
             CACHE_NAME = (String) cache.get("cacheDir");
             JAGGRAB_ENABLED = (boolean) cache.get("jaggrabEnabled");
+            RSA_ENABLED = (boolean) rsa.get("rsaEnabled");
             RSA_PUBLIC_KEY = new BigInteger(String.valueOf((int) rsa.get("rsaPub")));
             RSA_MODULUS = (BigInteger) rsa.get("rsaModulus");
             USE_STATIC_DETAILS = (boolean) login.get("useStaticCredentials");
@@ -35,7 +36,7 @@ public class Configuration {
             PASSWORD = (String) login.get("password");
             ROOFS_ENABLED = (boolean) game.get("roofsEnabled");
             FREE_TELEPORTS = (boolean) game.get("freeTeleports");
-            DEBUG_CONTEXT = (boolean) game.get("debugContextMenu");
+            DEBUG_CONTEXT = (boolean) game.get("debugContext");
 
             if(USERNAME == null) {
                 USERNAME = "";
