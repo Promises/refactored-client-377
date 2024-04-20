@@ -89,7 +89,7 @@ public class Configuration {
     /**
      * Whether or not the network packets should be encrypted.
      */
-    public static boolean RSA_ENABLED = true;
+    public static boolean RSA_ENABLED = false;
 
     /**
      * Public key to be used in RSA network encryption.
