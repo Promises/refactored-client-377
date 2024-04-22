@@ -82,7 +82,7 @@ public final class SignLink implements Runnable {
 
 	public void run() {
 		active = true;
-		String directory = cacheLocation();
+		String directory = findcachedir();
 		uid = getUID(directory);
 
 		try {
@@ -294,7 +294,7 @@ public final class SignLink implements Runnable {
 		}
 	}
 
-	public static String cacheLocation() {
+	public static String findcachedir() {
 		File file = new File(System.getProperty("user.home") + System.getProperty("file.separator") + CACHE_NAME + System.getProperty("file.separator"));
 		if (!file.exists()) {
 			if (!file.mkdir()) {
